@@ -4,65 +4,63 @@ package org.xmlrpc.android;
 import android.content.Context;
 import android.util.Log;
 
+import com.tidevalet.SessionManager;
 import com.tidevalet.helpers.Attributes;
 import com.tidevalet.helpers.Violation;
 
+import org.apache.http.client.ClientProtocolException;
 import org.wordpress.android.MediaFile;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 public class WebUtils {
-    @SuppressWarnings("unchecked")
     public static String uploadPostToWordpress(Violation violation, String image, String grade,
             Attributes service, Context context) throws XMLRPCException {
-
-        String adjustedURL = service.getUrl();
-        if (!adjustedURL.contains("http://")) {
-            adjustedURL = "http://" + adjustedURL;
-        }
-        if (adjustedURL.lastIndexOf("/") < adjustedURL.length() - 1) {
-            adjustedURL = adjustedURL + "/";
-
-        }
-
-        service.setUrl(adjustedURL);
-
+        SessionManager utils = new SessionManager(context);
+        service.setUrl(utils.getDefUrl());
         String imageURL = uploadImage(image, service, context);
-
         XMLRPCClient client = new XMLRPCClient(service.getUrl() + "xmlrpc.php");
         HashMap<String, Object> content = new HashMap<String, Object>();
         content.put("post_type", "post");
-        content.put("title", violation.getName());
+        content.put("title", "Test");
         content.put("description", prepareBodyOfPost(grade, imageURL));
-        String username = "";
-        String password = "";
-        if (service.getUseDefault() == Attributes.USE_DEFAULT) {
-            username = "";
-            password = "";
-        } else {
-            username = service.getUsername();
-            password = service.getPassword();
-        }
+        String username = utils.getUsername();
+        String password = utils.getPassword();
         Object[] params = {
                 1, username, password, content, true
         };
-
         Object result = null;
         try {
-            result = (Object) client.call("metaWeblog.newPost", params);
+            result = client.call("metaWeblog.newPost", params);
         } catch (XMLRPCException e) {
-            throw e;
+            e.printStackTrace();
         }
         return getPostUrl(result.toString(), service.getUrl());
     }
+    public Object callWp(String method, Context context)
+        throws XMLRPCException, UnsupportedEncodingException, ClientProtocolException, IOException {
+        SessionManager utils = new SessionManager(context);
+        String sXmlRpcMethod = method;
+        XMLRPCClient client = new XMLRPCClient(utils.getDefUrl() + "xmlrpc.php");
+        HashMap<String, Object> m = new HashMap<String, Object>();
+        m.put("test","test");
+        Object[] params = {
+                1, utils.getUsername(), utils.getPassword(), m
+        };
+        Object response = client.call(method, params);
+        Log.i("SENT", method + "");
+        return response;
 
+    }
     private static String uploadImage(String image, Attributes service, Context context)
             throws XMLRPCException {
         String resultUrl = "";
         XMLRPCClient client = new XMLRPCClient(service.getUrl() + "xmlrpc.php");
         String sXmlRpcMethod = "wp.uploadFile";
-        Log.d("uploadImage", "Uploading image " + service.getUrl() + image);
+        Log.i("uploadImage", "Uploading image " + service.getUrl() + image);
         MediaFile mf = new MediaFile();
         String orientation = "1";
         String mimeType = "image/jpeg";
@@ -73,23 +71,14 @@ public class WebUtils {
         m.put("type", mimeType);
         m.put("bits", mf);
         m.put("overwrite", true);
-        String username = "";
-        String password = "";
-        if (service.getUseDefault() == Attributes.USE_DEFAULT) {
-            username = "";
-            password = "";
-        } else {
-            username = service.getUsername();
-            password = service.getPassword();
-        }
+        SessionManager utils = new SessionManager(context);
         Object[] params = {
-                1, username, password, m
+                1, utils.getUsername(), utils.getPassword(), m
         };
 
         Object result = null;
-
         try {
-            result = (Object) client.call("wp.uploadFile", params);
+            result = (Object) client.call(sXmlRpcMethod, params);
             jpeg.delete();
         }
         catch (XMLRPCException e) {
@@ -104,10 +93,9 @@ public class WebUtils {
 
     private static String prepareBodyOfPost(String grade, String imageURL) {
         StringBuffer body = new StringBuffer();
-
         body.append("<img style=\"display:block;margin-right:auto;margin-left:auto;\" src=\""
                 + imageURL + "\" alt=\"image\" />");
-        body.append("\nGrade for assignment : " + grade);
+        body.append("\nTest : " + grade);
         System.out.println(body.toString());
         String formattedString = body.toString();
         formattedString = formattedString.replace("/\n\n/g", "</p><p>");
@@ -155,7 +143,6 @@ public class WebUtils {
         }
         return value;
     }*/
-
     public static String getPostUrl(String postID, String url) {
         return url + "?p=" + postID;
     }

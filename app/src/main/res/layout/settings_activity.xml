@@ -1,0 +1,15 @@
+<RelativeLayout android:id="@+id/RelativeLayout01" android:layout_width="fill_parent" android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:paddingLeft="10dip" android:paddingRight="10dip">
+    <TextView android:id="@+id/TextView02" android:layout_height="wrap_content" android:layout_width="fill_parent"
+        android:text="URL"></TextView>
+    <EditText android:layout_below="@id/TextView02" android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/editUrl" android:hint="tide.jpitt.xyz"></EditText>
+    <TextView android:id="@+id/TextView03" android:layout_below="@id/editUrl" android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Username"></TextView>
+    <EditText android:layout_below="@id/TextView03" android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/editUsername" android:hint="user"></EditText>
+
+    <TextView android:id="@+id/TextView04" android:layout_below="@id/editUsername" android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Password"></TextView>
+    <EditText android:layout_below="@id/TextView04" android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/editPassword" android:hint="pAssword1"></EditText>
+    <LinearLayout android:id="@+id/LinearLayout01" android:layout_below="@id/editPassword" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="center"><Button android:layout_height="wrap_content"
+        android:id="@+id/btnSave" android:layout_width="80dip" android:text="Save"></Button>
+        <Button android:layout_height="wrap_content" android:id="@+id/btnCancel" android:layout_width="80dip" android:text="Cancel"></Button>
+    </LinearLayout>
+</RelativeLayout>

@@ -55,8 +55,7 @@ public class XMLRPCClient {
 		postMethod.addHeader("Content-Type", "text/xml");
 		
 		postMethod.addHeader("charset", "UTF-8");
-		//UPDATE THE VERSION NUMBER BEFORE RELEASE! <3 Dan
-		postMethod.addHeader("User-Agent", "wp-android/1.2");
+		postMethod.addHeader("User-Agent", "android");
 		
 		httpParams = postMethod.getParams();
 		HttpProtocolParams.setUseExpectContinue(httpParams, false);
@@ -366,7 +365,7 @@ public class XMLRPCClient {
 				serializer.endDocument();
 				
 				HttpEntity entity = new StringEntity(bodyWriter.toString());
-				//Log.i("WordPress", bodyWriter.toString());
+				Log.i("WordPress", bodyWriter.toString());
 				postMethod.setEntity(entity);
 			}
 

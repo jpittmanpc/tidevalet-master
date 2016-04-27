@@ -1,4 +1,6 @@
+
 package com.tidevalet.thread;
+
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -57,26 +59,27 @@ public class adapter {
 		return sqlDB.insert(constants.TABLE_PUPIL, null, values);
 	}
 
-	/*public ArrayList<Pupil> getAllPupils() {
-		ArrayList<Pupil> pupils = new ArrayList<Pupil>();
+	public ArrayList<Violation> getAllPupils() {
+		ArrayList<Violation> pupils = new ArrayList<Violation>();
 		Cursor cursor = sqlDB.query(constants.TABLE_PUPIL, null, null, null,
 				null, null, null);
-		Pupil pupil = null;
+		Violation pupil = null;
 		while (cursor.moveToNext()) {
-			pupil = new Pupil();
+			pupil = new Violation();
 			pupil.setId(cursor.getLong(cursor
 					.getColumnIndex(constants.COL_KEY_ROW)));
 			pupil.setName(cursor.getString(cursor
 					.getColumnIndex(constants.PUPIL_NAME)));
 			if(!pupil.getName().equals("")){
 				pupils.add(pupil);
-			}else{
+			}
+			else{
 				trashPupil(pupil.getId());
 			}
 		}
 		cursor.close();
 		return pupils;
-	}*/
+	}
 
 	private void trashPupil(long id){
 		deletePupil(id);
@@ -111,19 +114,19 @@ public class adapter {
 		return post;
 	}
 
-	public Pupil getPupilById(long pupilId) {
-		Pupil pupil = null;
+	public Violation getPupilById(long pupilId) {
+		Violation violation = null;
 		Cursor cursor = sqlDB.query(constants.TABLE_PUPIL, null,
 				constants.COL_KEY_ROW + "=" + pupilId, null, null, null,
 				null);
 		while (cursor.moveToNext()) {
-			pupil = new Pupil();
-			pupil.setId(pupilId);
-			pupil.setName(cursor.getString(cursor
+			violation = new Violation();
+			violation.setId(pupilId);
+			violation.setName(cursor.getString(cursor
 					.getColumnIndex(constants.PUPIL_NAME)));
 		}
 		cursor.close();
-		return pupil;
+		return violation;
 	}
 
 	public void updatePupil(long pupilId, String name) {
@@ -178,7 +181,7 @@ public class adapter {
 				constants.PSERV_PUPIL_ID + "=" + pupilId, null);
 	}
 
-	public Violation getPupilServicesById(long id) {
+	public Attributes getPupilServicesById(long id) {
 		Attributes service = new Attributes();
 		Cursor cursor = sqlDB.query(constants.TABLE_PUPIL_SERVICES, null,
 				constants.COL_KEY_ROW + "=" + id, null, null, null, null);
@@ -206,7 +209,7 @@ public class adapter {
 	}
 
 	public Attributes getPupilServiceByPupilId(long pupilId, int serviceId) {
-		Attributes service = new PupilServices();
+		Attributes service = new Attributes();
 		Cursor cursor = sqlDB.query(constants.TABLE_PUPIL_SERVICES, null,
 				constants.PSERV_PUPIL_ID + "=" + pupilId + " AND "
 						+ constants.PSERV_SERV_ID + "=" + serviceId, null,

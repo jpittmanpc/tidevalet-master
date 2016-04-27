@@ -24,6 +24,9 @@ public class SessionManager {
 	static final String FILE_LINK = "fileAttach";
 	static final String DATE = "date";
 	static final String TIME = "time";
+	private static final String DEF_URL = "url";
+	private static final String DEF_USR = "username";
+	private static final String DEF_PWD = "password";
 
 	public SessionManager(Context _context) {
 		super();
@@ -34,7 +37,7 @@ public class SessionManager {
 
 
 	public void ShareValues
-			(String latitude, String longitude, String address, String date, String time){
+			(String latitude, String longitude, String address, String date, String time) {
 		editor.putString(LATITUDE, latitude);
 		editor.putString(LONGITUDE, longitude);
 		editor.putString(ADDRESS, address);
@@ -52,4 +55,26 @@ public class SessionManager {
 		user.put(TIME, pref.getString(TIME, null));
 		return user;
 	}
+	public void setDefUrl(String url) {
+		if (!url.contains("http://")) {
+			url = "http://" + url;
+		}
+		if (url.lastIndexOf("/") < url.length() - 1) {
+			url = url + "/";
+		}
+		editor.putString(DEF_URL, url);
+		editor.commit();
+	}
+	public void setDefUsr(String username) {
+		editor.putString(DEF_USR, username);
+		editor.commit();
+	}
+	public void setDefPwd(String password) {
+		editor.putString(DEF_PWD, password);
+		editor.commit();
+	}
+	public String getDefUrl() { return pref.getString(DEF_URL, null); }
+	public String getUsername() { return pref.getString(DEF_USR, null); }
+	public String getPassword() { return pref.getString(DEF_PWD, null); }
+
 }

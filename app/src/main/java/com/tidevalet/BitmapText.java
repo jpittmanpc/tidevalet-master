@@ -36,14 +36,9 @@ public class BitmapText {
         mStrokePaint.setStrokeMiter(10f);
         mStrokePaint.setStrokeWidth(10f);*/
            canvas.save();
-
-
             StaticLayout strokeLayout = new StaticLayout(msg, mStrokePaint, bg.getWidth() * 3 / 5,
                     Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
-
             canvas.translate(bg.getWidth() / 5, bg.getHeight() - strokeLayout.getHeight() - 20);
-
-
             TextPaint mTextPaint = new TextPaint();
             mTextPaint.setTextSize(15);
             mTextPaint.setColor(Color.BLACK);
@@ -56,7 +51,6 @@ public class BitmapText {
             mTextPaint.setTypeface(Typeface.DEFAULT);
             StaticLayout textLayout = new StaticLayout(msg, mTextPaint, bg.getWidth() * 3 / 5,
                     Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
-
             textLayout.draw(canvas);
             strokeLayout.draw(canvas);
             //canvas.save();

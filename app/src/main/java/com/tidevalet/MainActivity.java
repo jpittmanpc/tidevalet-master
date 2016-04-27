@@ -1,15 +1,14 @@
 package com.tidevalet;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.tidevalet.R;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -24,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         violationTxtView = (TextView) findViewById(R.id.violationTxtView);
         reportTxtView = (TextView) findViewById(R.id.reportTxtView);
-
         violationTxtView.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -34,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -50,12 +47,17 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            settingsDialog();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void settingsDialog() {
+        SettingsDialog dialog = new SettingsDialog(this);
+        dialog.setTitle("Default Settings");
+        dialog.show();
     }
 }

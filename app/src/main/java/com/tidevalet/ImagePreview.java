@@ -30,56 +30,34 @@ import java.util.Locale;
  * Created by admin on 11/2/2015.
  */
 public class ImagePreview extends Activity implements View.OnClickListener {
-
     TextView continueBtn, cancelBtn;
     ImageView imageView, imageView2, imageView3;
-
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     private static final int SELECT_PICTURE = 200;
     private static final String IMAGE_DIRECTORY_NAME = "TideValet";
     public static final int MEDIA_TYPE_IMAGE = 1;
-
     private Uri fileUri;
     Uri fileAttachment;
-
     ImageView getImageView;
     int imageId;
     private String selectedImagePath;
-
     ArrayList<String> uriList = new ArrayList<String>();
-
     String latitude, longitude, address, date, time, addDetail;
     SessionManager sessionManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_preview);
-
-        imageView = (ImageView) findViewById(R.id.image1);
+        imageView =  (ImageView) findViewById(R.id.image1);
         imageView2 = (ImageView) findViewById(R.id.image2);
         imageView3 = (ImageView) findViewById(R.id.image3);
-//        imageView4 = (ImageView) findViewById(R.id.image4);
-//        imageView5 = (ImageView) findViewById(R.id.image5);
-//        imageView6 = (ImageView) findViewById(R.id.image6);
-//        imageView7 = (ImageView) findViewById(R.id.image7);
-//        imageView8 = (ImageView) findViewById(R.id.image8);
-//        imageView9 = (ImageView) findViewById(R.id.image9);
         continueBtn = (TextView) findViewById(R.id.continueBtn);
         cancelBtn = (TextView) findViewById(R.id.cancelBtn);
-
         imageView.setOnClickListener(this);
         imageView2.setOnClickListener(this);
         imageView3.setOnClickListener(this);
-//        imageView4.setOnClickListener(this);
-//        imageView5.setOnClickListener(this);
-//        imageView6.setOnClickListener(this);
-//        imageView7.setOnClickListener(this);
-//        imageView8.setOnClickListener(this);
-//        imageView9.setOnClickListener(this);
         continueBtn.setOnClickListener(this);
         cancelBtn.setOnClickListener(this);
-
         sessionManager = new SessionManager(getApplicationContext());
         HashMap<String, String> user = sessionManager.getUserDetails();
         latitude = user.get(SessionManager.LATITUDE);
@@ -87,17 +65,14 @@ public class ImagePreview extends Activity implements View.OnClickListener {
         address = user.get(SessionManager.ADDRESS);
         date = user.get(SessionManager.DATE);
         time = user.get(SessionManager.TIME);
-
         if (!isDeviceSupportCamera()) {
             Toast.makeText(getApplicationContext(),
-                    "Sorry! Your device doesn't support Camera",
+                    "Sorry! Your device doesn't support \'Camera\'",
                     Toast.LENGTH_LONG).show();
             // will close the app if the device does't have camera or access
             finish();
         }
-
     }
-
     public boolean isDeviceSupportCamera() {
         if (getApplicationContext().getPackageManager().hasSystemFeature(
                 PackageManager.FEATURE_CAMERA)) {
@@ -105,78 +80,54 @@ public class ImagePreview extends Activity implements View.OnClickListener {
         } else {
             return false;
         }
-
     }
-
     private void CaptureImage() {
         final CharSequence[] options = { "Take Photo", "Choose from Gallery",
                 "Cancel" };
         AlertDialog.Builder builder = new AlertDialog.Builder(ImagePreview.this);
         builder.setTitle("Add Photo");
         builder.setItems(options, new DialogInterface.OnClickListener() {
-
             @Override
             public void onClick(DialogInterface dialog, int item) {
-
                 if (options[item].equals("Take Photo")) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
                     startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
-                }
-                else if (options[item].equals("Choose from Gallery"))
-                {
+                } else if (options[item].equals("Choose from Gallery")) {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent,"Select Picture"), SELECT_PICTURE);
-
-                }
-                else if (options[item].equals("Cancel")) {
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+                } else if (options[item].equals("Cancel")) {
                     dialog.dismiss();
-
                 }
-
             }
-
         });
-
         builder.show();
-
     }
-
     public Uri getOutputMediaFileUri(int type) {
         return Uri.fromFile(getOutputMediaFile(type));
     }
-
     private static File getOutputMediaFile(int type) {
-
         // External sdcard location
         File mediaStorageDir = new File(
                 Environment
                         .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                 IMAGE_DIRECTORY_NAME);
-
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d(IMAGE_DIRECTORY_NAME, "Failed to create: "
-                        + IMAGE_DIRECTORY_NAME);
+                Log.d(IMAGE_DIRECTORY_NAME, "Failed to create: " + IMAGE_DIRECTORY_NAME);
                 return null;
             }
         }
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-                Locale.getDefault()).format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         File mediaFile;
-
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator
-                + "IMG_" + timeStamp + ".jpg");
-
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
         return mediaFile;
     }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -188,17 +139,14 @@ public class ImagePreview extends Activity implements View.OnClickListener {
                         fileAttachment = Uri.parse("file://" + fileUri.getPath());
                         uriList.add("file://" + fileUri.getPath());
                         break;
-
                     case Activity.RESULT_CANCELED:
                         Toast.makeText(getApplicationContext(),
                                 "Cancelled Image Capture", Toast.LENGTH_SHORT)
                                 .show();
                         break;
-
                 }
                 break;
         }
-
         switch (requestCode) {
             case SELECT_PICTURE:
                 switch (resultCode) {
@@ -207,12 +155,14 @@ public class ImagePreview extends Activity implements View.OnClickListener {
                         selectedImagePath = getSelectGalleryPath(selectedImageUri);
                         uriList.add("file://" + selectedImagePath);
                         BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inSampleSize = 8;
+                        options.inJustDecodeBounds = true;
+                        int scaleFactor = Math.min(options.outWidth/getImageView.getWidth(), options.outHeight/getImageView.getHeight());
+                        options.inJustDecodeBounds = false;
+                        options.inSampleSize = scaleFactor;
+                        options.inPurgeable = true;
                         final Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath, options);
                         getImageView.setImageBitmap(bitmap);
-
                         break;
-
                 }
                 break;
         }
@@ -226,29 +176,33 @@ public class ImagePreview extends Activity implements View.OnClickListener {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
-
     private void previewCaptureImage() {
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 8;
+            options.inJustDecodeBounds = true;
+            int targetW = getImageView.getWidth();
+            int targetH = getImageView.getHeight();
+            int photoW = options.outWidth;
+            int photoH = options.outHeight;
+            int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+            options.inJustDecodeBounds = false;
+            options.inSampleSize = scaleFactor;
+            options.inPurgeable = true;
             //setup date
             Date now = new Date();
-            String template = "M/dd/yy      h:mm:ss";
+            String template = "M/dd/yy      h:mm:sst";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(template, Locale.getDefault());
             String td = simpleDateFormat.format(now);
             final Bitmap bitmap = BitmapFactory.decodeFile(fileUri.getPath(),
                     options).copy(Bitmap.Config.ARGB_8888, true);
             //draw text on image
-            BitmapText.drawTextBitmap(bitmap,
-                    td);
+            BitmapText.drawTextBitmap(bitmap, td);
             //save it again
             FileOutputStream output = new FileOutputStream(fileUri.getPath());
             //compression
             bitmap.compress(Bitmap.CompressFormat.PNG, 50, output);
-            output.flush();
-            output.close();
+            output.flush(); output.close();
             getImageView.setImageBitmap(bitmap);
-
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -260,21 +214,21 @@ public class ImagePreview extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.image1:
                 imageId = R.id.image1;
-                getImageView = (ImageView)v;
+                getImageView = (ImageView) v;
                 getImageView.findViewById(imageId);
                 CaptureImage();
                 break;
 
             case R.id.image2:
                 imageId = R.id.image2;
-                getImageView = (ImageView)v;
+                getImageView = (ImageView) v;
                 getImageView.findViewById(imageId);
                 CaptureImage();
                 break;
 
             case R.id.image3:
                 imageId = R.id.image3;
-                getImageView = (ImageView)v;
+                getImageView = (ImageView) v;
                 getImageView.findViewById(imageId);
                 CaptureImage();
                 break;
