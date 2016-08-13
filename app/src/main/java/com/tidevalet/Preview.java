@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tidevalet.helpers.Post;
-import com.tidevalet.helpers.Violation;
+import com.tidevalet.helpers.Properties;
 import com.tidevalet.service.ulservice;
 import com.tidevalet.thread.adapter;
 
@@ -87,16 +87,16 @@ public class Preview extends Activity {
 				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
                         new String[]{"jpittmanpc@gmail.com"});
 				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-                        "New Violation Report:" + "\n" + numberPicker1Value);
+                        "New Properties Report:" + "\n" + numberPicker1Value);
 				emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,
                         arrayUri);
 				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-                        "A new violation report has been submitted"
+                        "A new Violation1 report has been submitted"
                                 + "\n"
-                                + "Violation Type: "
+                                + "Properties Type: "
                                 + numberPicker1Value
                                 + "\n"
-                                + "Address of Violation: "
+                                + "Address of Properties: "
                                 + numberPicker2Value
                                 + "\n"
                                 + "GPS Coordinates: "
@@ -112,21 +112,21 @@ public class Preview extends Activity {
                                 + numberPicker2Value
                                 + "\n"
                                 + "\n"
-                                + "The Violation image was captured at:"
+                                + "The Properties image was captured at:"
                                 + "\n"
                                 + time
                                 + " on "
                                 + date
                                 + "\n"
-                                + "Additional comments about the violation:"
+                                + "Additional comments about the Violation1:"
                                 + "\n" + addDetail);
                 Post post = new Post();
                 post.setIsPosted(0);
                 long pupilId = 41;
+				post.setViolationType("Type " + numberPicker1Value + " address" + numberPicker2Value);
                 post.setLocalImagePath(fileAttachment.getPath());
-                post.setPupilId(pupilId);
+                post.setViolationId(pupilId);
                 post.setTimestamp(Calendar.getInstance().toString());
-                post.setGrade("test");
 
 				try {
                     startSubmit(Uri.parse(fileUrl).toString(), post, context);
@@ -146,7 +146,7 @@ public class Preview extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(Preview.this, MainActivity.class);
+				Intent intent = new Intent(Preview.this, App.class);
 				startActivity(intent);
 			}
 		});
@@ -167,11 +167,8 @@ public class Preview extends Activity {
 
 			shortAddress = address;
 		}
-
-
 		final String[] values1 = { "Not Tied", "Overflowing", "Stinks", "Ripped", "Not There", "Dynamic" };
 		final String[] values2 = { shortAddress, "", "Other", "AptComplex2", "Complex3", "Dynamic List" };
-
 		numberPicker1.setMinValue(0);
 		numberPicker1.setMaxValue(values1.length - 1);
 		numberPicker1.setDisplayedValues(values1);
@@ -221,14 +218,14 @@ public class Preview extends Activity {
 		});
 	}
     private void startSubmit(String image, Post post, Context context) {
-        Violation violation = new Violation();
-        violation.setId(post.getId());
-        violation.setName("Testing");
+        Properties properties = new Properties();
+        properties.setId(post.getId());
+        properties.setName("Testing");
         adapter dbAdapter = new adapter(this);
         dbAdapter.open();
         post = dbAdapter.addPost(post);
         dbAdapter.close();
-        Intent service = new Intent(this, ulservice.class);
+        Intent service = new Intent(this,  ulservice.class);
         service.putExtra("id", post.getId());
         startService(service);
         setResult(RESULT_OK);

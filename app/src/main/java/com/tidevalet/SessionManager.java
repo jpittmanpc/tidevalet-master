@@ -24,9 +24,11 @@ public class SessionManager {
 	static final String FILE_LINK = "fileAttach";
 	static final String DATE = "date";
 	static final String TIME = "time";
+	static final String DEF_LOGGED_IN = "logged_in";
 	private static final String DEF_URL = "url";
 	private static final String DEF_USR = "username";
 	private static final String DEF_PWD = "password";
+	private static final String PROPERTY_SELECTED = "property";
 
 	public SessionManager(Context _context) {
 		super();
@@ -55,7 +57,16 @@ public class SessionManager {
 		user.put(TIME, pref.getString(TIME, null));
 		return user;
 	}
+	public String resetUser() {
+		editor.remove(DEF_USR);
+		editor.remove(DEF_LOGGED_IN);
+		editor.remove(DEF_PWD);
+		editor.commit();
+		System.exit(0);
+		return "bye";
+	}
 	public void setDefUrl(String url) {
+		url = App.getSiteUrl();
 		if (!url.contains("http://")) {
 			url = "http://" + url;
 		}
@@ -73,6 +84,15 @@ public class SessionManager {
 		editor.putString(DEF_PWD, password);
 		editor.commit();
 	}
+	public long propertySelected() {
+		return pref.getLong(PROPERTY_SELECTED, 0);
+	}
+	public void setPropertySelected(long value) {
+		editor.putLong(PROPERTY_SELECTED, value);
+		editor.commit();
+	}
+	public void setLoggedIn(Boolean value) { editor.putBoolean(DEF_LOGGED_IN, value); editor.commit(); }
+	public boolean isLoggedIn() { return pref.getBoolean(DEF_LOGGED_IN, false); }
 	public String getDefUrl() { return pref.getString(DEF_URL, null); }
 	public String getUsername() { return pref.getString(DEF_USR, null); }
 	public String getPassword() { return pref.getString(DEF_PWD, null); }

@@ -38,7 +38,7 @@ public class ImagePreview extends Activity implements View.OnClickListener {
     public static final int MEDIA_TYPE_IMAGE = 1;
     private Uri fileUri;
     Uri fileAttachment;
-    ImageView getImageView;
+    private static ImageView getImageView;
     int imageId;
     private String selectedImagePath;
     ArrayList<String> uriList = new ArrayList<String>();
@@ -179,20 +179,20 @@ public class ImagePreview extends Activity implements View.OnClickListener {
     private void previewCaptureImage() {
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
+            options.inJustDecodeBounds = false;
             int targetW = getImageView.getWidth();
             int targetH = getImageView.getHeight();
             int photoW = options.outWidth;
             int photoH = options.outHeight;
             int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-            options.inJustDecodeBounds = false;
             options.inSampleSize = scaleFactor;
             options.inPurgeable = true;
             //setup date
             Date now = new Date();
-            String template = "M/dd/yy      h:mm:sst";
+            String template = "M/dd/yy      h:mm:ssa";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(template, Locale.getDefault());
             String td = simpleDateFormat.format(now);
+            td = td.replace("AM","a"); td=td.replace("PM","p");
             final Bitmap bitmap = BitmapFactory.decodeFile(fileUri.getPath(),
                     options).copy(Bitmap.Config.ARGB_8888, true);
             //draw text on image
@@ -200,17 +200,19 @@ public class ImagePreview extends Activity implements View.OnClickListener {
             //save it again
             FileOutputStream output = new FileOutputStream(fileUri.getPath());
             //compression
-            bitmap.compress(Bitmap.CompressFormat.PNG, 50, output);
-            output.flush(); output.close();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, output);
+            output.flush();
+            output.close();
+            Log.i("SETTING IMAGE", "setting..." + getImageView.getId());
             getImageView.setImageBitmap(bitmap);
         } catch (Exception e) {
+            e.printStackTrace();
             // TODO: handle exception
         }
     }
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.image1:
                 imageId = R.id.image1;
@@ -236,14 +238,14 @@ public class ImagePreview extends Activity implements View.OnClickListener {
 //            case R.id.image4:
 //                imageId = R.id.image4;
 //                getImageView = (ImageView)v;
-//                getImageView.findViewById(imageId);
+//                getImageView.loginFragment(imageId);
 //                CaptureImage();
 //                break;
 //
 //            case R.id.image5:
 //                imageId = R.id.image5;
 //                getImageView = (ImageView)v;
-//                getImageView.findViewById(imageId);
+//                getImageView.loginFragment(imageId);
 //                CaptureImage();
 //                break;
 

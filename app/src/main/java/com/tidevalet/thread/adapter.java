@@ -8,12 +8,14 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
-import com.tidevalet.helpers.Post;
 import com.tidevalet.helpers.Attributes;
-import com.tidevalet.helpers.Violation;
+import com.tidevalet.helpers.Post;
+import com.tidevalet.helpers.Properties;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class adapter {
 	private SQLiteDatabase sqlDB;
@@ -42,9 +44,9 @@ public class adapter {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			db.execSQL(constants.SQL_PUPIL);
+			db.execSQL(constants.SQL_PROPERTIES);
 			db.execSQL(constants.SQL_POSTS);
-			db.execSQL(constants.SQL_PSERV);
+			db.execSQL(constants.SQL_PROPVIO);
 			db.execSQL(constants.SQL_SERVICES);
 		}
 
@@ -53,47 +55,78 @@ public class adapter {
 		}
 	}
 
-	public long addPupil(String pupilName) {
+	public long addProperty(int propId, String propertyName, String address, String image, String contractors) {
 		ContentValues values = new ContentValues();
-		values.put(constants.PUPIL_NAME, pupilName);
-		return sqlDB.insert(constants.TABLE_PUPIL, null, values);
-	}
+		values.put(constants.COL_KEY_ROW, propId);
+		values.put(constants.PROPERTY_NAME, propertyName);
+		values.put(constants.PROPERTY_ADDRESS, address);
 
-	public ArrayList<Violation> getAllPupils() {
-		ArrayList<Violation> pupils = new ArrayList<Violation>();
-		Cursor cursor = sqlDB.query(constants.TABLE_PUPIL, null, null, null,
-				null, null, null);
-		Violation pupil = null;
-		while (cursor.moveToNext()) {
-			pupil = new Violation();
-			pupil.setId(cursor.getLong(cursor
-					.getColumnIndex(constants.COL_KEY_ROW)));
-			pupil.setName(cursor.getString(cursor
-					.getColumnIndex(constants.PUPIL_NAME)));
-			if(!pupil.getName().equals("")){
-				pupils.add(pupil);
-			}
-			else{
-				trashPupil(pupil.getId());
-			}
+		values.put(constants.PROPERTY_IMG, image);
+		values.put(constants.PROPERTY_CONTRACTOR, contractors);
+		String strFilter = constants.COL_KEY_ROW + "=" + propId;
+		if (getPropertyById(propId) == null) {
+			return sqlDB.insert(constants.TABLE_PROPERTIES, null, values);
 		}
-		cursor.close();
-		return pupils;
+		else {
+			return sqlDB.update(constants.TABLE_PROPERTIES, values, strFilter, null);
+		}
 	}
 
-	private void trashPupil(long id){
-		deletePupil(id);
+	public Map<String, Object> getAllProperties() throws NullPointerException, IllegalStateException {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		try {
+			Log.d("ADAPTER", "Get ALl Properties");
+
+			Cursor cursor = sqlDB.query(constants.TABLE_PROPERTIES, null, null, null,
+					null, null, null, null);
+			Properties property = null;
+
+			while (cursor.moveToNext()) {
+				property = new Properties();
+				property.setId(cursor.getInt(cursor
+						.getColumnIndex(constants.COL_KEY_ROW)));
+				property.setName(cursor.getString(cursor
+						.getColumnIndex(constants.PROPERTY_NAME)));
+				property.setAddress(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_ADDRESS)));
+				property.setImage(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_IMG)));
+				if (!property.getName().equals("")) {
+					String name = cursor.getString(cursor
+							.getColumnIndex(constants.PROPERTY_NAME));
+					Object prop_id = property.getId();
+					Object image = property.getImage();
+					Object address = property.getAddress();
+					HashMap<String, Object> objectHashMap = new HashMap<String, Object>();
+					objectHashMap.put(constants.PROPERTY_ID, prop_id);
+					objectHashMap.put(constants.PROPERTY_IMG, image);
+					objectHashMap.put(constants.PROPERTY_ADDRESS, address);
+					map.put(name, objectHashMap);
+				} else {
+					trashProperty(property.getId());
+				}
+			}
+			cursor.close();
+		}
+		catch (IllegalStateException i) {
+
+			i.printStackTrace();
+		}
+		return map;
+	}
+
+
+	private void trashProperty(long id){
+		deleteProperty(id);
 	}
 	public Post addPost(Post post) {
 		ContentValues values = new ContentValues();
-		values.put(constants.POST_PUPIL_ID, post.getPupilId());
+		values.put(constants.POST_VIOLATION_ID, post.getViolationId());
 		values.put(constants.POST_IS_POSTED, post.getIsPosted());
 		values
 				.put(constants.POST_LOCAL_IMAGE_PATH, post
 						.getLocalImagePath());
 		values.put(constants.POST_RETURNED_STRING, post.getReturnedString());
 		values.put(constants.POST_TIMESTAMP, post.getTimestamp());
-		values.put(constants.POST_GRADE, post.getGrade());
+		values.put(constants.POST_VIOLATION_TYPE, post.getViolationType());
 		post.setId(sqlDB.insert(constants.TABLE_POSTS, null, values));
 		return post;
 	}
@@ -103,94 +136,103 @@ public class adapter {
 		Cursor cursor = sqlDB.query(constants.TABLE_POSTS, null, constants.COL_KEY_ROW+"="+postId, null, null, null, null);
 		while (cursor.moveToNext()) {
 			post.setId(postId);
-			post.setPupilId(cursor.getLong(cursor.getColumnIndex(constants.POST_PUPIL_ID)));
+			post.setViolationId(cursor.getLong(cursor.getColumnIndex(constants.POST_VIOLATION_ID)));
 			post.setIsPosted(cursor.getInt(cursor.getColumnIndex(constants.POST_IS_POSTED)));
 			post.setLocalImagePath(cursor.getString(cursor.getColumnIndex(constants.POST_LOCAL_IMAGE_PATH)));
 			post.setReturnedString(cursor.getString(cursor.getColumnIndex(constants.POST_RETURNED_STRING)));
 			post.setTimestamp(cursor.getString(cursor.getColumnIndex(constants.POST_TIMESTAMP)));
-			post.setGrade(cursor.getString(cursor.getColumnIndex(constants.POST_GRADE)));
+			post.setViolationType(cursor.getString(cursor.getColumnIndex(constants.POST_VIOLATION_TYPE)));
 		}
 		cursor.close();
 		return post;
 	}
-
-	public Violation getPupilById(long pupilId) {
-		Violation violation = null;
-		Cursor cursor = sqlDB.query(constants.TABLE_PUPIL, null,
-				constants.COL_KEY_ROW + "=" + pupilId, null, null, null,
+    public Integer getPropertyByName(String propertyName) {
+		Integer propId = null;
+		Cursor cursor = sqlDB.query(constants.TABLE_PROPERTIES, null, constants.PROPERTY_NAME + "=" + propertyName, null, null, null, null);
+		while (cursor.moveToNext()) {
+			propId = cursor.getInt(cursor.getColumnIndex(constants.PROPERTY_ID));
+		}
+		return propId;
+	}
+	public Properties getPropertyById(long propertyId) {
+		Properties properties = null;
+		Cursor cursor = sqlDB.query(constants.TABLE_PROPERTIES, null,
+				constants.COL_KEY_ROW + "=" + propertyId, null, null, null,
 				null);
 		while (cursor.moveToNext()) {
-			violation = new Violation();
-			violation.setId(pupilId);
-			violation.setName(cursor.getString(cursor
-					.getColumnIndex(constants.PUPIL_NAME)));
+			properties = new Properties();
+			properties.setId(propertyId);
+			properties.setName(cursor.getString(cursor
+					.getColumnIndex(constants.PROPERTY_NAME)));
+			properties.setAddress(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_ADDRESS)));
+			properties.setImage(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_IMG)));
 		}
 		cursor.close();
-		return violation;
+		return properties;
 	}
 
-	public void updatePupil(long pupilId, String name) {
+	public void updateProperty(long pupilId, String name) {
 		ContentValues values = new ContentValues();
-		values.put(constants.PUPIL_NAME, name);
-		sqlDB.update(constants.TABLE_PUPIL, values, constants.COL_KEY_ROW
+		values.put(constants.PROPERTY_NAME, name);
+		sqlDB.update(constants.TABLE_PROPERTIES, values, constants.COL_KEY_ROW
 				+ "=" + pupilId, null);
 	}
 
-	public void deletePupil(long pupilId) {
-		sqlDB.delete(constants.TABLE_PUPIL, constants.COL_KEY_ROW + "="
+	public void deleteProperty(long pupilId) {
+		sqlDB.delete(constants.TABLE_PROPERTIES, constants.COL_KEY_ROW + "="
 				+ pupilId, null);
 	}
 
-	public void updatePupilService(Attributes service) {
+	/*public void updatePupilService(Attributes service) {
 		ContentValues values = new ContentValues();
-		values.put(constants.PSERV_PUPIL_ID, service.getPupilId());
-		values.put(constants.PSERV_SERV_ID, service.getServiceId());
+		values.put(constants.PROP_VIOLATION_ID, service.getPropertyId());
+		values.put(constants.PROPERTY_ID, service.getServiceId());
 		values.put(constants.PSERV_ENABLED, service.getIsEnabled());
 		values.put(constants.PSERV_NICK, service.getNickname());
 		values.put(constants.PSERV_URL, service.getUrl());
 		values.put(constants.PSERV_USERNAME, service.getUsername());
 		values.put(constants.PSERV_PASSWORD, service.getPassword());
 		values.put(constants.PSERV_USEDEFAULT, service.getUseDefault());
-		sqlDB.update(constants.TABLE_PUPIL_SERVICES, values,
+		sqlDB.update(constants.TABLE_VIOLATIONS, values,
 				constants.COL_KEY_ROW + "=" + service.getId(),
 				null);
 	}
 
 	public Attributes addPupilService(Attributes service) {
 		ContentValues values = new ContentValues();
-		values.put(constants.PSERV_PUPIL_ID, service.getPupilId());
-		values.put(constants.PSERV_SERV_ID, service.getServiceId());
+		values.put(constants.PROP_VIOLATION_ID, service.getPropertyId());
+		values.put(constants.PROPERTY_ID, service.getServiceId());
 		values.put(constants.PSERV_ENABLED, service.getIsEnabled());
 		values.put(constants.PSERV_NICK, service.getNickname());
 		values.put(constants.PSERV_URL, service.getUrl());
 		values.put(constants.PSERV_USERNAME, service.getUsername());
 		values.put(constants.PSERV_PASSWORD, service.getPassword());
 		values.put(constants.PSERV_USEDEFAULT, service.getUseDefault());
-		service.setId(sqlDB.insert(constants.TABLE_PUPIL_SERVICES, null,
+		service.setId(sqlDB.insert(constants.TABLE_VIOLATIONS, null,
 				values));
 		return service;
 	}
 
 	public void deletePupilService(long id) {
-		sqlDB.delete(constants.TABLE_PUPIL_SERVICES,
+		sqlDB.delete(constants.TABLE_VIOLATIONS,
 				constants.COL_KEY_ROW + "=" + id, null);
 	}
 
 	public void deletePupilServiceByPupilId(long pupilId) {
-		sqlDB.delete(constants.TABLE_PUPIL_SERVICES,
-				constants.PSERV_PUPIL_ID + "=" + pupilId, null);
+		sqlDB.delete(constants.TABLE_VIOLATIONS,
+				constants.PROP_VIOLATION_ID + "=" + pupilId, null);
 	}
 
 	public Attributes getPupilServicesById(long id) {
 		Attributes service = new Attributes();
-		Cursor cursor = sqlDB.query(constants.TABLE_PUPIL_SERVICES, null,
+		Cursor cursor = sqlDB.query(constants.TABLE_VIOLATIONS, null,
 				constants.COL_KEY_ROW + "=" + id, null, null, null, null);
 		if (cursor.moveToNext()) {
 			service.setId(id);
-			service.setPupilId(cursor.getLong(cursor
-					.getColumnIndex(constants.PSERV_PUPIL_ID)));
+			service.setPropertyId(cursor.getLong(cursor
+					.getColumnIndex(constants.PROP_VIOLATION_ID)));
 			service.setServiceId(cursor.getLong(cursor
-					.getColumnIndex(constants.PSERV_SERV_ID)));
+					.getColumnIndex(constants.PROPERTY_ID)));
 			service.setIsEnabled(cursor.getInt(cursor
 					.getColumnIndex(constants.PSERV_ENABLED)));
 			service.setNickname(cursor.getString(cursor
@@ -206,34 +248,22 @@ public class adapter {
 		}
 		cursor.close();
 		return service;
-	}
+	}*/
 
-	public Attributes getPupilServiceByPupilId(long pupilId, int serviceId) {
+	public Attributes getViolationByPropertyId(long pupilId, int serviceId) {
 		Attributes service = new Attributes();
-		Cursor cursor = sqlDB.query(constants.TABLE_PUPIL_SERVICES, null,
-				constants.PSERV_PUPIL_ID + "=" + pupilId + " AND "
-						+ constants.PSERV_SERV_ID + "=" + serviceId, null,
+		Cursor cursor = sqlDB.query(constants.TABLE_VIOLATIONS, null,
+				constants.PROP_VIOLATION_ID + "=" + pupilId + " AND "
+						+ constants.PROPERTY_ID + "=" + serviceId, null,
 				null, null, null);
 		if (cursor.moveToNext()) {
 			service.setId(cursor.getLong(cursor
 					.getColumnIndex(constants.COL_KEY_ROW)));
-			service.setPupilId(cursor.getLong(cursor
-					.getColumnIndex(constants.PSERV_PUPIL_ID)));
-			service.setServiceId(cursor.getLong(cursor
-					.getColumnIndex(constants.PSERV_SERV_ID)));
-			service.setIsEnabled(cursor.getInt(cursor
-					.getColumnIndex(constants.PSERV_ENABLED)));
-			service.setNickname(cursor.getString(cursor
-					.getColumnIndex(constants.PSERV_NICK)));
-			service.setUrl(cursor.getString(cursor
-					.getColumnIndex(constants.PSERV_URL)));
-			service.setUsername(cursor.getString(cursor
-					.getColumnIndex(constants.PSERV_USERNAME)));
-			service.setPassword(cursor.getString(cursor
-					.getColumnIndex(constants.PSERV_PASSWORD)));
-			service.setUseDefault(cursor.getInt(cursor
-					.getColumnIndex(constants.PSERV_USEDEFAULT)));
-		}
+			service.setPropertyId(cursor.getLong(cursor
+					.getColumnIndex(constants.PROP_VIOLATION_ID)));
+			service.setViolationId(cursor.getLong(cursor
+					.getColumnIndex(constants.PROPERTY_ID)));
+					}
 		cursor.close();
 		return service;
 	}
@@ -243,7 +273,7 @@ public class adapter {
 		values.put(constants.POST_IS_POSTED, post.getIsPosted());
 		values.put(constants.POST_RETURNED_STRING, post.getReturnedString());
 		values.put(constants.POST_TIMESTAMP, post.getTimestamp());
-		values.put(constants.POST_GRADE, post.getGrade());
+		values.put(constants.POST_VIOLATION_TYPE, post.getViolationType());
 		sqlDB.update(constants.TABLE_POSTS, values, constants.COL_KEY_ROW
 				+ "=" + post.getId(), null);
 	}

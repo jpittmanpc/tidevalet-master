@@ -3,9 +3,22 @@ package com.tidevalet.helpers;
 /**
  * Created by Justin on 4/22/16.
  */
-public class Violation {
+public class Properties {
     private long id;
     private String name;
+    private String term_id, image, address;
+    public void setImage(String image) {
+        this.image = image;
+    }
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+      this.address = address;
+    }
+    public String getImage() {
+        return image;
+    }
     public long getId() {
         return id;
     }

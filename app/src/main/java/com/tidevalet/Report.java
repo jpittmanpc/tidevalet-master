@@ -22,7 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tidevalet.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -76,7 +75,7 @@ public class Report extends AppCompatActivity implements
         LocationListener,
         ResultCallback<LocationSettingsResult> {
 
-    protected static final String TAG = "MainActivity";
+    protected static final String TAG = "App";
 
     /**
      * Constant used in the location settings dialog.
@@ -171,42 +170,32 @@ public class Report extends AppCompatActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report);
-
         // Locate the UI widgets.
         completeReportTxt = (TextView) findViewById(R.id.completeReportTxt);
         captureImgTxt = (TextView) findViewById(R.id.captureImageTxt);
         imagePreview = (ImageView) findViewById(R.id.imagePreview);
         mapLayout = (RelativeLayout) findViewById(R.id.map_layout);
         sessionManager = new SessionManager(getApplicationContext());
-
         // Set labels.
         mLatitudeLabel = getResources().getString(R.string.latitude_label);
         mLongitudeLabel = getResources().getString(R.string.longitude_label);
         mLastUpdateTimeLabel = getResources().getString(R.string.last_update_time_label);
-
         completeReportTxt.setEnabled(false);
-
         mRequestingLocationUpdates = false;
         mLastUpdateTime = "";
-
         // Update values using data stored in the Bundle.
         updateValuesFromBundle(savedInstanceState);
-
         // Kick off the process of building the GoogleApiClient, LocationRequest, and
         // LocationSettingsRequest objects.
         buildGoogleApiClient();
         createLocationRequest();
         buildLocationSettingsRequest();
-
         checkLocationSettings();
-
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(
                 R.id.google_map);
-        googleMap = mapFragment.getMap();
+        //googleMap = mapFragment.getMap();
         mp.draggable(true);
-
         geocoder = new Geocoder(this, Locale.ENGLISH);
-
         completeReportTxt.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -264,7 +253,6 @@ public class Report extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                captureImage();
                 Calendar c = Calendar.getInstance();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
                 SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("HH:mm:ss a");
@@ -278,7 +266,6 @@ public class Report extends AppCompatActivity implements
                         for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
                             addressesReturned.append(returnedAddress.getAddressLine(i)).append("\n");
                         }
-
                         sessionManager.ShareValues(Double.toString(getLatitude), Double.toString(getLongitude), addressesReturned.toString(), currentDateString, currentTimeString);
                         Intent intent = new Intent(Report.this, ImagePreview.class);
                         startActivity(intent);
@@ -311,7 +298,6 @@ public class Report extends AppCompatActivity implements
      *****/
 
     public boolean isDeviceSupportCamera() {
-
         if (getApplicationContext().getPackageManager().hasSystemFeature(
                 PackageManager.FEATURE_CAMERA)) {
             return true;
@@ -325,7 +311,6 @@ public class Report extends AppCompatActivity implements
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
         startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
 
     }
@@ -545,14 +530,12 @@ public class Report extends AppCompatActivity implements
     private void previewCaptureImage() {
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
-
             options.inSampleSize = 8;
-
             final Bitmap bitmap = BitmapFactory.decodeFile(fileUri.getPath(),
                     options);
             imagePreview.setImageBitmap(bitmap);
-
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             // TODO: handle exception
         }
     }
@@ -664,7 +647,6 @@ public class Report extends AppCompatActivity implements
             startLocationUpdates();
         }
     }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -719,7 +701,6 @@ public class Report extends AppCompatActivity implements
             updateLocationUI();
         }
     }
-
     /**
      * Callback that fires when the location changes.
      */
@@ -728,11 +709,9 @@ public class Report extends AppCompatActivity implements
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         googleMap.clear();
-
         mp.position(new LatLng(location.getLatitude(), location.getLongitude()));
         mp.title("my position");
         googleMap.addMarker(mp);
-
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
                 location.getLatitude(), location.getLongitude()), 12));
         getLatitude = location.getLatitude();
@@ -742,7 +721,6 @@ public class Report extends AppCompatActivity implements
 //                Toast.LENGTH_SHORT).show();
 
         googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-
             @Override
             public void onMarkerDragStart(Marker marker) {
 
@@ -761,7 +739,6 @@ public class Report extends AppCompatActivity implements
             }
         });
     }
-
     @Override
     public void onConnectionSuspended(int cause) {
         Log.i(TAG, "Connection suspended");
@@ -773,7 +750,6 @@ public class Report extends AppCompatActivity implements
         // onConnectionFailed.
         Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
-
     /**
      * Stores activity data in the Bundle.
      */

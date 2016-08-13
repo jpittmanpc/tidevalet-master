@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.tidevalet.MainActivity" >
+    tools:context="com.tidevalet.App" >
 
     <TableLayout
         android:id="@+id/tableLayout"
@@ -23,8 +23,8 @@
 
             <ImageView
                 android:id="@+id/image1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:scaleType="fitXY"
@@ -34,8 +34,8 @@
 
             <ImageView
                 android:id="@+id/image2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:scaleType="fitXY"
@@ -44,8 +44,8 @@
 
             <ImageView
                 android:id="@+id/image3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
                 android:layout_weight="1"
                 android:scaleType="fitXY"
                 android:background="@drawable/image_border"

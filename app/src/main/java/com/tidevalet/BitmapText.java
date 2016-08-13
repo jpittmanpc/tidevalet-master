@@ -35,7 +35,7 @@ public class BitmapText {
         mStrokePaint.setStrokeJoin(Paint.Join.MITER);
         mStrokePaint.setStrokeMiter(10f);
         mStrokePaint.setStrokeWidth(10f);*/
-           canvas.save();
+            canvas.save();
             StaticLayout strokeLayout = new StaticLayout(msg, mStrokePaint, bg.getWidth() * 3 / 5,
                     Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
             canvas.translate(bg.getWidth() / 5, bg.getHeight() - strokeLayout.getHeight() - 20);

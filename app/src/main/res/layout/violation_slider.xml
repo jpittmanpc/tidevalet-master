@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:theme="@style/TideValet"
+xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="wrap_content"
+    tools:context="com.tidevalet.ViolationActivity"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:layout_height="match_parent">
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+       android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/linearLayout" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:layout_height="48sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout">
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableLeft="@drawable/stepper_left"
+            android:drawableStart="@drawable/stepper_left"
+            android:paddingRight="10sp"
+            android:paddingEnd="10sp"
+            android:paddingLeft="0sp"
+            android:paddingStart="0sp"
+            android:text="Back"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="15sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:id="@+id/dots"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginRight="3dp" />
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableRight="@drawable/stepper_right"
+            android:drawableEnd="@drawable/stepper_right"
+            android:paddingLeft="5sp"
+            android:paddingStart="10sp"
+            android:paddingRight="0sp"
+            android:paddingEnd="0sp"
+            android:text="Next"
+            android:textColor="@color/TideBlue"
+            android:textSize="15sp"
+            android:layout_alignTop="@+id/back"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

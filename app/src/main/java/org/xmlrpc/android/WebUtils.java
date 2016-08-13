@@ -4,29 +4,56 @@ package org.xmlrpc.android;
 import android.content.Context;
 import android.util.Log;
 
+import com.tidevalet.App;
 import com.tidevalet.SessionManager;
 import com.tidevalet.helpers.Attributes;
-import com.tidevalet.helpers.Violation;
+import com.tidevalet.helpers.Properties;
+import com.tidevalet.thread.adapter;
+import com.tidevalet.thread.constants;
 
 import org.apache.http.client.ClientProtocolException;
+import org.json.JSONArray;
 import org.wordpress.android.MediaFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 public class WebUtils {
-    public static String uploadPostToWordpress(Violation violation, String image, String grade,
+    public static String uploadPostToWordpress(Properties properties, String image, String violation_type,
             Attributes service, Context context) throws XMLRPCException {
         SessionManager utils = new SessionManager(context);
         service.setUrl(utils.getDefUrl());
         String imageURL = uploadImage(image, service, context);
         XMLRPCClient client = new XMLRPCClient(service.getUrl() + "xmlrpc.php");
+        // Setup Post
         HashMap<String, Object> content = new HashMap<String, Object>();
-        content.put("post_type", "post");
-        content.put("title", "Test");
-        content.put("description", prepareBodyOfPost(grade, imageURL));
+        content.put("post_type", "violations");
+        content.put("title", "properties");
+        content.put("post_content", prepareBodyOfPost(violation_type, imageURL));
+        content.put("post_status", "publish");
+        // Term Fields
+        Hashtable tax = new Hashtable();
+        List<String> property = new ArrayList<String>();
+        property.add(String.valueOf(properties.getId()));
+        tax.put("properties", property);
+        content.put("terms", tax);
+        //Custom Fields
+        List<Hashtable> customFieldsList = new ArrayList<Hashtable>();
+        Hashtable customField = new Hashtable();
+        customField.put("key", "image");
+        customField.put("value", imageURL);
+        customFieldsList.add(customField);
+        customField = new Hashtable();
+        customField.put("key", "violation_type");
+        customField.put("value", violation_type);
+        customFieldsList.add(customField);
+        content.put("custom_fields", customFieldsList);
         String username = utils.getUsername();
         String password = utils.getPassword();
         Object[] params = {
@@ -34,26 +61,127 @@ public class WebUtils {
         };
         Object result = null;
         try {
-            result = client.call("metaWeblog.newPost", params);
+            Log.d("WebUtil_class", "params: " + params);
+            result = client.call("wp.newPost", params);
+            Log.d("WebUtil_class", "result: " + result.toString());
         } catch (XMLRPCException e) {
             e.printStackTrace();
         }
         return getPostUrl(result.toString(), service.getUrl());
     }
-    public Object callWp(String method, Context context)
+    public static String authWp(String username, String password,Context context) throws XMLRPCException {
+        SessionManager utils = new SessionManager(context);
+        XMLRPCClient client = new XMLRPCClient(utils.getDefUrl() + "xmlrpc.php");
+        Object result = null;
+        Object[] params = { 1, username, password, "", true };
+        try {
+            Log.d("WebUtils", "params" + params);
+            client.call("android.auth", params);
+            Log.d("Auth", "results: " + result.toString());
+        }
+        catch (XMLRPCException e) {
+            result = "error";
+            e.printStackTrace();
+        }
+        return getResults(result.toString());
+    }
+    public static String callWp(String method, Context context)
         throws XMLRPCException, UnsupportedEncodingException, ClientProtocolException, IOException {
         SessionManager utils = new SessionManager(context);
         String sXmlRpcMethod = method;
+        String result = null;
         XMLRPCClient client = new XMLRPCClient(utils.getDefUrl() + "xmlrpc.php");
-        HashMap<String, Object> m = new HashMap<String, Object>();
-        m.put("test","test");
+        HashMap<String, Object> theCall = new HashMap<String, Object>();
+        Hashtable filter = new Hashtable();
+        filter.put("hide_empty", false);
+        theCall.put("filter", filter);
+        String taxonomy = "properties";
         Object[] params = {
-                1, utils.getUsername(), utils.getPassword(), m
+                1, utils.getUsername(), utils.getPassword(), taxonomy, theCall
         };
-        Object response = client.call(method, params);
-        Log.i("SENT", method + "");
-        return response;
+        Object[] obj = (Object[]) client.call(method, params);
+        adapter dbAdapter = new adapter(App.getInstance());
+        dbAdapter.open();
+        Integer propId = 0;
+        String name = "", address = "", image = "";
+        List contractors = new ArrayList();
+        for (int i=0; i<obj.length;i++) {
+            Map<String, Object> each = (HashMap<String, Object>) obj[i];
+            name = (String) each.get("name");
+            address = (String) each.get("address");
+            propId = Integer.valueOf(String.valueOf(each.get("term_id")));
+            for (Map.Entry<String, Object> entry : each.entrySet()) {
+                if (entry.getValue() instanceof String) {
+                    if (entry.getKey() == constants.PROPERTY_NAME) { name = (String) entry.getValue(); }
 
+                    Log.d("STRING", entry.getKey() + " val:" + entry.getValue().toString());
+                }
+                else if (entry.getValue() instanceof Object) {
+                    String t = entry.getValue().getClass().getName();
+                    Log.d("TAG", "Class for " + entry.getKey() + " is: " + t);
+                    if (t == "java.lang.Boolean") { Log.d("TAG", "Boolean: " + entry.getValue() + " for " + entry.getKey()); }
+                    else if (t == "java.lang.Integer") { Log.d("TAG", "Int: " + entry.getValue() + " for " + entry.getKey()); }
+                    else if (t == "java.util.HashMap") {
+                        Map<String, String> imageMap = (HashMap<String, String>) entry.getValue();
+                        image = (String) imageMap.get("image");
+                        Log.d("HASHMAP", entry.getValue().toString() + " for " + entry.getKey());
+                    }
+                    else {
+                        Object[] breakdown = (Object[]) entry.getValue();
+                        for (int j = 0; j < breakdown.length; j++) {
+                            Log.d("BREAKDOWN", breakdown[j].toString());
+                            // http://stackoverflow.com/questions/17808159/saving-arraylistmapstring-string-to-a-sqlite-database
+                            if (entry.getKey() == "contractor") {
+                                contractors.add(entry.getValue());
+                            }
+                            //Map<String, Object> wtf = (HashMap<String, Object>) breakdown[i];
+                        /*for (Map.Entry<String, Object> entries : wtf.entrySet()) {
+                            if (entries.getValue() instanceof String) {
+                                Log.d("ENTRIES", entries.getKey().toString() + " <key val> " + entries.getValue().toString());
+                            }
+                            else if (entries.getValue() instanceof Object) {
+                                Object[] fuck = (Object[]) entries.getValue();
+                                Log.d("FUCK", fuck.toString());
+                            }
+                        }*/
+                        }
+                    }
+                                    }
+                else if (entry.getValue() instanceof Map) {
+                    Log.d("MAP", "Fuck if i know");
+                }
+            }
+            String contractorList = String.valueOf(new JSONArray(contractors));
+            dbAdapter.addProperty(propId, name, address, image, contractorList);
+        }
+        dbAdapter.close();
+        /*for (int i=0; i<obj.length;i++) {
+
+            Class<? extends Object> c = obj[i].getClass();
+            Log.d("CLASS", c.toString());
+            /*if (c == String.class) {
+                String what = obj[i].toString();
+                Log.d("TAGwhat", what);
+            }
+            if (c == Array.class) {
+
+            }
+            HashMap<String, Object[]> test = (HashMap<String, Object[]>) obj[i];
+
+        }
+        for (Object v : obj) {
+            Log.d("TAG2", v.toString());
+        }*/
+
+        //String term_id = contentHash.get("term_id").toString();
+        //String name = contentHash.get("name").toString();
+        //Log.d("WebUtils", "Term ID: " + term_id + " Name:" + name);
+        return result;
+    }
+    private static void ObjToString(Object[] key) {
+        List<Object> list = new ArrayList<Object>();
+        String TAG = "TAG";
+        Log.d(TAG, list.get(0).toString() + " " + list.get(1).toString());
     }
     private static String uploadImage(String image, Attributes service, Context context)
             throws XMLRPCException {
@@ -90,12 +218,14 @@ public class WebUtils {
         resultUrl = contentHash.get("url").toString();
         return resultUrl;
     }
-
-    private static String prepareBodyOfPost(String grade, String imageURL) {
+    private static String wpGetProps() {
+     return null;
+    }
+    private static String prepareBodyOfPost(String violation_type, String imageURL) {
         StringBuffer body = new StringBuffer();
         body.append("<img style=\"display:block;margin-right:auto;margin-left:auto;\" src=\""
                 + imageURL + "\" alt=\"image\" />");
-        body.append("\nTest : " + grade);
+        body.append("\n" + violation_type);
         System.out.println(body.toString());
         String formattedString = body.toString();
         formattedString = formattedString.replace("/\n\n/g", "</p><p>");
@@ -145,5 +275,8 @@ public class WebUtils {
     }*/
     public static String getPostUrl(String postID, String url) {
         return url + "?p=" + postID;
+    }
+    public static String getResults(String params) {
+        return params;
     }
 }

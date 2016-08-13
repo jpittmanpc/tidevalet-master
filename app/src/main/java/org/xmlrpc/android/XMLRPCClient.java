@@ -53,55 +53,54 @@ public class XMLRPCClient {
 	public XMLRPCClient(URI uri) {
 		postMethod = new HttpPost(uri);
 		postMethod.addHeader("Content-Type", "text/xml");
-		
+
 		postMethod.addHeader("charset", "UTF-8");
-		postMethod.addHeader("User-Agent", "android");
-		
+		postMethod.addHeader("User-Agent", "wp-android");
 		httpParams = postMethod.getParams();
 		HttpProtocolParams.setUseExpectContinue(httpParams, false);
-		
+
 		//username & password not needed
 		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("", "");
-		
+
 		//this gets connections working over https
 		if (uri.getScheme() != null){
-			if(uri.getScheme().equals("https")) { 
+			if(uri.getScheme().equals("https")) {
 				if(uri.getPort() == -1)
 					try {
 						client = new ConnectionClient(creds, 443);
 					} catch (KeyManagementException e) {
-						client = new ConnectionClient(creds); 
+						client = new ConnectionClient(creds);
 					} catch (NoSuchAlgorithmException e) {
-						client = new ConnectionClient(creds); 
+						client = new ConnectionClient(creds);
 					} catch (KeyStoreException e) {
-						client = new ConnectionClient(creds); 
+						client = new ConnectionClient(creds);
 					} catch (UnrecoverableKeyException e) {
-						client = new ConnectionClient(creds); 
+						client = new ConnectionClient(creds);
 					}
 					else
 						try {
 							client = new ConnectionClient(creds, uri.getPort());
 						} catch (KeyManagementException e) {
-							client = new ConnectionClient(creds); 
+							client = new ConnectionClient(creds);
 						} catch (NoSuchAlgorithmException e) {
-							client = new ConnectionClient(creds); 
+							client = new ConnectionClient(creds);
 						} catch (KeyStoreException e) {
-							client = new ConnectionClient(creds); 
+							client = new ConnectionClient(creds);
 						} catch (UnrecoverableKeyException e) {
-							client = new ConnectionClient(creds); 
-						} 
-			} 
+							client = new ConnectionClient(creds);
+						}
+			}
 			else {
-				client = new ConnectionClient(creds); 
+				client = new ConnectionClient(creds);
 			}
 		}
 		else{
 			client = new ConnectionClient(creds);
 		}
-		
+
 		serializer = Xml.newSerializer();
 	}
-	
+
 	/**
 	 * Convenience constructor. Creates new instance based on server String address
 	 * @param XMLRPC server address
@@ -109,7 +108,7 @@ public class XMLRPCClient {
 	public XMLRPCClient(String url) {
 		this(URI.create(url));
 	}
-	
+
 	/**
 	 * Convenience XMLRPCClient constructor. Creates new instance based on server URL
 	 * @param XMLRPC server URL
@@ -122,7 +121,7 @@ public class XMLRPCClient {
 	 * Call method with optional parameters. This is general method.
 	 * If you want to call your method with 0-8 parameters, you can use more
 	 * convenience call methods
-	 * 
+	 *
 	 * @param method name of method to call
 	 * @param params parameters to pass to method (may be null if method has no parameters)
 	 * @return deserialized method return value
@@ -131,10 +130,10 @@ public class XMLRPCClient {
 	public Object call(String method, Object[] params) throws XMLRPCException {
 		return callXMLRPC(method, params);
 	}
-	
+
 	/**
 	 * Convenience method call with no parameters
-	 * 
+	 *
 	 * @param method name of method to call
 	 * @return deserialized method return value
 	 * @throws XMLRPCException
@@ -142,10 +141,10 @@ public class XMLRPCClient {
 	public Object call(String method) throws XMLRPCException {
 		return callXMLRPC(method, null);
 	}
-	
+
 	/**
 	 * Convenience method call with one parameter
-	 * 
+	 *
 	 * @param method name of method to call
 	 * @param p0 method's parameter
 	 * @return deserialized method return value
@@ -157,10 +156,10 @@ public class XMLRPCClient {
 		};
 		return callXMLRPC(method, params);
 	}
-	
+
 	/**
 	 * Convenience method call with two parameters
-	 * 
+	 *
 	 * @param method name of method to call
 	 * @param p0 method's 1st parameter
 	 * @param p1 method's 2nd parameter
@@ -173,10 +172,10 @@ public class XMLRPCClient {
 		};
 		return callXMLRPC(method, params);
 	}
-	
+
 	/**
 	 * Convenience method call with three parameters
-	 * 
+	 *
 	 * @param method name of method to call
 	 * @param p0 method's 1st parameter
 	 * @param p1 method's 2nd parameter
@@ -193,7 +192,7 @@ public class XMLRPCClient {
 
 	/**
 	 * Convenience method call with four parameters
-	 * 
+	 *
 	 * @param method name of method to call
 	 * @param p0 method's 1st parameter
 	 * @param p1 method's 2nd parameter
@@ -211,7 +210,7 @@ public class XMLRPCClient {
 
 	/**
 	 * Convenience method call with five parameters
-	 * 
+	 *
 	 * @param method name of method to call
 	 * @param p0 method's 1st parameter
 	 * @param p1 method's 2nd parameter
@@ -230,7 +229,7 @@ public class XMLRPCClient {
 
 	/**
 	 * Convenience method call with six parameters
-	 * 
+	 *
 	 * @param method name of method to call
 	 * @param p0 method's 1st parameter
 	 * @param p1 method's 2nd parameter
@@ -250,7 +249,7 @@ public class XMLRPCClient {
 
 	/**
 	 * Convenience method call with seven parameters
-	 * 
+	 *
 	 * @param method name of method to call
 	 * @param p0 method's 1st parameter
 	 * @param p1 method's 2nd parameter
@@ -271,7 +270,7 @@ public class XMLRPCClient {
 
 	/**
 	 * Convenience method call with eight parameters
-	 * 
+	 *
 	 * @param method name of method to call
 	 * @param p0 method's 1st parameter
 	 * @param p1 method's 2nd parameter
@@ -293,7 +292,7 @@ public class XMLRPCClient {
 
 	/**
 	 * Call method with optional parameters
-	 * 
+	 *
 	 * @param method name of method to call
 	 * @param params parameters to pass to method (may be null if method has no parameters)
 	 * @return deserialized method return value
@@ -306,7 +305,7 @@ public class XMLRPCClient {
 			File tempFile = null;
 			if (method.equals("wp.uploadFile")){
 				String tempFilePath = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".xml";
-				
+
 				File directory = new File(tempFilePath).getParentFile();
 	            if (!directory.exists() && !directory.mkdirs()) {
 	            	throw new XMLRPCException("Path to file could not be created.");
@@ -315,7 +314,7 @@ public class XMLRPCClient {
 				tempFile = new File(tempFilePath);
 				FileWriter fileWriter = new FileWriter(tempFile);
 				serializer.setOutput(fileWriter);
-				
+
 				serializer.startDocument(null, null);
 				serializer.startTag(null, TAG_METHOD_CALL);
 				// set method name
@@ -332,21 +331,21 @@ public class XMLRPCClient {
 				}
 				serializer.endTag(null, TAG_METHOD_CALL);
 				serializer.endDocument();
-				
+
 				fileWriter.flush();
 				fileWriter.close();
-				FileEntity fEntity = new FileEntity(tempFile,"text/xml; charset=\"UTF-8\""); 
+				FileEntity fEntity = new FileEntity(tempFile,"text/xml; charset=\"UTF-8\"");
 	            fEntity.setContentType("text/xml");
 	            //fEntity.setChunked(true);
 //				long fileSize = tempFile.length();
 	            postMethod.setEntity(fEntity);
-	            
-	            
+
+
 			}
 			else{
 				StringWriter bodyWriter = new StringWriter();
 				serializer.setOutput(bodyWriter);
-				
+
 				serializer.startDocument(null, null);
 				serializer.startTag(null, TAG_METHOD_CALL);
 				// set method name
@@ -363,7 +362,7 @@ public class XMLRPCClient {
 				}
 				serializer.endTag(null, TAG_METHOD_CALL);
 				serializer.endDocument();
-				
+
 				HttpEntity entity = new StringEntity(bodyWriter.toString());
 				Log.i("WordPress", bodyWriter.toString());
 				postMethod.setEntity(entity);
@@ -374,18 +373,18 @@ public class XMLRPCClient {
 	        client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
 			postMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
 			postMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
-			
+
 			// execute HTTP POST request
 			HttpResponse response = client.execute(postMethod);
-			
+
 			Log.i("WordPress", "response = " + response.getStatusLine());
 			// check status code
 			int statusCode = response.getStatusLine().getStatusCode();
-			
+
 			if ((method.equals("wp.uploadFile"))){ //get rid of the temp file
 				tempFile.delete();
 			}
-			
+
 			if (statusCode != HttpStatus.SC_OK) {
 				throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " + response.getStatusLine().getReasonPhrase());
 			}
@@ -395,7 +394,7 @@ public class XMLRPCClient {
 			HttpEntity entity = response.getEntity();
 			//change to pushbackinput stream 1/18/2010 to handle self installed wp sites that insert the BOM
 			PushbackInputStream is = new PushbackInputStream(entity.getContent());
-			
+
 			//get rid of junk characters before xml response.  60 = '<'.  Added stopper to prevent infinite loop
 			int bomCheck = is.read();
 			int stopper = 0;
@@ -404,14 +403,14 @@ public class XMLRPCClient {
 				stopper++;
 			}
 			is.unread(bomCheck);
-			
+
 			pullParser.setInput(is, "UTF-8");
-			
+
 			// lets start pulling...
 			pullParser.nextTag();
 			pullParser.require(XmlPullParser.START_TAG, null, TAG_METHOD_RESPONSE);
-			
-			pullParser.nextTag(); // either TAG_PARAMS (<params>) or TAG_FAULT (<fault>)  
+
+			pullParser.nextTag(); // either TAG_PARAMS (<params>) or TAG_FAULT (<fault>)
 			String tag = pullParser.getName();
 			if (tag.equals(TAG_PARAMS)) {
 				// normal response
@@ -419,7 +418,7 @@ public class XMLRPCClient {
 				pullParser.require(XmlPullParser.START_TAG, null, TAG_PARAM);
 				pullParser.nextTag(); // TAG_VALUE (<value>)
 				// no parser.require() here since its called in XMLRPCSerializer.deserialize() below
-				
+
 				// deserialize result
 				Object obj = XMLRPCSerializer.deserialize(pullParser);
 				entity.consumeContent();

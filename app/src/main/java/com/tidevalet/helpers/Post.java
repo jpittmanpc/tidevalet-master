@@ -4,24 +4,25 @@ package com.tidevalet.helpers;
  * Created by Justin on 4/22/16.
  */
 public class Post {
-    private long id;
-    private long pupilId;
+    private long id, violationId, propertyId;
     private String localImagePath;
     private int isPosted;
     private String returnedString;
     private String timestamp;
-    private String grade;
+    private String type;
     public long getId() {
         return id;
     }
     public void setId(long id) {
         this.id = id;
     }
-    public long getPupilId() {
-        return pupilId;
+    public long getViolationId() {
+        return violationId;
     }
-    public void setPupilId(long pupilId) {
-        this.pupilId = pupilId;
+    public void setPropertyId(long propertyId) { this.propertyId = propertyId; }
+    public long getPropertyId() { return propertyId; }
+    public void setViolationId(long violationId) {
+        this.violationId = violationId;
     }
     public String getLocalImagePath() {
         return localImagePath;
@@ -47,10 +48,10 @@ public class Post {
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
-    public String getGrade() {
-        return grade;
+    public String getViolationType() {
+        return type;
     }
-    public void setGrade(String grade) {
-        this.grade = grade;
+    public void setViolationType(String type) {
+        this.type = type;
     }
 }
