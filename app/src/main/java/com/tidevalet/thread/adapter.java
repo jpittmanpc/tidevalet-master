@@ -156,14 +156,6 @@ public class adapter {
 		return propId;
 	}
 	public Properties getPropertyById(long propertyId) {
-		try {
-			if (!sqlDB.isOpen()) {
-				this.open();
-			}
-		}
-		catch (NullPointerException e) {
-			this.open();
-		}
 		Properties properties = null;
 		Cursor cursor = sqlDB.query(constants.TABLE_PROPERTIES, null,
 				constants.COL_KEY_ROW + "=" + propertyId, null, null, null,

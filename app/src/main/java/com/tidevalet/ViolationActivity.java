@@ -116,7 +116,9 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
                 else { mPager.setCurrentItem((mPager.getCurrentItem()) + 1); }
             }
         });
+        adapter.open();
         property = adapter.getPropertyById(attributes.getPropertyId());
+        adapter.close();
     }
     private void dispatchTakePictureIntent() {
         if (isStoragePermissionGranted()) {

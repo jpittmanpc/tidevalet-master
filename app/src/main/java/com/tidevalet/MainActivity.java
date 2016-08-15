@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final boolean RESET_APP = false;
     static String TAG = "MainActivity";
     ImageView propertyImage;
     TextView propertyName;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private static adapter propAdapter = new adapter(App.getInstance());
     private static Map<String, Object> propertyList;
     private static ArrayList listViewProperties;
+    public ListListener listListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,6 +140,10 @@ public class MainActivity extends AppCompatActivity {
         propertyList = propAdapter.getAllProperties();
         propAdapter.close();
         listViewProperties = new ArrayList(propertyList.keySet());
+        if (listViewProperties.isEmpty()) {
+            listViewProperties.add("Retrieving Properties...");
+            boolean RESET_APP = true;
+        }
         listAdapter = new ArrayAdapter(App.getInstance(), R.layout.listitems,R.id.text1, listViewProperties);
         LayoutInflater inflater = this.getLayoutInflater();
         ViewGroup container = (ViewGroup) findViewById(R.id.fragment);
@@ -159,14 +166,23 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("MainAct", pos + " pos " + " id: " + id + "name: " + listAdapter.getItem(pos).toString() + " ID:");
             }
         });
+        if (RESET_APP) {
+           startActivity(new Intent(this, MainActivity.class));
+        }
     }
+
+
     public static void updateList() {
         propAdapter.open();
         propertyList = propAdapter.getAllProperties();
         propAdapter.close();
+        Log.d("UPDATELIST", "Supposed to update");
         listViewProperties = new ArrayList(propertyList.keySet());
         listAdapter = new ArrayAdapter(App.getInstance(), R.layout.listitems,R.id.text1, listViewProperties);
-        Log.d(TAG, "Updating List");
-        listAdapter.notifyDataSetChanged();
+        ListListener list = (ListListener) App.getAppContext();
+        list.notifyUpdate();
     }
+    public interface ListListener {
+        void notifyUpdate();
+   }
 }

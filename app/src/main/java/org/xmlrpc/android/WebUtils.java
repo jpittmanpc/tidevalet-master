@@ -25,7 +25,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-public class WebUtils {
+public class WebUtils implements MainActivity.ListListener {
     static SessionManager sessionManager;
     public static String uploadPostToWordpress(Properties properties, String image, String violation_type,
             Attributes service, Context context) throws XMLRPCException {
@@ -42,7 +42,7 @@ public class WebUtils {
         // Term Fields
         Hashtable tax = new Hashtable();
         List<String> property = new ArrayList<String>();
-        property.add(String.valueOf(service.getPropertyId()));
+        property.add(String.valueOf(sessionManager.propertySelected()));
         tax.put("properties", property);
         content.put("terms", tax);
         //Custom Fields
@@ -180,7 +180,15 @@ public class WebUtils {
         if (sessionManager.noProperties()) {
             sessionManager.setNoProperties(false);
             Log.d("WebUtils", "updating list after retrieval");
-            MainActivity.updateList();
+            MainActivity.ListListener listListener = new MainActivity.ListListener() {
+                @Override
+                public void notifyUpdate() {
+                    updateList();
+                }
+
+                private void updateList() {
+                }
+            };
         }
         return result;
     }
@@ -284,5 +292,9 @@ public class WebUtils {
     }
     public static String getResults(String params) {
         return params;
+    }
+
+    @Override
+    public void notifyUpdate() {
     }
 }
