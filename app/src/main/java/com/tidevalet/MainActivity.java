@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.tidevalet.helpers.Attributes;
 import com.tidevalet.helpers.Properties;
 import com.tidevalet.service.wp_service;
 import com.tidevalet.thread.adapter;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     Button viewViolation;
     Button changeProperty;
     private static SessionManager sessionManager = new SessionManager(App.getInstance());
+    public static Attributes attributes = new Attributes();
     private static ArrayAdapter listAdapter;
     private static adapter propAdapter = new adapter(App.getInstance());
     private static Map<String, Object> propertyList;
@@ -94,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
         propAdapter.close();
         propertyImage = (ImageView) findViewById(R.id.propertyImg);
         ImageLoader imgLoader = ImageLoader.getInstance();
+        Log.d("TAG", sessionManager.propertySelected() + "");
+        attributes.setPropertyId(sessionManager.propertySelected());
         imgLoader.displayImage(property.getImage(), propertyImage);
         propertyName = (TextView) findViewById(R.id.propertyName);
         try { propertyName.setText(property.getName()); }
@@ -102,8 +106,9 @@ public class MainActivity extends AppCompatActivity {
         newViolation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("New Violation1", "Click (Start Intent)");
+                Log.d("New Violation", "Click (Start Intent)");
                 Intent i = new Intent(App.getAppContext(), ViolationActivity.class);
+
                 startActivity(i);
                 finish();
             }

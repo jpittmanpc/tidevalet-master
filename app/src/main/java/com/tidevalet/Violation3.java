@@ -29,7 +29,7 @@ public class Violation3 extends Fragment implements Step {
     private String mParam1;
     private String mParam2;
 
-//    private OnFragmentInteractionListener mListener;
+//    private OnFragmentInteractionListener violationListener;
 
     public Violation3() {
         // Required empty public constructor
@@ -91,8 +91,8 @@ public class Violation3 extends Fragment implements Step {
 
     /*// TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+        if (violationListener != null) {
+            violationListener.onFragmentInteraction(uri);
         }
     }
 
@@ -100,7 +100,7 @@ public class Violation3 extends Fragment implements Step {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+            violationListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -110,7 +110,7 @@ public class Violation3 extends Fragment implements Step {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        violationListener = null;
     }
 
     /**

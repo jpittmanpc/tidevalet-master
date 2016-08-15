@@ -1,30 +1,14 @@
 package com.tidevalet;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.stepstone.stepper.Step;
-import com.stepstone.stepper.VerificationError;
-
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -33,7 +17,7 @@ import java.util.Locale;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Violation1.OnFragmentInteractionListener} interface
+ * {@link ViolationListener} interface
  * to handle interaction events.
  * Use the {@link Violation1#newInstance} factory method to
  * create an instance of this fragment.
@@ -48,7 +32,7 @@ public class Violation1 extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    public OnFragmentInteractionListener mListener;
+    public ViolationListener violationListener;
 
     public Violation1() {
         // Required empty public constructor
@@ -107,10 +91,9 @@ public class Violation1 extends Fragment {
     }
 
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void takePicture(View view) {
-        if (mListener != null) {
-            mListener.clicked(view);
+        if (violationListener != null) {
+            violationListener.clicked(view);
         }
     }
     @Override
@@ -122,8 +105,8 @@ public class Violation1 extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof ViolationListener) {
+            violationListener = (ViolationListener) context;
         } else {
             throw new ClassCastException(context.toString() + "must implement OnFragmentInteractionListener");
         }
@@ -132,13 +115,11 @@ public class Violation1 extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        violationListener = null;
     }
 
 
-    public interface OnFragmentInteractionListener {
-        void clicked(View view);
-    }
+
 
 
     /**

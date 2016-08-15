@@ -177,7 +177,6 @@ public class adapter {
 			properties.setImage(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_IMG)));
 		}
 		cursor.close();
-		if (!sqlDB.isOpen()) { this.close(); }
 		return properties;
 	}
 

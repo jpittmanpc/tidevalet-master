@@ -42,7 +42,7 @@ public class WebUtils {
         // Term Fields
         Hashtable tax = new Hashtable();
         List<String> property = new ArrayList<String>();
-        property.add(String.valueOf(properties.getId()));
+        property.add(String.valueOf(service.getPropertyId()));
         tax.put("properties", property);
         content.put("terms", tax);
         //Custom Fields
@@ -156,7 +156,6 @@ public class WebUtils {
             String contractorList = String.valueOf(new JSONArray(contractors));
             dbAdapter.addProperty(propId, name, address, image, contractorList);
         }
-        dbAdapter.close();
         /*for (int i=0; i<obj.length;i++) {
 
             Class<? extends Object> c = obj[i].getClass();

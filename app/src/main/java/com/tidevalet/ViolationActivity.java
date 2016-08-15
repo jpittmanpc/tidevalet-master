@@ -20,6 +20,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,7 +34,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.tidevalet.helpers.Attributes;
+import com.tidevalet.helpers.Post;
 import com.tidevalet.helpers.Properties;
+import com.tidevalet.service.ulservice;
 import com.tidevalet.thread.adapter;
 
 import org.xmlrpc.android.WebUtils;
@@ -47,7 +51,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class ViolationActivity extends AppCompatActivity implements Violation1.OnFragmentInteractionListener {
+public class ViolationActivity extends AppCompatActivity implements ViolationListener {
     /**
      * The number of pages (wizard steps) to show in this demo.
      */
@@ -74,10 +78,15 @@ public class ViolationActivity extends AppCompatActivity implements Violation1.O
     Properties property;
     FragmentManager frags;
     Fragment Viol1;
+    Attributes attributes = new Attributes();
+    Post post;
+    ArrayList<String> uriList = new ArrayList<String>();
+    ArrayList<Uri> arrayUri = new ArrayList<Uri>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        post = new Post();
         SessionManager session = new SessionManager(this);
         adapter adapter = new adapter(this);
         setContentView(R.layout.violation_slider);
@@ -101,12 +110,13 @@ public class ViolationActivity extends AppCompatActivity implements Violation1.O
             @Override
             public void onClick(View v) {
                 if (mPager.getCurrentItem() == 2) {
-                    Snackbar.make(v, "Submit", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(v, "Submitting", Snackbar.LENGTH_LONG).show();
+                    startSubmit();
                 }
                 else { mPager.setCurrentItem((mPager.getCurrentItem()) + 1); }
             }
         });
-        property = adapter.getPropertyById(session.propertySelected());
+        property = adapter.getPropertyById(attributes.getPropertyId());
     }
     private void dispatchTakePictureIntent() {
         if (isStoragePermissionGranted()) {
@@ -181,15 +191,9 @@ public class ViolationActivity extends AppCompatActivity implements Violation1.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("TAG", "OnActResult" + requestCode + " resultcode: " + resultCode);
-        if (requestCode == 1) {
-            if (data != null) {
-  //              Bundle extras = data.getExtras();
-//                Bitmap bitmap = (Bitmap) extras.get("data");
-            }
+        if (requestCode == 1 && resultCode == RESULT_OK) {
             try {
-
-                //Bitmap bitmap = (Bitmap) extras.get("data");
-                //img1.setImageBitmap(bitmap);
+                uriList.add(filePath.getPath());
                 Log.d("ONACTIVITYRESULT", "Got pic");
                 Bitmap image = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 img1.setImageBitmap( ThumbnailUtils.extractThumbnail(image, img1.getWidth(), img1.getHeight()));
@@ -212,7 +216,10 @@ public class ViolationActivity extends AppCompatActivity implements Violation1.O
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
     }
-
+    @Override
+    public void violationTypes(String string) {
+        post.setViolationType(string);
+    }
     @Override
     public void clicked(View v) {
         dispatchTakePictureIntent();
@@ -251,6 +258,19 @@ public class ViolationActivity extends AppCompatActivity implements Violation1.O
     }
 
     private void startSubmit() {
+        post.setIsPosted(0);
+        post.setLocalImagePath(Uri.parse(uriList.get(0)).toString());
+        post.setPropertyId(attributes.getPropertyId());
+        adapter dbAdapter = new adapter(this);
+        post.setId(41);
+        dbAdapter.open();
+        post = dbAdapter.addPost(post);
+        dbAdapter.close();
+        Intent service = new Intent(this,  ulservice.class);
+        service.putExtra("id", post.getId());
+        startService(service);
+        setResult(RESULT_OK);
+        finish();
         //start submit, then call new intent to go back to the property screen
         Intent i = new Intent(this, MainActivity.class);
         i.putExtra("snackbar", "The violation has been successfully submitted");

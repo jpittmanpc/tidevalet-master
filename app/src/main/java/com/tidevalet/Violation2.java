@@ -1,11 +1,13 @@
 package com.tidevalet;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
@@ -14,7 +16,7 @@ import com.stepstone.stepper.VerificationError;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Violation2.OnFragmentInteractionListener} interface
+ * {@link ViolationListener} interface
  * to handle interaction events.
  * Use the {@link Violation2#newInstance} factory method to
  * create an instance of this fragment.
@@ -24,12 +26,14 @@ public class Violation2 extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    public ViolationListener violationListener;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private CheckBox cb1;
 
-//    private OnFragmentInteractionListener mListener;
+//    private OnFragmentInteractionListener violationListener;
 
     public Violation2() {
         // Required empty public constructor
@@ -66,22 +70,15 @@ public class Violation2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_violation2, container, false);
+        View v = inflater.inflate(R.layout.fragment_violation2, container, false);
+        cb1 = (CheckBox)v.findViewById(R.id.cb1);
+        return v;
     }
-
-
-    /*// TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof ViolationListener) {
+            violationListener = (ViolationListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -90,8 +87,17 @@ public class Violation2 extends Fragment {
 
     @Override
     public void onDetach() {
+        if (cb1.isChecked()) {
+            violationTypes((String) cb1.getText());
+        }
         super.onDetach();
-        mListener = null;
+
+        violationListener = null;
+    }
+    public void violationTypes(String string) {
+        if (violationListener != null) {
+            violationListener.violationTypes(string);
+        }
     }
 
     /**
