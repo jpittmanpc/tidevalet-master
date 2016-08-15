@@ -58,30 +58,39 @@
         android:layout_height="wrap_content"
         android:text="NEW VIOLATION"
         android:id="@+id/newViolation"
-        android:paddingBottom="@dimen/activity_horizontal_margin"
         android:background="@android:color/transparent"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:padding="@dimen/abc_button_padding_horizontal_material"
+        android:theme="@atyle/FlatButton"
+        style="@style/Widget.AppCompat.Button.Borderless"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="VIEW VIOLATIONS"
-        android:paddingBottom="@dimen/activity_horizontal_margin"
         android:id="@+id/viewViolation"
         android:background="@android:color/transparent"
         android:layout_marginTop="44dp"
         android:layout_below="@+id/newViolation"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:padding="@dimen/abc_button_padding_horizontal_material"
+        android:textStyle="bold"
+        android:theme="@atyle/FlatButton"
+        style="@style/Widget.AppCompat.Button.Borderless"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="CHANGE LOCATION"
         android:id="@+id/changeProperty"
-        android:paddingBottom="@dimen/activity_horizontal_margin"
         android:background="@android:color/transparent"
         android:layout_marginTop="44dp"
         android:layout_below="@+id/viewViolation"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:padding="@dimen/abc_button_padding_horizontal_material"
+        android:textStyle="bold"
+        android:theme="@atyle/FlatButton"
+        style="@style/Widget.AppCompat.Button.Borderless"/>
 </RelativeLayout>
