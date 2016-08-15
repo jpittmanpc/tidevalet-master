@@ -22,14 +22,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Violation Date and Time"
-        android:id="@+id/textView2"
+        android:text="Violation Date"
+        android:id="@+id/dateTitle"
         android:layout_marginTop="25dp"
         android:layout_below="@+id/violation_type_text_top"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/editText3"
-        android:layout_toStartOf="@+id/editText3" />
+        android:layout_toLeftOf="@+id/timeTxt"
+        android:layout_toStartOf="@+id/timeTxt" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -37,34 +37,37 @@
         android:text="Time"
         android:id="@+id/textView3"
         android:layout_gravity="center_horizontal"
-        android:layout_above="@+id/editText3"
-        android:layout_toLeftOf="@+id/textView6"
-        android:layout_toStartOf="@+id/textView6" />
+        android:layout_above="@+id/dateTxt"
+        android:layout_toRightOf="@+id/dateTxt"
+        android:layout_toEndOf="@+id/dateTxt" />
 
-    <EditText
-        android:layout_width="129dp"
+    <TextView
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText2"
-        android:layout_below="@+id/textView2"
+        android:id="@+id/dateTxt"
+        android:text="date"
+        android:layout_below="@+id/dateTitle"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/textView5"
         android:layout_alignEnd="@+id/textView5" />
 
-    <EditText
-        android:layout_width="129dp"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText3"
-        android:layout_alignTop="@+id/editText2"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:text="time"
+        android:id="@+id/timeTxt"
+        android:layout_alignTop="@+id/dateTxt"
+        android:layout_alignRight="@+id/textView3"
+        android:layout_alignEnd="@+id/textView3" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Building Number"
         android:id="@+id/textView4"
-        android:layout_below="@+id/editText2"
+        android:layout_below="@+id/dateTxt"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="68dp" />
@@ -83,17 +86,17 @@
         android:text="Add Photos"
         android:id="@+id/textView6"
         android:layout_above="@+id/imageButton"
-        android:layout_alignRight="@+id/editText3"
-        android:layout_alignEnd="@+id/editText3"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageButton"
         android:src="@drawable/mr_ic_cast_dark"
-        android:layout_alignTop="@+id/editText5"
+        android:layout_above="@+id/relativeLayout"
+        android:layout_alignLeft="@+id/textView6"
+        android:layout_alignStart="@+id/textView6"
         android:layout_alignRight="@+id/textView6"
         android:layout_alignEnd="@+id/textView6" />
 
@@ -121,12 +124,13 @@
     android:layout_height="wrap_content"
     android:layout_below="@+id/editText4"
     android:layout_centerHorizontal="true"
-    android:layout_marginTop="63dp">
+    android:layout_marginTop="63dp"
+    android:id="@+id/relativeLayout">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView2"
+        android:id="@+id/img1"
         android:background="@drawable/placeholder"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -135,12 +139,12 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView4"
+        android:id="@+id/img2"
         android:background="@drawable/placeholder"
         android:src="@drawable/placeholder"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/imageView2"
-        android:layout_toEndOf="@+id/imageView2"
+        android:layout_toRightOf="@+id/img1"
+        android:layout_toEndOf="@+id/img1"
         android:layout_marginLeft="44dp"
         android:layout_marginStart="44dp" />
 
@@ -150,8 +154,8 @@
         android:id="@+id/imageView5"
         android:background="@drawable/placeholder"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/imageView4"
-        android:layout_toEndOf="@+id/imageView4"
+        android:layout_toRightOf="@+id/img2"
+        android:layout_toEndOf="@+id/img2"
         android:layout_marginLeft="35dp"
         android:layout_marginStart="35dp" />
 
@@ -165,4 +169,15 @@
         android:layout_alignParentEnd="true" />
 
  </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/violProp"
+        android:textColor="#000000"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/textView6"
+        android:layout_alignStart="@+id/textView6" />
 </RelativeLayout>

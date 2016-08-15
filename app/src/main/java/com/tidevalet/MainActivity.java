@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayAdapter listAdapter;
     private static adapter propAdapter = new adapter(App.getInstance());
     private static Map<String, Object> propertyList;
+    private static ArrayList listViewProperties;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,13 +55,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             else {
-                Intent service = new Intent(this, wp_service.class);
-                startService(service);
                 propAdapter.open();
                 propertyList = propAdapter.getAllProperties();
                 propAdapter.close();
-                ArrayList listViewProperties = new ArrayList(propertyList.keySet());
-                listAdapter = new ArrayAdapter(App.getInstance(), R.layout.listitems,R.id.text1, listViewProperties);
+                Log.d(TAG, sessionManager.noProperties() + " ");
+                if (propertyList.keySet().isEmpty()) {
+                    sessionManager.setNoProperties(true);
+                }
+
+                Intent service = new Intent(this, wp_service.class);
+                startService(service);
                 startListView();
             }
         }
@@ -124,6 +128,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startListView() {
+        propAdapter.open();
+        propertyList = propAdapter.getAllProperties();
+        propAdapter.close();
+        listViewProperties = new ArrayList(propertyList.keySet());
+        listAdapter = new ArrayAdapter(App.getInstance(), R.layout.listitems,R.id.text1, listViewProperties);
         LayoutInflater inflater = this.getLayoutInflater();
         ViewGroup container = (ViewGroup) findViewById(R.id.fragment);
         inflater.inflate(R.layout.fragment_main, container, false);
@@ -146,5 +155,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+    public static void updateList() {
+        propAdapter.open();
+        propertyList = propAdapter.getAllProperties();
+        propAdapter.close();
+        listViewProperties = new ArrayList(propertyList.keySet());
+        listAdapter = new ArrayAdapter(App.getInstance(), R.layout.listitems,R.id.text1, listViewProperties);
+        Log.d(TAG, "Updating List");
+        listAdapter.notifyDataSetChanged();
+    }
 }

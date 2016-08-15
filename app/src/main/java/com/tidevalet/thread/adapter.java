@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.tidevalet.MainActivity;
 import com.tidevalet.helpers.Attributes;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.helpers.Properties;
@@ -155,6 +156,14 @@ public class adapter {
 		return propId;
 	}
 	public Properties getPropertyById(long propertyId) {
+		try {
+			if (!sqlDB.isOpen()) {
+				this.open();
+			}
+		}
+		catch (NullPointerException e) {
+			this.open();
+		}
 		Properties properties = null;
 		Cursor cursor = sqlDB.query(constants.TABLE_PROPERTIES, null,
 				constants.COL_KEY_ROW + "=" + propertyId, null, null, null,
@@ -168,6 +177,7 @@ public class adapter {
 			properties.setImage(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_IMG)));
 		}
 		cursor.close();
+		if (!sqlDB.isOpen()) { this.close(); }
 		return properties;
 	}
 

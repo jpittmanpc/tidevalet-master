@@ -3,6 +3,7 @@ package com.tidevalet;
 import android.app.Application;
 import android.content.Context;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -19,8 +20,16 @@ public class App extends Application {
         super.onCreate();
         sInstance = this;
         App.mContext = getApplicationContext();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
-        ImageLoader.getInstance().init(config);
+        DisplayImageOptions defaultOptions = new DisplayImageOptions
+                .Builder()
+                .cacheOnDisk(true)
+                .cacheInMemory(true)
+                .build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .defaultDisplayImageOptions(defaultOptions)
+                .build();
+        ImageLoader.getInstance()
+                .init(config);
     }
     public static Context getAppContext() {
         return App.mContext;

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.tidevalet.App;
+import com.tidevalet.MainActivity;
 import com.tidevalet.SessionManager;
 import com.tidevalet.helpers.Attributes;
 import com.tidevalet.helpers.Properties;
@@ -25,10 +26,11 @@ import java.util.List;
 import java.util.Map;
 
 public class WebUtils {
+    static SessionManager sessionManager;
     public static String uploadPostToWordpress(Properties properties, String image, String violation_type,
             Attributes service, Context context) throws XMLRPCException {
-        SessionManager utils = new SessionManager(context);
-        service.setUrl(utils.getDefUrl());
+        sessionManager = new SessionManager(context);
+        service.setUrl(sessionManager.getDefUrl());
         String imageURL = uploadImage(image, service, context);
         XMLRPCClient client = new XMLRPCClient(service.getUrl() + "xmlrpc.php");
         // Setup Post
@@ -54,8 +56,8 @@ public class WebUtils {
         customField.put("value", violation_type);
         customFieldsList.add(customField);
         content.put("custom_fields", customFieldsList);
-        String username = utils.getUsername();
-        String password = utils.getPassword();
+        String username = sessionManager.getUsername();
+        String password = sessionManager.getPassword();
         Object[] params = {
                 1, username, password, content, true
         };
@@ -70,8 +72,8 @@ public class WebUtils {
         return getPostUrl(result.toString(), service.getUrl());
     }
     public static String authWp(String username, String password,Context context) throws XMLRPCException {
-        SessionManager utils = new SessionManager(context);
-        XMLRPCClient client = new XMLRPCClient(utils.getDefUrl() + "xmlrpc.php");
+        sessionManager = new SessionManager(context);
+        XMLRPCClient client = new XMLRPCClient(sessionManager.getDefUrl() + "xmlrpc.php");
         Object result = null;
         Object[] params = { 1, username, password, "", true };
         try {
@@ -87,17 +89,17 @@ public class WebUtils {
     }
     public static String callWp(String method, Context context)
         throws XMLRPCException, UnsupportedEncodingException, ClientProtocolException, IOException {
-        SessionManager utils = new SessionManager(context);
-        String sXmlRpcMethod = method;
+        sessionManager = new SessionManager(context);
+                String sXmlRpcMethod = method;
         String result = null;
-        XMLRPCClient client = new XMLRPCClient(utils.getDefUrl() + "xmlrpc.php");
+        XMLRPCClient client = new XMLRPCClient(sessionManager.getDefUrl() + "xmlrpc.php");
         HashMap<String, Object> theCall = new HashMap<String, Object>();
         Hashtable filter = new Hashtable();
         filter.put("hide_empty", false);
         theCall.put("filter", filter);
         String taxonomy = "properties";
         Object[] params = {
-                1, utils.getUsername(), utils.getPassword(), taxonomy, theCall
+                1, sessionManager.getUsername(), sessionManager.getPassword(), taxonomy, theCall
         };
         Object[] obj = (Object[]) client.call(method, params);
         adapter dbAdapter = new adapter(App.getInstance());
@@ -176,6 +178,11 @@ public class WebUtils {
         //String term_id = contentHash.get("term_id").toString();
         //String name = contentHash.get("name").toString();
         //Log.d("WebUtils", "Term ID: " + term_id + " Name:" + name);
+        if (sessionManager.noProperties()) {
+            sessionManager.setNoProperties(false);
+            Log.d("WebUtils", "updating list after retrieval");
+            MainActivity.updateList();
+        }
         return result;
     }
     private static void ObjToString(Object[] key) {

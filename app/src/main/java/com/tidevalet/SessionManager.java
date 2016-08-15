@@ -29,6 +29,7 @@ public class SessionManager {
 	private static final String DEF_USR = "username";
 	private static final String DEF_PWD = "password";
 	private static final String PROPERTY_SELECTED = "property";
+	private static String UPDATE_VIEW = "update_view";
 
 	public SessionManager(Context _context) {
 		super();
@@ -96,5 +97,10 @@ public class SessionManager {
 	public String getDefUrl() { return pref.getString(DEF_URL, null); }
 	public String getUsername() { return pref.getString(DEF_USR, null); }
 	public String getPassword() { return pref.getString(DEF_PWD, null); }
-
+    public void setNoProperties(boolean value) {
+		editor.putBoolean(UPDATE_VIEW, value); editor.commit();
+	}
+	public boolean noProperties() {
+		return pref.getBoolean(UPDATE_VIEW, false);
+	}
 }

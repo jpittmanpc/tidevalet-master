@@ -1,18 +1,33 @@
 package com.tidevalet;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -23,7 +38,7 @@ import com.stepstone.stepper.VerificationError;
  * Use the {@link Violation1#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Violation1 extends Fragment implements fragInt {
+public class Violation1 extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -33,7 +48,7 @@ public class Violation1 extends Fragment implements fragInt {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private fragInt mListener;
+    public OnFragmentInteractionListener mListener;
 
     public Violation1() {
         // Required empty public constructor
@@ -69,24 +84,48 @@ public class Violation1 extends Fragment implements fragInt {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_violation1, container, false);
+        View v = inflater.inflate(R.layout.fragment_violation1, container, false);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yy", Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm:ssa", Locale.getDefault());
+        TextView propViol = (TextView)v.findViewById(R.id.violProp);
+        TextView dateTxt = (TextView)v.findViewById(R.id.dateTxt);
+        TextView timeTxt = (TextView)v.findViewById(R.id.timeTxt);
+        ImageButton takePic = (ImageButton)v.findViewById(R.id.imageButton);
+        takePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePicture(v);
+            }
+        });
+    //    ImageView img1 = (ImageView)v.findViewById(R.id.img1);
+        propViol.setText("rpop");
+        dateTxt.setText(dateFormat.format(new Date()));
+        timeTxt.setText(timeFormat.format(new Date()));
+        return v;
+
 
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(View view) {
+    public void takePicture(View view) {
         if (mListener != null) {
-            mListener.onCustomClick(view);
+            mListener.clicked(view);
         }
     }
+    @Override
+    public void onViewCreated(View v, Bundle savedInstanceState) {
+        super.onViewCreated(v, savedInstanceState);
+    }
+
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof fragInt) {
-            mListener = (fragInt) context;
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
         } else {
-
+            throw new ClassCastException(context.toString() + "must implement OnFragmentInteractionListener");
         }
     }
 
@@ -96,10 +135,11 @@ public class Violation1 extends Fragment implements fragInt {
         mListener = null;
     }
 
-    @Override
-    public void onCustomClick(View view) {
 
+    public interface OnFragmentInteractionListener {
+        void clicked(View view);
     }
+
 
     /**
      * This interface must be implemented by activities that contain this
