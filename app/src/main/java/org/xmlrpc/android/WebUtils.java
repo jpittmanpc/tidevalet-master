@@ -2,13 +2,16 @@
 package org.xmlrpc.android;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.tidevalet.App;
-import com.tidevalet.MainActivity;
+import com.tidevalet.activities.MainActivity;
 import com.tidevalet.SessionManager;
 import com.tidevalet.helpers.Attributes;
 import com.tidevalet.helpers.Properties;
+import com.tidevalet.interfaces.MainListener;
 import com.tidevalet.thread.adapter;
 import com.tidevalet.thread.constants;
 
@@ -25,10 +28,12 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-public class WebUtils implements MainActivity.ListListener {
+public class WebUtils {
     static SessionManager sessionManager;
+
     public static String uploadPostToWordpress(Properties properties, String image, String violation_type,
             Attributes service, Context context) throws XMLRPCException {
+
         sessionManager = new SessionManager(context);
         service.setUrl(sessionManager.getDefUrl());
         String imageURL = uploadImage(image, service, context);
@@ -89,6 +94,7 @@ public class WebUtils implements MainActivity.ListListener {
     }
     public static String callWp(String method, Context context)
         throws XMLRPCException, UnsupportedEncodingException, ClientProtocolException, IOException {
+
         sessionManager = new SessionManager(context);
                 String sXmlRpcMethod = method;
         String result = null;
@@ -178,19 +184,15 @@ public class WebUtils implements MainActivity.ListListener {
         //String name = contentHash.get("name").toString();
         //Log.d("WebUtils", "Term ID: " + term_id + " Name:" + name);
         if (sessionManager.noProperties()) {
+            Intent intent = new Intent("updateListView");
+            LocalBroadcastManager.getInstance(App.getInstance()).sendBroadcast(intent);
             sessionManager.setNoProperties(false);
             Log.d("WebUtils", "updating list after retrieval");
-            MainActivity.ListListener listListener = new MainActivity.ListListener() {
-                @Override
-                public void notifyUpdate() {
-                    updateList();
-                }
-
-                private void updateList() {
-                }
-            };
         }
         return result;
+     }
+    public interface ListenerCallback {
+        void onUpdate();
     }
     private static void ObjToString(Object[] key) {
         List<Object> list = new ArrayList<Object>();
@@ -294,7 +296,5 @@ public class WebUtils implements MainActivity.ListListener {
         return params;
     }
 
-    @Override
-    public void notifyUpdate() {
-    }
+
 }

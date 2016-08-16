@@ -1,4 +1,4 @@
-package com.tidevalet;
+package com.tidevalet.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,12 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.CheckBox;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import com.tidevalet.R;
+import com.tidevalet.interfaces.ViolationListener;
 
 
 /**
@@ -19,22 +17,24 @@ import java.util.Locale;
  * Activities that contain this fragment must implement the
  * {@link ViolationListener} interface
  * to handle interaction events.
- * Use the {@link Violation1#newInstance} factory method to
+ * Use the {@link Violation2#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Violation1 extends Fragment {
+public class Violation2 extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final String LAYOUT_RESOURCE_ID_ARG_KEY = "messageResourceId";
-    private int i = 0;
+    public ViolationListener violationListener;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    public ViolationListener violationListener;
+    private CheckBox cb1;
 
-    public Violation1() {
+//    private MainListener violationListener;
+
+    public Violation2() {
         // Required empty public constructor
     }
 
@@ -44,11 +44,11 @@ public class Violation1 extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Violation1.
+     * @return A new instance of fragment Violation2.
      */
     // TODO: Rename and change types and number of parameters
-    public static Violation1 newInstance(String param1, String param2) {
-        Violation1 fragment = new Violation1();
+    public static Violation2 newInstance(String param1, String param2) {
+        Violation2 fragment = new Violation2();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -68,59 +68,36 @@ public class Violation1 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_violation1, container, false);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yy", Locale.getDefault());
-        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm:ssa", Locale.getDefault());
-        TextView propViol = (TextView)v.findViewById(R.id.violProp);
-        TextView dateTxt = (TextView)v.findViewById(R.id.dateTxt);
-        TextView timeTxt = (TextView)v.findViewById(R.id.timeTxt);
-        ImageButton takePic = (ImageButton)v.findViewById(R.id.imageButton);
-        takePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture(v);
-            }
-        });
-    //    ImageView img1 = (ImageView)v.findViewById(R.id.img1);
-        propViol.setText("rpop");
-        dateTxt.setText(dateFormat.format(new Date()));
-        timeTxt.setText(timeFormat.format(new Date()));
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_violation2, container, false);
+        cb1 = (CheckBox)v.findViewById(R.id.cb1);
         return v;
-
-
     }
-
-
-    public void takePicture(View view) {
-        if (violationListener != null) {
-            violationListener.clicked(view);
-        }
-    }
-    @Override
-    public void onViewCreated(View v, Bundle savedInstanceState) {
-        super.onViewCreated(v, savedInstanceState);
-    }
-
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof ViolationListener) {
             violationListener = (ViolationListener) context;
         } else {
-            throw new ClassCastException(context.toString() + "must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString()
+                    + " must implement MainListener");
         }
     }
 
     @Override
     public void onDetach() {
+        if (cb1.isChecked()) {
+            violationTypes((String) cb1.getText());
+        }
         super.onDetach();
+
         violationListener = null;
     }
-
-
-
-
+    public void violationTypes(String string) {
+        if (violationListener != null) {
+            violationListener.violationTypes(string);
+        }
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -131,5 +108,9 @@ public class Violation1 extends Fragment {
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
-     */
+     *
+    public interface MainListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }*/
 }

@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.tidevalet.MainActivity;
 import com.tidevalet.helpers.Attributes;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.helpers.Properties;

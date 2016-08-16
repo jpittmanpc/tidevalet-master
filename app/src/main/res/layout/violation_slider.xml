@@ -4,7 +4,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
 android:theme="@style/TideValet"
 xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="wrap_content"
-    tools:context="com.tidevalet.ViolationActivity"
+    tools:context=".activities.ViolationActivity"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_height="match_parent">
 

@@ -28,7 +28,7 @@ public class wp_thread extends Thread {
 
         try {
             dbAdapter.open();
-            WebUtils.callWp("wp.getTerms", context);
+            String url = WebUtils.callWp("wp.getTerms", context);
             dbAdapter.close();
         }
         catch (Exception e) {

@@ -1,4 +1,4 @@
-package com.tidevalet;
+package com.tidevalet.interfaces;
 
 import android.content.Context;
 import android.view.View;

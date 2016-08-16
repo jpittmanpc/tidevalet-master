@@ -1,4 +1,4 @@
-package com.tidevalet;
+package com.tidevalet.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
+import com.tidevalet.R;
 
 
 /**
@@ -29,7 +30,7 @@ public class Violation3 extends Fragment implements Step {
     private String mParam1;
     private String mParam2;
 
-//    private OnFragmentInteractionListener violationListener;
+//    private MainListener violationListener;
 
     public Violation3() {
         // Required empty public constructor
@@ -99,11 +100,11 @@ public class Violation3 extends Fragment implements Step {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            violationListener = (OnFragmentInteractionListener) context;
+        if (context instanceof MainListener) {
+            violationListener = (MainListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement MainListener");
         }
     }
 
@@ -123,7 +124,7 @@ public class Violation3 extends Fragment implements Step {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      *
-    public interface OnFragmentInteractionListener {
+    public interface MainListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }*/

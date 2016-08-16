@@ -1,10 +1,9 @@
-package com.tidevalet;
+package com.tidevalet.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -18,33 +17,32 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
+import com.tidevalet.App;
+import com.tidevalet.R;
+import com.tidevalet.SessionManager;
+import com.tidevalet.activities.MainActivity;
+import com.tidevalet.fragments.Violation1;
+import com.tidevalet.fragments.Violation2;
+import com.tidevalet.fragments.Violation3;
 import com.tidevalet.helpers.Attributes;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.helpers.Properties;
+import com.tidevalet.interfaces.ViolationListener;
 import com.tidevalet.service.ulservice;
 import com.tidevalet.thread.adapter;
 
-import org.xmlrpc.android.WebUtils;
-
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

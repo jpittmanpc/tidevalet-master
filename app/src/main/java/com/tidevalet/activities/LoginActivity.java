@@ -1,4 +1,4 @@
-package com.tidevalet;
+package com.tidevalet.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,6 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import com.tidevalet.App;
+import com.tidevalet.R;
+import com.tidevalet.SessionManager;
+import com.tidevalet.activities.MainActivity;
 
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;

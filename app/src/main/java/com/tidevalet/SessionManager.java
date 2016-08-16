@@ -9,11 +9,8 @@ import java.util.HashMap;
 public class SessionManager {
 
 	Context context;
-
 	SharedPreferences pref;
-
 	Editor editor;
-
 	String PREF_NAME = "pref_name";
 
 	int PREF_MODE = 0;

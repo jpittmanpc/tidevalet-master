@@ -1,41 +1,37 @@
-package com.tidevalet;
+package com.tidevalet.fragments;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 
-import com.stepstone.stepper.Step;
-import com.stepstone.stepper.VerificationError;
-
+import com.tidevalet.R;
+import com.tidevalet.interfaces.MainListener;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ViolationListener} interface
+ * {@link MainListener} interface
  * to handle interaction events.
- * Use the {@link Violation2#newInstance} factory method to
+ * Use the {@link PropertyList#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Violation2 extends Fragment {
+public class PropertyList extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    public ViolationListener violationListener;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private CheckBox cb1;
 
-//    private OnFragmentInteractionListener violationListener;
+    private MainListener mListener;
 
-    public Violation2() {
+    public PropertyList() {
         // Required empty public constructor
     }
 
@@ -45,11 +41,11 @@ public class Violation2 extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Violation2.
+     * @return A new instance of fragment PropertyList.
      */
     // TODO: Rename and change types and number of parameters
-    public static Violation2 newInstance(String param1, String param2) {
-        Violation2 fragment = new Violation2();
+    public static PropertyList newInstance(String param1, String param2) {
+        PropertyList fragment = new PropertyList();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -70,34 +66,34 @@ public class Violation2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_violation2, container, false);
-        cb1 = (CheckBox)v.findViewById(R.id.cb1);
+        View v = inflater.inflate(R.layout.fragment_property_list, container, false);
+        initialize(v);
         return v;
     }
+    public void initialize(View v) {
+        mListener.propertyList(v);
+    }
+    public void onButtonPressed(View v) {
+        if (mListener != null) {
+            mListener.clicked(v);
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof ViolationListener) {
-            violationListener = (ViolationListener) context;
+        if (context instanceof MainListener) {
+            mListener = (MainListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement MainListener");
         }
     }
 
     @Override
     public void onDetach() {
-        if (cb1.isChecked()) {
-            violationTypes((String) cb1.getText());
-        }
         super.onDetach();
-
-        violationListener = null;
-    }
-    public void violationTypes(String string) {
-        if (violationListener != null) {
-            violationListener.violationTypes(string);
-        }
+        mListener = null;
     }
 
     /**
@@ -109,9 +105,5 @@ public class Violation2 extends Fragment {
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
-     *
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }*/
+     */
 }
