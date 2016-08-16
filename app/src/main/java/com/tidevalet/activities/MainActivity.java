@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements MainListener {
 
 
     private void propUI() {
-        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         if (sM.propertySelected() == 0) {
             startListView();
         }
