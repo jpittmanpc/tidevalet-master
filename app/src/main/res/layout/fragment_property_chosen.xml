@@ -63,7 +63,7 @@
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
         android:padding="@dimen/abc_button_padding_horizontal_material"
-        android:theme="@atyle/FlatButton"
+        android:theme="@style/FlatButton"
         style="@style/Widget.AppCompat.Button.Borderless"/>
 
     <Button
@@ -77,8 +77,8 @@
         android:layout_centerHorizontal="true"
         android:padding="@dimen/abc_button_padding_horizontal_material"
         android:textStyle="bold"
-        android:theme="@atyle/FlatButton"
-        style="@style/Widget.AppCompat.Button.Borderless" />
+        android:theme="@style/FlatButton"
+        style="@style/Widget.AppCompat.Button.Borderless"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -91,6 +91,6 @@
         android:layout_centerHorizontal="true"
         android:padding="@dimen/abc_button_padding_horizontal_material"
         android:textStyle="bold"
-        android:theme="@atyle/FlatButton"
-        style="@style/Widget.AppCompat.Button.Borderless" />
+        android:theme="@style/FlatButton"
+        style="@style/Widget.AppCompat.Button.Borderless"/>
 </RelativeLayout>
