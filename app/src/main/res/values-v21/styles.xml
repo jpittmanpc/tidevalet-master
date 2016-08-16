@@ -8,15 +8,15 @@
 
     <style name="TideValet" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/TideBlue</item>
-        <item name="colorPrimaryDark">#333333</item>
-        <item name="colorAccent">#272262</item>
+        <item name="colorPrimaryDark">@color/TideBlueDark</item>
+        <item name="colorAccent">#7ea538</item>
         <item name="android:colorBackground">#e2e3e4</item>
         <item name="android:colorForeground">#757571</item>
         <item name="android:navigationBarColor">@android:color/black</item>
-        <item name="android:statusBarColor">@android:color/black</item>
-        <item name="android:textColorPrimary">#272262</item>
-        <item name="android:textColorPrimaryInverse">#f6f6f6</item>
-        <item name="android:textColorSecondary">#6171bd</item>
+        <item name="android:statusBarColor">@color/TideBlueDark</item>
+        <item name="android:textColorPrimary">@color/TideBlue</item>
+        <item name="android:textColorPrimaryInverse">@android:color/black</item>
+        <item name="android:textColorSecondary">@color/TideBlue</item>
         <item name="android:textColorSecondaryInverse">@color/dkgrey</item>
         <item name="android:windowBackground">@color/dkgrey</item>
     </style>

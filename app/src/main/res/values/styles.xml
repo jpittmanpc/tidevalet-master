@@ -31,13 +31,13 @@
     <style name="TideValet" parent="Theme.AppCompat.Light.DarkActionBar" >
         <item name="actionBarTheme">@style/Actionbar</item>
         <item name="colorPrimary">@color/TideBlue</item>
-        <item name="colorPrimaryDark">#333333</item>
-        <item name="colorAccent">#272262</item>
+        <item name="colorPrimaryDark">@color/TideBlueDark</item>
+        <item name="colorAccent">#7ea538</item>
         <item name="android:colorBackground">#e2e3e4</item>
         <item name="android:colorForeground">#757571</item>
-        <item name="android:textColorPrimary">#272262</item>
-        <item name="android:textColorPrimaryInverse">#f6f6f6</item>
-        <item name="android:textColorSecondary">#6171bd</item>
+        <item name="android:textColorPrimary">@color/TideBlue</item>
+        <item name="android:textColorPrimaryInverse">@android:color/black</item>
+        <item name="android:textColorSecondary">@color/TideBlue</item>
         <item name="android:textColorSecondaryInverse">#e2e3e4</item>
         <item name="android:windowBackground">@color/TideBlue</item>
     </style>
@@ -66,6 +66,11 @@
     </style>
 
     <color name="TideBlue">#272262</color>
-    <color name="TideBlueDark">#8d07005e</color>
+    <color name="TideBlueDark">#180e51</color>
     <color name="white">#ffffff</color>
+
+    <style name="FlatButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">#272262</item>
+    </style>
+
 </resources>

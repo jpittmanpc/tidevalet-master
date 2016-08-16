@@ -91,14 +91,15 @@
 
     <ImageButton
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/abc_action_button_min_height_material"
         android:id="@+id/imageButton"
-        android:src="@drawable/mr_ic_cast_dark"
+        android:src="@drawable/ic_add_a_photo_black_48dp"
         android:layout_above="@+id/relativeLayout"
         android:layout_alignLeft="@+id/textView6"
         android:layout_alignStart="@+id/textView6"
         android:layout_alignRight="@+id/textView6"
-        android:layout_alignEnd="@+id/textView6" />
+        android:layout_alignEnd="@+id/textView6"
+        android:background="#00ffffff" />
 
     <EditText
         android:layout_width="wrap_content"

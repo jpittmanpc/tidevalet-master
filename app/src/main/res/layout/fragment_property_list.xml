@@ -23,7 +23,9 @@
         android:layout_centerHorizontal="true"
         android:entries="@color/wallet_bright_foreground_holo_dark"
         android:divider="#1c1c1c"
-        android:layout_margin="@dimen/activity_horizontal_margin" />
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin" />
     <TextView android:id="@+id/topText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
