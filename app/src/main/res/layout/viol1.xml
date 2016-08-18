@@ -116,7 +116,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText4"
+        android:id="@+id/bldg"
         android:layout_below="@+id/textView4"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -126,8 +126,8 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText5"
-        android:layout_alignBottom="@+id/editText4"
+        android:id="@+id/unit"
+        android:layout_alignBottom="@+id/bldg"
         android:layout_alignLeft="@+id/textView5"
         android:layout_alignStart="@+id/textView5"
         android:layout_alignRight="@+id/textView5"
@@ -135,7 +135,7 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/editText4"
+    android:layout_below="@+id/bldg"
     android:layout_centerHorizontal="true"
     android:layout_marginTop="63dp"
     android:id="@+id/relativeLayout">

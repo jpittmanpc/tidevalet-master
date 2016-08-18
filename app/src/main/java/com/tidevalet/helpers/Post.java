@@ -1,15 +1,12 @@
 package com.tidevalet.helpers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Justin on 4/22/16.
  */
 public class Post {
     private long id, violationId, propertyId;
     private int isPosted;
-    private String type, contractorComments, timestamp, returnedString, localImagePath;
+    private String type, contractorComments, timestamp, returnedString, localImagePath, bldg, unit;
     public long getId() {
         return id;
     }
@@ -57,5 +54,17 @@ public class Post {
     public String getContractorComments(String contractorComments) { return contractorComments; }
     public void setContractorComments(String contractorComments) {
         this.contractorComments = contractorComments;
+    }
+    public void setBldg(String bldg) {
+        this.bldg = bldg;
+    }
+    public String getBldg() {
+        return bldg;
+    }
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+    public String getUnit() {
+        return unit;
     }
 }

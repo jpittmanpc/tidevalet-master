@@ -7,11 +7,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.tidevalet.App;
-import com.tidevalet.activities.MainActivity;
 import com.tidevalet.SessionManager;
 import com.tidevalet.helpers.Attributes;
 import com.tidevalet.helpers.Properties;
-import com.tidevalet.interfaces.MainListener;
 import com.tidevalet.thread.adapter;
 import com.tidevalet.thread.constants;
 
@@ -31,7 +29,7 @@ import java.util.Map;
 public class WebUtils {
     static SessionManager sessionManager;
 
-    public static String uploadPostToWordpress(Properties properties, String image, String violation_type,
+    public static String uploadPostToWordpress(Properties properties, String image, String violation_type, String bldg, String unit,
             Attributes service, Context context) throws XMLRPCException {
 
         sessionManager = new SessionManager(context);
@@ -53,12 +51,20 @@ public class WebUtils {
         //Custom Fields
         List<Hashtable> customFieldsList = new ArrayList<Hashtable>();
         Hashtable customField = new Hashtable();
-        customField.put("key", "image");
+        customField.put("key", "_image");
         customField.put("value", imageURL);
         customFieldsList.add(customField);
         customField = new Hashtable();
-        customField.put("key", "violation_type");
+        customField.put("key", "_violation_type");
         customField.put("value", violation_type);
+        customFieldsList.add(customField);
+        customField = new Hashtable();
+        customField.put("key", "_violation_bldg");
+        customField.put("value", bldg);
+        customFieldsList.add(customField);
+        customField = new Hashtable();
+        customField.put("key", "_violation_unit");
+        customField.put("value", unit);
         customFieldsList.add(customField);
         content.put("custom_fields", customFieldsList);
         String username = sessionManager.getUsername();

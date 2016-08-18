@@ -107,7 +107,7 @@ public class Violation2 extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         errorTextView.setText("");
-        violationTypes = null;
+        violationTypes = new StringBuilder();
         for (int i = 0; i < cbList.size(); i++) {
             if (cbList.get(i).isChecked()) {
                 String type = cbList.get(i).getText().toString();

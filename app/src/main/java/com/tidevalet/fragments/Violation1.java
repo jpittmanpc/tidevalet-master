@@ -79,6 +79,7 @@ public class Violation1 extends Fragment implements View.OnClickListener {
         TextView propViol = (TextView)v.findViewById(R.id.violProp);
         TextView dateTxt = (TextView)v.findViewById(R.id.dateTxt);
         TextView timeTxt = (TextView)v.findViewById(R.id.timeTxt);
+
         ImageButton takePic = (ImageButton)v.findViewById(R.id.imageButton);
         takePic.setOnClickListener(this);
         takePic.setOnClickListener(this);
