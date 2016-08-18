@@ -172,6 +172,7 @@ public class adapter {
 					.getColumnIndex(constants.PROPERTY_NAME)));
 			properties.setAddress(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_ADDRESS)));
 			properties.setImage(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_IMG)));
+			properties.setContractors(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_CONTRACTOR)));
 		}
 		cursor.close();
 		return properties;

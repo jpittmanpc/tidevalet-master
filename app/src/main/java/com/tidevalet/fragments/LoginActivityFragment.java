@@ -127,7 +127,7 @@ public class LoginActivityFragment extends Fragment {
                 if (result != null) {
                     InteractWithAct(1, "Cancelled");
                     mL.authenticated();
-                    session.setUserId((Integer) result);
+                    session.setUserId(result.toString());
                     //Intent intent = new Intent(App.getInstance(), MainActivity.class);
                     //startActivity(intent);
                 }

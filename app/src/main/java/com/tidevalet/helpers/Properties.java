@@ -1,11 +1,17 @@
 package com.tidevalet.helpers;
 
+import android.util.Log;
+
 import com.tidevalet.App;
 import com.tidevalet.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Justin on 4/22/16.
@@ -38,14 +44,19 @@ public class Properties {
     public void setName(String name) {
         this.name = name;
     }
-    public boolean isContractor() {
-        JSONArray list = new JSONArray();
-        try {
-            list = new JSONArray(contractors);
+    public String getContractors() {
+        return contractors;
+    }
+    public Boolean isContractor() {
+        SessionManager sM = new SessionManager(App.getInstance());
+        Boolean isContractor = false;
+        String test = contractors.replaceAll("\"", "");
+        test = test.substring(1,test.length()-1);
+        for (String isCont : test.split(",")) {
+            Log.d("TAG", isCont + " " + sM.getUserId());
+            if (Objects.equals(isCont, sM.getUserId())) { isContractor = true; }
         }
-        catch (JSONException e) { e.printStackTrace(); }
-        SessionManager sm = new SessionManager(App.getInstance());
-        return list.toString().contains(sm.getUserId().toString());
+        return isContractor;
     }
     public void setContractors(String contractors) {
         this.contractors = contractors;

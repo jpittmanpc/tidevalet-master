@@ -95,8 +95,8 @@ public class SessionManager {
 	public String getDefUrl() { return pref.getString(DEF_URL, null); }
 	public String getUsername() { return pref.getString(DEF_USR, null); }
 	public String getPassword() { return pref.getString(DEF_PWD, null); }
-	public Integer getUserId() { return pref.getInt(WP_USER_ID, 0); }
-	public void setUserId(Integer id) { editor.putInt(WP_USER_ID, id); editor.commit(); }
+	public String getUserId() { return pref.getString(WP_USER_ID, "").toString(); }
+	public void setUserId(String id) { editor.putString(WP_USER_ID, id); editor.commit(); }
     public void setNoProperties(boolean value) {
 		editor.putBoolean(UPDATE_VIEW, value); editor.commit();
 	}

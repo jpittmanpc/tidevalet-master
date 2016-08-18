@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -38,8 +39,11 @@ import com.tidevalet.service.wp_service;
 import com.tidevalet.thread.adapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements MainListener {
 
@@ -199,9 +203,16 @@ public class MainActivity extends AppCompatActivity implements MainListener {
                 @SuppressWarnings("unchecked") HashMap<String, Object> map = (HashMap<String, Object>) propertyList.get(listAdapter.getItem(pos));
                 long ids = (long) Integer.valueOf(map.get("property_id").toString());
                 Properties property = propAdapter.getPropertyById(ids);
-               /* if (!property.isContractor()) {
-                    Log.d("Main", "You aren't a contractor for this property.");
-                }*/
+                String contractors = property.getContractors();
+                Boolean isContractor = false;
+                for (String isCont : contractors.split(",")) {
+                    if (isCont == sM.getUserId()) { isContractor = true; }
+                }
+                if (!property.isContractor()) {
+                    Snackbar snackbar = Snackbar
+                            .make(view, "You are not a contractor for this property.", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
                 sM.setPropertySelected(property.getId());
                 propAdapter.close();
                 startPropView();
