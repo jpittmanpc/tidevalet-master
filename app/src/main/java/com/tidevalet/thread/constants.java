@@ -1,5 +1,7 @@
 package com.tidevalet.thread;
 
+import java.util.List;
+
 public interface constants {
 	public static final String DATABASE_NAME = "tidevalet.db";
 	public static final int DATABASE_VERSION = 2;
@@ -9,6 +11,7 @@ public interface constants {
 	public static final String TABLE_POSTS = "posts";
 	public static final String TABLE_VIOLATIONS = "pservices";
 	public static final String TABLE_SERVICES = "services";
+
 	
 	// Key Row Column
 	public static final String COL_KEY_ROW = "_id";
@@ -29,6 +32,9 @@ public interface constants {
 	public static final String POST_RETURNED_STRING = "returned_string";
 	public static final String POST_TIMESTAMP = "timestamp";
 	public static final String POST_VIOLATION_TYPE = "violation_type";
+	public static final String POST_BLDG = "bldg";
+	public static final String POST_UNIT = "unit";
+	public static final String POST_COMMENTS = "comments";
 	
 	// Columns for Table PUPIL_SERVICES
 	public static final String PROP_VIOLATION_ID = "violation_id";
@@ -59,7 +65,7 @@ public interface constants {
 		+ constants.TABLE_POSTS + "(" + constants.COL_KEY_ROW + " integer primary key autoincrement,"
 		+ constants.POST_VIOLATION_ID + " integer," + constants.POST_LOCAL_IMAGE_PATH + " text,"
 		+ constants.POST_RETURNED_STRING + " text," + constants.POST_IS_POSTED + " integer,"
-		+ constants.POST_TIMESTAMP + " text,"+constants.POST_VIOLATION_TYPE +" text);";
+		+ constants.POST_TIMESTAMP + " text,"+constants.POST_VIOLATION_TYPE +" text,"+constants.POST_UNIT +" text," + constants.POST_BLDG + " text," + constants.POST_COMMENTS + " text);";
 	// create table pservices (_id integer primary key autoincrement,
 	//							pupil_id integer
 	// 							serv_id integer,

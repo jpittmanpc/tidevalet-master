@@ -9,11 +9,8 @@ import java.util.HashMap;
 public class SessionManager {
 
 	Context context;
-
 	SharedPreferences pref;
-
 	Editor editor;
-
 	String PREF_NAME = "pref_name";
 
 	int PREF_MODE = 0;
@@ -30,6 +27,7 @@ public class SessionManager {
 	private static final String DEF_PWD = "password";
 	private static final String PROPERTY_SELECTED = "property";
 	private static String UPDATE_VIEW = "update_view";
+	private static String WP_USER_ID = "contractor_id";
 
 	public SessionManager(Context _context) {
 		super();
@@ -97,6 +95,8 @@ public class SessionManager {
 	public String getDefUrl() { return pref.getString(DEF_URL, null); }
 	public String getUsername() { return pref.getString(DEF_USR, null); }
 	public String getPassword() { return pref.getString(DEF_PWD, null); }
+	public String getUserId() { return pref.getString(WP_USER_ID, "").toString(); }
+	public void setUserId(String id) { editor.putString(WP_USER_ID, id); editor.commit(); }
     public void setNoProperties(boolean value) {
 		editor.putBoolean(UPDATE_VIEW, value); editor.commit();
 	}

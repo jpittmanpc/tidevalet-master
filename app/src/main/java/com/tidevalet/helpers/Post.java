@@ -5,11 +5,8 @@ package com.tidevalet.helpers;
  */
 public class Post {
     private long id, violationId, propertyId;
-    private String localImagePath;
     private int isPosted;
-    private String returnedString;
-    private String timestamp;
-    private String type;
+    private String type, contractorComments, timestamp, returnedString, localImagePath, bldg, unit;
     public long getId() {
         return id;
     }
@@ -54,4 +51,21 @@ public class Post {
     public void setViolationType(String type) {
         this.type = type;
     }
+    public String getContractorComments() { return contractorComments; }
+    public void setContractorComments(String contractorComments) {
+        this.contractorComments = contractorComments;
+    }
+    public void setBldg(String bldg) {
+        this.bldg = bldg;
+    }
+    public String getBldg() {
+        return bldg;
+    }
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+    public String getUnit() {
+        return unit;
+    }
+
 }

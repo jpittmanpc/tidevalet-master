@@ -15,64 +15,45 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="51dp" />
-
-
-    <CheckBox
+        android:layout_marginTop="51dp"
+        android:layout_marginBottom="30dp"
+        />
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Not Tied"
-        android:id="@+id/cb1"
-        android:layout_marginBottom="52dp"
-        android:layout_above="@+id/checkBox3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Not Tied"
-        android:id="@+id/checkBox"
-        android:layout_alignTop="@+id/cb1"
-        android:layout_centerHorizontal="true" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Not Tied"
-        android:id="@+id/checkBox2"
-        android:layout_alignTop="@+id/checkBox4"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Not Tied"
-        android:id="@+id/checkBox3"
-        android:layout_alignTop="@+id/checkBox5"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Not Tied"
-        android:layout_marginTop="5dp"
-        android:id="@+id/checkBox4"
-        android:layout_below="@+id/checkBox"
-        android:layout_marginBottom="5dp"
-        android:layout_alignLeft="@+id/checkBox"
-        android:layout_alignStart="@+id/checkBox" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Not Tied"
-        android:id="@+id/checkBox5"
+        android:id="@+id/errorTextView2"
+        android:text=""
         android:layout_below="@+id/violation_type_text_top"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="169dp" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingBottom="15dp"
+        android:gravity="center_horizontal" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        android:layout_below="@id/errorTextView2" >
 
+        <LinearLayout android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:id="@+id/left"
+            android:orientation="vertical"
+            android:clickable="false">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:id="@+id/right"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

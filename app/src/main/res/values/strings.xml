@@ -12,7 +12,11 @@
     <string name="step2">violation2</string>
     <string name="step3">violation3</string>
     <string name="submit">Submit</string>
+    <string name="errorForNoPic">Please take a picture.</string>
+    <string name="errorForNoViolationType">Please choose a violation type.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="viol3_title">Please leave additional \ndetailed comments.</string>
+    <string name="contractor_comments">Contractor Comments</string>
 </resources>

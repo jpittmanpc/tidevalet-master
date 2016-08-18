@@ -1,25 +1,25 @@
-package com.tidevalet;
+package com.tidevalet.fragments;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.stepstone.stepper.Step;
-import com.stepstone.stepper.VerificationError;
-
+import com.tidevalet.R;
+import com.tidevalet.interfaces.MainListener;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Violation1.OnFragmentInteractionListener} interface
+ * {@link MainListener} interface
  * to handle interaction events.
- * Use the {@link Violation1#newInstance} factory method to
+ * Use the {@link PropertyList#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Violation3 extends Fragment implements Step {
+public class PropertyList extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,9 +29,9 @@ public class Violation3 extends Fragment implements Step {
     private String mParam1;
     private String mParam2;
 
-//    private OnFragmentInteractionListener violationListener;
+    private MainListener mListener;
 
-    public Violation3() {
+    public PropertyList() {
         // Required empty public constructor
     }
 
@@ -41,11 +41,11 @@ public class Violation3 extends Fragment implements Step {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Violation3.
+     * @return A new instance of fragment PropertyList.
      */
     // TODO: Rename and change types and number of parameters
-    public static Violation3 newInstance(String param1, String param2) {
-        Violation3 fragment = new Violation3();
+    public static PropertyList newInstance(String param1, String param2) {
+        PropertyList fragment = new PropertyList();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -66,51 +66,34 @@ public class Violation3 extends Fragment implements Step {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_violation3, container, false);
+        View v = inflater.inflate(R.layout.fragment_property_list, container, false);
+        initialize(v);
+        return v;
     }
-
-    @Override
-    public int getName() {
-        return 0;
+    public void initialize(View v) {
+        mListener.propertyList(v);
     }
-
-    @Override
-    public VerificationError verifyStep() {
-        return null;
-    }
-
-    @Override
-    public void onSelected() {
-
-    }
-
-    @Override
-    public void onError(@NonNull VerificationError error) {
-
-    }
-
-    /*// TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (violationListener != null) {
-            violationListener.onFragmentInteraction(uri);
+    public void onButtonPressed(View v) {
+        if (mListener != null) {
+            mListener.clicked(v);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            violationListener = (OnFragmentInteractionListener) context;
+        if (context instanceof MainListener) {
+            mListener = (MainListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement MainListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        violationListener = null;
+        mListener = null;
     }
 
     /**
@@ -122,9 +105,5 @@ public class Violation3 extends Fragment implements Step {
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
-     *
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }*/
+     */
 }

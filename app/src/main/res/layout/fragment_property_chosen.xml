@@ -6,35 +6,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="2"
-    tools:context="com.tidevalet.MainActivityFragment$PlaceholderFragment"
+    tools:context=".fragments.PropertyChosen$PlaceholderFragment"
     app:layout_behavior="@string/appbar_scrolling_view_behavior" >
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="40dp"
-    android:id="@+id/topLayout"
-    android:maxHeight="80dp" >
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/snackbarlocation">
-    </android.support.design.widget.CoordinatorLayout>
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/propertyImg"
-        android:contentDescription="Property Image"
-        android:layout_alignParentTop="true"
-        android:maxHeight="60dp"
-        android:layout_alignParentLeft="true"
-        android:src="@drawable/tidevalet"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:minHeight="40dp"
+        android:id="@+id/topLayout"
+        android:maxHeight="80dp" >
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/snackbarlocation">
+        </android.support.design.widget.CoordinatorLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/propertyImg"
+            android:contentDescription="Property Image"
+            android:layout_alignParentTop="true"
+            android:maxHeight="60dp"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/tidevalet"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
-</RelativeLayout>
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -45,13 +45,13 @@
         android:id="@+id/propertyName"
         android:layout_gravity="center"
         android:gravity="center"
-        android:paddingBottom="20dp"
-        android:layout_above="@+id/newViolation"
+        android:paddingBottom="16dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/topLayout" />
+        android:layout_below="@+id/topLayout"
+        android:layout_above="@+id/newViolation" />
 
     <Button
         android:layout_width="wrap_content"
@@ -63,7 +63,7 @@
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
         android:padding="@dimen/abc_button_padding_horizontal_material"
-        android:theme="@atyle/FlatButton"
+        android:theme="@style/FlatButton"
         style="@style/Widget.AppCompat.Button.Borderless"/>
 
     <Button
@@ -77,7 +77,7 @@
         android:layout_centerHorizontal="true"
         android:padding="@dimen/abc_button_padding_horizontal_material"
         android:textStyle="bold"
-        android:theme="@atyle/FlatButton"
+        android:theme="@style/FlatButton"
         style="@style/Widget.AppCompat.Button.Borderless"/>
 
     <Button
@@ -91,6 +91,6 @@
         android:layout_centerHorizontal="true"
         android:padding="@dimen/abc_button_padding_horizontal_material"
         android:textStyle="bold"
-        android:theme="@atyle/FlatButton"
+        android:theme="@style/FlatButton"
         style="@style/Widget.AppCompat.Button.Borderless"/>
 </RelativeLayout>

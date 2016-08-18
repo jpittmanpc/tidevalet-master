@@ -1,4 +1,4 @@
-package com.tidevalet;
+package com.tidevalet.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,33 +18,33 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.tidevalet.App;
+import com.tidevalet.R;
+import com.tidevalet.SessionManager;
+import com.tidevalet.fragments.Violation1;
+import com.tidevalet.fragments.Violation2;
+import com.tidevalet.fragments.Violation3;
 import com.tidevalet.helpers.Attributes;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.helpers.Properties;
+import com.tidevalet.interfaces.ViolationListener;
 import com.tidevalet.service.ulservice;
 import com.tidevalet.thread.adapter;
 
-import org.xmlrpc.android.WebUtils;
-
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,23 +52,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class ViolationActivity extends AppCompatActivity implements ViolationListener {
-    /**
-     * The number of pages (wizard steps) to show in this demo.
-     */
     private static final int NUM_PAGES = 3;
-
-    /**
-     * The pager widget, which handles animation and allows swiping horizontally to access previous
-     * and next wizard steps.
-     */
     private ViewPager mPager;
-
-
-    /**
-     * The pager adapter, which provides the pages to the view pager widget.
-     */
     private PagerAdapter mPagerAdapter;
-    
+    private List<String> violationTypes = new ArrayList<>();
     private List<ImageView> dots;
     Button back;
     Button next;
@@ -76,12 +63,12 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     ImageView img1;
     ImageView img2;
     Properties property;
-    FragmentManager frags;
-    Fragment Viol1;
     Attributes attributes = new Attributes();
     Post post;
     ArrayList<String> uriList = new ArrayList<String>();
-    ArrayList<Uri> arrayUri = new ArrayList<Uri>();
+    private View Violation1v;
+    private View Violation2v;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,9 +96,23 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, post.getViolationType() + " ...types");
                 if (mPager.getCurrentItem() == 2) {
-                    Snackbar.make(v, "Submitting", Snackbar.LENGTH_LONG).show();
-                    startSubmit();
+                    if (post.getViolationType() == null) {
+                        mPager.setCurrentItem(1);
+                        TextView tv1 = (TextView) Violation2v.findViewById(R.id.errorTextView2);
+                        tv1.setText(R.string.errorForNoViolationType);
+                        tv1.setTextColor(Color.RED);
+                    }
+                    if (uriList.isEmpty()) {
+                        mPager.setCurrentItem(0);
+                        TextView tv0 = (TextView) Violation1v.findViewById(R.id.errorTextView1);
+                        tv0.setText(R.string.errorForNoPic);
+                    }
+                    else {
+                        Snackbar.make(v, "Submitting", Snackbar.LENGTH_LONG).show();
+                        startSubmit();
+                    }
                 }
                 else { mPager.setCurrentItem((mPager.getCurrentItem()) + 1); }
             }
@@ -219,9 +220,24 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         }
     }
     @Override
-    public void violationTypes(String string) {
-        post.setViolationType(string);
+    public void violationTypes(String list) {
+        post.setViolationType(list);
     }
+
+    @Override
+    public void sendview(View v, int id) {
+        switch (id) {
+            case 1: Violation1v = v; break;
+            case 2: Violation2v = v; break;
+            default: break;
+        }
+    }
+
+    @Override
+    public void sendComments(String s) {
+        post.setContractorComments(s);
+    }
+
     @Override
     public void clicked(View v) {
         dispatchTakePictureIntent();
@@ -263,8 +279,16 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         post.setIsPosted(0);
         post.setLocalImagePath(Uri.parse(uriList.get(0)).toString());
         post.setPropertyId(attributes.getPropertyId());
+        EditText bldgV = (EditText) Violation1v.findViewById(R.id.bldg);
+        EditText unitV = (EditText) Violation1v.findViewById(R.id.unit);
+        String unit = "";
+        String bldg = "";
+        bldg = bldgV.getText().toString();
+        unit = unitV.getText().toString();
+        Log.d("BLDG", bldg + unit + " ");
+        post.setBldg(bldg);
+        post.setUnit(unit);
         adapter dbAdapter = new adapter(this);
-        post.setId(41);
         dbAdapter.open();
         post = dbAdapter.addPost(post);
         dbAdapter.close();

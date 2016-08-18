@@ -2,10 +2,11 @@
 package org.xmlrpc.android;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.tidevalet.App;
-import com.tidevalet.MainActivity;
 import com.tidevalet.SessionManager;
 import com.tidevalet.helpers.Attributes;
 import com.tidevalet.helpers.Properties;
@@ -25,10 +26,12 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-public class WebUtils implements MainActivity.ListListener {
+public class WebUtils {
     static SessionManager sessionManager;
-    public static String uploadPostToWordpress(Properties properties, String image, String violation_type,
+
+    public static String uploadPostToWordpress(Properties properties, String image, String violation_type, String bldg, String unit,
             Attributes service, Context context) throws XMLRPCException {
+
         sessionManager = new SessionManager(context);
         service.setUrl(sessionManager.getDefUrl());
         String imageURL = uploadImage(image, service, context);
@@ -40,7 +43,7 @@ public class WebUtils implements MainActivity.ListListener {
         content.put("post_content", prepareBodyOfPost(violation_type, imageURL));
         content.put("post_status", "publish");
         // Term Fields
-        Hashtable tax = new Hashtable();
+        HashMap<String, List<String>> tax = new HashMap<String, List<String>>();
         List<String> property = new ArrayList<String>();
         property.add(String.valueOf(sessionManager.propertySelected()));
         tax.put("properties", property);
@@ -48,12 +51,20 @@ public class WebUtils implements MainActivity.ListListener {
         //Custom Fields
         List<Hashtable> customFieldsList = new ArrayList<Hashtable>();
         Hashtable customField = new Hashtable();
-        customField.put("key", "image");
+        customField.put("key", "_image");
         customField.put("value", imageURL);
         customFieldsList.add(customField);
         customField = new Hashtable();
-        customField.put("key", "violation_type");
+        customField.put("key", "_violation_type");
         customField.put("value", violation_type);
+        customFieldsList.add(customField);
+        customField = new Hashtable();
+        customField.put("key", "_violation_bldg");
+        customField.put("value", bldg);
+        customFieldsList.add(customField);
+        customField = new Hashtable();
+        customField.put("key", "_violation_unit");
+        customField.put("value", unit);
         customFieldsList.add(customField);
         content.put("custom_fields", customFieldsList);
         String username = sessionManager.getUsername();
@@ -89,8 +100,9 @@ public class WebUtils implements MainActivity.ListListener {
     }
     public static String callWp(String method, Context context)
         throws XMLRPCException, UnsupportedEncodingException, ClientProtocolException, IOException {
+        adapter dbAdapter = new adapter(App.getInstance());
         sessionManager = new SessionManager(context);
-                String sXmlRpcMethod = method;
+        String sXmlRpcMethod = method;
         String result = null;
         XMLRPCClient client = new XMLRPCClient(sessionManager.getDefUrl() + "xmlrpc.php");
         HashMap<String, Object> theCall = new HashMap<String, Object>();
@@ -102,40 +114,49 @@ public class WebUtils implements MainActivity.ListListener {
                 1, sessionManager.getUsername(), sessionManager.getPassword(), taxonomy, theCall
         };
         Object[] obj = (Object[]) client.call(method, params);
-        adapter dbAdapter = new adapter(App.getInstance());
-        dbAdapter.open();
+
         Integer propId = 0;
         String name = "", address = "", image = "";
-        List contractors = new ArrayList();
-        for (int i=0; i<obj.length;i++) {
-            Map<String, Object> each = (HashMap<String, Object>) obj[i];
+        for (int i = 0; i < obj.length; i++) {
+            List<String> contractors = new ArrayList<>();
+            List<String> complex_mgrs = new ArrayList<>();
+            Map<String, Object> each = (Map<String, Object>) obj[i];
             name = (String) each.get("name");
             address = (String) each.get("address");
             propId = Integer.valueOf(String.valueOf(each.get("term_id")));
             for (Map.Entry<String, Object> entry : each.entrySet()) {
                 if (entry.getValue() instanceof String) {
-                    if (entry.getKey() == constants.PROPERTY_NAME) { name = (String) entry.getValue(); }
+                    if (entry.getKey() == constants.PROPERTY_NAME) {
+                        name = (String) entry.getValue();
+                    }
 
                     Log.d("STRING", entry.getKey() + " val:" + entry.getValue().toString());
-                }
-                else if (entry.getValue() instanceof Object) {
+                } else if (entry.getValue() instanceof Object) {
                     String t = entry.getValue().getClass().getName();
                     Log.d("TAG", "Class for " + entry.getKey() + " is: " + t);
-                    if (t == "java.lang.Boolean") { Log.d("TAG", "Boolean: " + entry.getValue() + " for " + entry.getKey()); }
-                    else if (t == "java.lang.Integer") { Log.d("TAG", "Int: " + entry.getValue() + " for " + entry.getKey()); }
-                    else if (t == "java.util.HashMap") {
+                    if (t == "java.lang.Boolean") {
+                        Log.d("TAG", "Boolean: " + entry.getValue() + " for " + entry.getKey());
+                    } else if (t == "java.lang.Integer") {
+                        Log.d("TAG", "Int: " + entry.getValue() + " for " + entry.getKey());
+                    } else if (t == "java.util.HashMap") {
                         Map<String, String> imageMap = (HashMap<String, String>) entry.getValue();
                         image = (String) imageMap.get("image");
                         Log.d("HASHMAP", entry.getValue().toString() + " for " + entry.getKey());
-                    }
-                    else {
+                    } else {
                         Object[] breakdown = (Object[]) entry.getValue();
                         for (int j = 0; j < breakdown.length; j++) {
-                            Log.d("BREAKDOWN", breakdown[j].toString());
-                            // http://stackoverflow.com/questions/17808159/saving-arraylistmapstring-string-to-a-sqlite-database
-                            if (entry.getKey() == "contractor") {
-                                contractors.add(entry.getValue());
+                            switch (entry.getKey()) {
+                                case "contractor":
+                                    contractors.add(breakdown[j].toString());
+                                    break;
+                                case "complex_mgrs":
+                                    complex_mgrs.add(breakdown[j].toString());
+                                    break;
+                                default:
+                                    Log.d("IDK", entry.getKey() + "< THE KEY ... THE VALUE >>" + breakdown[j].toString());
+                                    break;
                             }
+                            Log.d("BREAKDOWN", entry.getKey() + " " + breakdown[j].toString());
                             //Map<String, Object> wtf = (HashMap<String, Object>) breakdown[i];
                         /*for (Map.Entry<String, Object> entries : wtf.entrySet()) {
                             if (entries.getValue() instanceof String) {
@@ -148,14 +169,17 @@ public class WebUtils implements MainActivity.ListListener {
                         }*/
                         }
                     }
-                                    }
-                else if (entry.getValue() instanceof Map) {
-                    Log.d("MAP", "Fuck if i know");
+                    if (entry.getValue() instanceof Map || entry.getValue() instanceof HashMap) {
+                        Log.d("MAP", "Fuck if i know");
+                    }
                 }
             }
-            String contractorList = String.valueOf(new JSONArray(contractors));
-            dbAdapter.addProperty(propId, name, address, image, contractorList);
-        }
+                String contractorList = String.valueOf(new JSONArray(contractors));
+                Log.d("Contractor List", contractorList.toString());
+                dbAdapter.open();
+                dbAdapter.addProperty(propId, name, address, image, contractorList);
+                dbAdapter.close();
+
         /*for (int i=0; i<obj.length;i++) {
 
             Class<? extends Object> c = obj[i].getClass();
@@ -174,23 +198,20 @@ public class WebUtils implements MainActivity.ListListener {
             Log.d("TAG2", v.toString());
         }*/
 
-        //String term_id = contentHash.get("term_id").toString();
-        //String name = contentHash.get("name").toString();
-        //Log.d("WebUtils", "Term ID: " + term_id + " Name:" + name);
-        if (sessionManager.noProperties()) {
-            sessionManager.setNoProperties(false);
-            Log.d("WebUtils", "updating list after retrieval");
-            MainActivity.ListListener listListener = new MainActivity.ListListener() {
-                @Override
-                public void notifyUpdate() {
-                    updateList();
-                }
-
-                private void updateList() {
-                }
-            };
+            //String term_id = contentHash.get("term_id").toString();
+            //String name = contentHash.get("name").toString();
+            //Log.d("WebUtils", "Term ID: " + term_id + " Name:" + name);
+            if (sessionManager.noProperties()) {
+                Intent intent = new Intent("updateListView");
+                LocalBroadcastManager.getInstance(App.getInstance()).sendBroadcast(intent);
+                sessionManager.setNoProperties(false);
+                Log.d("WebUtils", "updating list after retrieval");
+            }
         }
-        return result;
+       return result;
+    }
+    public interface ListenerCallback {
+        void onUpdate();
     }
     private static void ObjToString(Object[] key) {
         List<Object> list = new ArrayList<Object>();
@@ -294,7 +315,5 @@ public class WebUtils implements MainActivity.ListListener {
         return params;
     }
 
-    @Override
-    public void notifyUpdate() {
-    }
+
 }

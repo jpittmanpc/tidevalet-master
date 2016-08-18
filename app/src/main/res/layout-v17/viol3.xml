@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/viol3_title"
+        android:textAppearance="@style/LargeText"
+        android:id="@+id/violation_type_text_top"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_weight="0.22"
+        android:textAlignment="center"
+        android:layout_marginTop="51dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/contractor_comments"
+        android:id="@+id/textView"
+        android:layout_weight="0.03" />
+    <EditText
+        android:id="@+id/comments"
+        android:layout_width="match_parent"
+        android:layout_height="145dp"
+        android:inputType="text|textMultiLine"
+        android:gravity="top"
+        android:layout_weight="0.00" />
+</LinearLayout>

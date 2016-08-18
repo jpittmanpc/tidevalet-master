@@ -1,12 +1,25 @@
 package com.tidevalet.helpers;
 
+import android.util.Log;
+
+import com.tidevalet.App;
+import com.tidevalet.SessionManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 /**
  * Created by Justin on 4/22/16.
  */
 public class Properties {
     private long id;
     private String name;
-    private String term_id, image, address;
+    private String term_id, image, address, contractors;
     public void setImage(String image) {
         this.image = image;
     }
@@ -30,5 +43,22 @@ public class Properties {
     }
     public void setName(String name) {
         this.name = name;
+    }
+    public String getContractors() {
+        return contractors;
+    }
+    public Boolean isContractor() {
+        SessionManager sM = new SessionManager(App.getInstance());
+        Boolean isContractor = false;
+        String test = contractors.replaceAll("\"", "");
+        test = test.substring(1,test.length()-1);
+        for (String isCont : test.split(",")) {
+            Log.d("TAG", isCont + " " + sM.getUserId());
+            if (Objects.equals(isCont, sM.getUserId())) { isContractor = true; }
+        }
+        return isContractor;
+    }
+    public void setContractors(String contractors) {
+        this.contractors = contractors;
     }
 }
