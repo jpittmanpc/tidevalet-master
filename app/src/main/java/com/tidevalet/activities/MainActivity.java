@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -198,6 +199,9 @@ public class MainActivity extends AppCompatActivity implements MainListener {
                 @SuppressWarnings("unchecked") HashMap<String, Object> map = (HashMap<String, Object>) propertyList.get(listAdapter.getItem(pos));
                 long ids = (long) Integer.valueOf(map.get("property_id").toString());
                 Properties property = propAdapter.getPropertyById(ids);
+               /* if (!property.isContractor()) {
+                    Log.d("Main", "You aren't a contractor for this property.");
+                }*/
                 sM.setPropertySelected(property.getId());
                 propAdapter.close();
                 startPropView();

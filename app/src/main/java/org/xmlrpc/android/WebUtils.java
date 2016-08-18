@@ -117,8 +117,9 @@ public class WebUtils {
 
         Integer propId = 0;
         String name = "", address = "", image = "";
-        List contractors = new ArrayList();
         for (int i = 0; i < obj.length; i++) {
+            List<String> contractors = new ArrayList<>();
+            List<String> complex_mgrs = new ArrayList<>();
             Map<String, Object> each = (Map<String, Object>) obj[i];
             name = (String) each.get("name");
             address = (String) each.get("address");
@@ -144,13 +145,18 @@ public class WebUtils {
                     } else {
                         Object[] breakdown = (Object[]) entry.getValue();
                         for (int j = 0; j < breakdown.length; j++) {
-                            Log.d("BREAKDOWN", breakdown[j].toString());
-                            // http://stackoverflow.com/questions/17808159/saving-arraylistmapstring-string-to-a-sqlite-database
-                            if (entry.getKey() == "contractor") {
-                                contractors.add(entry.getValue());
+                            switch (entry.getKey()) {
+                                case "contractor":
+                                    contractors.add(breakdown[j].toString());
+                                    break;
+                                case "complex_mgrs":
+                                    complex_mgrs.add(breakdown[j].toString());
+                                    break;
+                                default:
+                                    Log.d("IDK", entry.getKey() + "< THE KEY ... THE VALUE >>" + breakdown[j].toString());
+                                    break;
                             }
-
-
+                            Log.d("BREAKDOWN", entry.getKey() + " " + breakdown[j].toString());
                             //Map<String, Object> wtf = (HashMap<String, Object>) breakdown[i];
                         /*for (Map.Entry<String, Object> entries : wtf.entrySet()) {
                             if (entries.getValue() instanceof String) {
@@ -167,11 +173,13 @@ public class WebUtils {
                         Log.d("MAP", "Fuck if i know");
                     }
                 }
+            }
                 String contractorList = String.valueOf(new JSONArray(contractors));
+                Log.d("Contractor List", contractorList.toString());
                 dbAdapter.open();
                 dbAdapter.addProperty(propId, name, address, image, contractorList);
                 dbAdapter.close();
-            }
+
         /*for (int i=0; i<obj.length;i++) {
 
             Class<? extends Object> c = obj[i].getClass();

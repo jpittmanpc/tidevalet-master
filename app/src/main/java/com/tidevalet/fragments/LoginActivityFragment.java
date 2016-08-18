@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,21 +120,25 @@ public class LoginActivityFragment extends Fragment {
         @Override
         protected String doInBackground(String[] params) {
             XMLRPCClient client = new XMLRPCClient(session.getDefUrl() + "xmlrpc.php");
-            Object[] paramaters = { 1, params[0], params[1], true };
+            Object[] paramaters = {1, params[0], params[1], true};
+            Object result = null;
             try {
-                Object result = client.call("android.auth", paramaters);
+                result = client.call("android.auth", paramaters);
                 if (result != null) {
                     InteractWithAct(1, "Cancelled");
                     mL.authenticated();
+                    session.setUserId((Integer) result);
                     //Intent intent = new Intent(App.getInstance(), MainActivity.class);
                     //startActivity(intent);
                 }
             } catch (XMLRPCException e) {
                 ERROR = true;
+                result = " ";
                 resp = e.getMessage();
                 InteractWithAct(1, "error");
                 e.printStackTrace();
             }
+            Log.d("RESPONSE FROM SITE", result.toString() + " ");
             return resp;
         }
     }

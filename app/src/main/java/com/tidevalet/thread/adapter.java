@@ -89,6 +89,7 @@ public class adapter {
 						.getColumnIndex(constants.PROPERTY_NAME)));
 				property.setAddress(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_ADDRESS)));
 				property.setImage(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_IMG)));
+				property.setContractors(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_CONTRACTOR)));
 				if (!property.getName().equals("")) {
 					String name = cursor.getString(cursor
 							.getColumnIndex(constants.PROPERTY_NAME));
@@ -121,12 +122,14 @@ public class adapter {
 		ContentValues values = new ContentValues();
 		values.put(constants.POST_VIOLATION_ID, post.getViolationId());
 		values.put(constants.POST_IS_POSTED, post.getIsPosted());
-		values
-				.put(constants.POST_LOCAL_IMAGE_PATH, post
+		values.put(constants.POST_LOCAL_IMAGE_PATH, post
 						.getLocalImagePath());
 		values.put(constants.POST_RETURNED_STRING, post.getReturnedString());
 		values.put(constants.POST_TIMESTAMP, post.getTimestamp());
 		values.put(constants.POST_VIOLATION_TYPE, post.getViolationType().toString());
+		values.put(constants.POST_BLDG, post.getBldg());
+		values.put(constants.POST_UNIT, post.getUnit());
+		values.put(constants.POST_COMMENTS, post.getContractorComments());
 		post.setId(sqlDB.insert(constants.TABLE_POSTS, null, values));
 		return post;
 	}
@@ -142,6 +145,9 @@ public class adapter {
 			post.setReturnedString(cursor.getString(cursor.getColumnIndex(constants.POST_RETURNED_STRING)));
 			post.setTimestamp(cursor.getString(cursor.getColumnIndex(constants.POST_TIMESTAMP)));
 			post.setViolationType(cursor.getString(cursor.getColumnIndex(constants.POST_VIOLATION_TYPE)));
+			post.setContractorComments(cursor.getString(cursor.getColumnIndex(constants.POST_COMMENTS)));
+			post.setBldg(cursor.getString(cursor.getColumnIndex(constants.POST_BLDG)));
+			post.setUnit(cursor.getString(cursor.getColumnIndex(constants.POST_UNIT)));
 		}
 		cursor.close();
 		return post;
@@ -273,7 +279,10 @@ public class adapter {
 		values.put(constants.POST_IS_POSTED, post.getIsPosted());
 		values.put(constants.POST_RETURNED_STRING, post.getReturnedString());
 		values.put(constants.POST_TIMESTAMP, post.getTimestamp());
-		values.put(constants.POST_VIOLATION_TYPE, post.getViolationType().toString());
+		values.put(constants.POST_VIOLATION_TYPE, post.getViolationType());
+		values.put(constants.POST_BLDG, post.getBldg());
+		values.put(constants.POST_UNIT, post.getUnit());
+		values.put(constants.POST_COMMENTS, post.getContractorComments());
 		sqlDB.update(constants.TABLE_POSTS, values, constants.COL_KEY_ROW
 				+ "=" + post.getId(), null);
 	}

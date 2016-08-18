@@ -51,7 +51,7 @@ public class Post {
     public void setViolationType(String type) {
         this.type = type;
     }
-    public String getContractorComments(String contractorComments) { return contractorComments; }
+    public String getContractorComments() { return contractorComments; }
     public void setContractorComments(String contractorComments) {
         this.contractorComments = contractorComments;
     }
@@ -67,4 +67,5 @@ public class Post {
     public String getUnit() {
         return unit;
     }
+
 }

@@ -285,10 +285,10 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         String bldg = "";
         bldg = bldgV.getText().toString();
         unit = unitV.getText().toString();
+        Log.d("BLDG", bldg + unit + " ");
         post.setBldg(bldg);
         post.setUnit(unit);
         adapter dbAdapter = new adapter(this);
-        post.setId(41);
         dbAdapter.open();
         post = dbAdapter.addPost(post);
         dbAdapter.close();
