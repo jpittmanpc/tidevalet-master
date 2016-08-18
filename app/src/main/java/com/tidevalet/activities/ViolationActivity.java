@@ -52,21 +52,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class ViolationActivity extends AppCompatActivity implements ViolationListener {
-    /**
-     * The number of pages (wizard steps) to show in this demo.
-     */
     private static final int NUM_PAGES = 3;
-
-    /**
-     * The pager widget, which handles animation and allows swiping horizontally to access previous
-     * and next wizard steps.
-     */
     private ViewPager mPager;
-
-
-    /**
-     * The pager adapter, which provides the pages to the view pager widget.
-     */
     private PagerAdapter mPagerAdapter;
     private List<String> violationTypes = new ArrayList<>();
     private List<ImageView> dots;
@@ -76,12 +63,9 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     ImageView img1;
     ImageView img2;
     Properties property;
-    FragmentManager frags;
-    Fragment Viol1;
     Attributes attributes = new Attributes();
     Post post;
     ArrayList<String> uriList = new ArrayList<String>();
-    ArrayList<Uri> arrayUri = new ArrayList<Uri>();
     private View Violation1v;
     private View Violation2v;
 
@@ -117,13 +101,13 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
                     if (post.getViolationType() == null) {
                         mPager.setCurrentItem(1);
                         TextView tv1 = (TextView) Violation2v.findViewById(R.id.errorTextView2);
-                        tv1.setText("Please choose a violation type");
+                        tv1.setText(R.string.errorForNoViolationType);
                         tv1.setTextColor(Color.RED);
                     }
                     if (uriList.isEmpty()) {
                         mPager.setCurrentItem(0);
                         TextView tv0 = (TextView) Violation1v.findViewById(R.id.errorTextView1);
-                        tv0.setText("Please take a picture");
+                        tv0.setText(R.string.errorForNoPic);
                     }
                     else {
                         Snackbar.make(v, "Submitting", Snackbar.LENGTH_LONG).show();
@@ -247,6 +231,11 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             case 2: Violation2v = v; break;
             default: break;
         }
+    }
+
+    @Override
+    public void sendComments(String s) {
+        post.setContractorComments(s);
     }
 
     @Override

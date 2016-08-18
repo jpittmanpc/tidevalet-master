@@ -8,11 +8,8 @@ import java.util.List;
  */
 public class Post {
     private long id, violationId, propertyId;
-    private String localImagePath;
     private int isPosted;
-    private String returnedString;
-    private String timestamp;
-    private String type;
+    private String type, contractorComments, timestamp, returnedString, localImagePath;
     public long getId() {
         return id;
     }
@@ -56,5 +53,9 @@ public class Post {
     }
     public void setViolationType(String type) {
         this.type = type;
+    }
+    public String getContractorComments(String contractorComments) { return contractorComments; }
+    public void setContractorComments(String contractorComments) {
+        this.contractorComments = contractorComments;
     }
 }

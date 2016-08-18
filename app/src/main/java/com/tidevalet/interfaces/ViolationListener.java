@@ -15,4 +15,6 @@ public interface ViolationListener {
     void violationTypes(String list);
 
     void sendview(View v, int id);
+
+    void sendComments(String s);
 }

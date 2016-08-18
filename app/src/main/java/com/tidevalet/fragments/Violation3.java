@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
@@ -33,6 +34,7 @@ public class Violation3 extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private EditText comments;
 
     public ViolationListener vL;
 
@@ -71,7 +73,9 @@ public class Violation3 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_violation3, container, false);
+        View v = inflater.inflate(R.layout.fragment_violation3, container, false);
+        comments = (EditText) v.findViewById(R.id.comments);
+        return v;
     }
 
 
@@ -90,6 +94,7 @@ public class Violation3 extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        vL.sendComments(comments.getText().toString());
         vL = null;
     }
 
