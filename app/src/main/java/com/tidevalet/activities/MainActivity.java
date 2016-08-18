@@ -203,11 +203,6 @@ public class MainActivity extends AppCompatActivity implements MainListener {
                 @SuppressWarnings("unchecked") HashMap<String, Object> map = (HashMap<String, Object>) propertyList.get(listAdapter.getItem(pos));
                 long ids = (long) Integer.valueOf(map.get("property_id").toString());
                 Properties property = propAdapter.getPropertyById(ids);
-                String contractors = property.getContractors();
-                Boolean isContractor = false;
-                for (String isCont : contractors.split(",")) {
-                    if (isCont == sM.getUserId()) { isContractor = true; }
-                }
                 if (!property.isContractor()) {
                     Snackbar snackbar = Snackbar
                             .make(view, "You are not a contractor for this property.", Snackbar.LENGTH_LONG);
