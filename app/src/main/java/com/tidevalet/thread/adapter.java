@@ -126,7 +126,7 @@ public class adapter {
 						.getLocalImagePath());
 		values.put(constants.POST_RETURNED_STRING, post.getReturnedString());
 		values.put(constants.POST_TIMESTAMP, post.getTimestamp());
-		values.put(constants.POST_VIOLATION_TYPE, post.getViolationType());
+		values.put(constants.POST_VIOLATION_TYPE, post.getViolationType().toString());
 		post.setId(sqlDB.insert(constants.TABLE_POSTS, null, values));
 		return post;
 	}
@@ -273,7 +273,7 @@ public class adapter {
 		values.put(constants.POST_IS_POSTED, post.getIsPosted());
 		values.put(constants.POST_RETURNED_STRING, post.getReturnedString());
 		values.put(constants.POST_TIMESTAMP, post.getTimestamp());
-		values.put(constants.POST_VIOLATION_TYPE, post.getViolationType());
+		values.put(constants.POST_VIOLATION_TYPE, post.getViolationType().toString());
 		sqlDB.update(constants.TABLE_POSTS, values, constants.COL_KEY_ROW
 				+ "=" + post.getId(), null);
 	}

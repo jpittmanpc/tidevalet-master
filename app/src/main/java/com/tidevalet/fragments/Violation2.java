@@ -1,15 +1,26 @@
 package com.tidevalet.fragments;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.tidevalet.App;
 import com.tidevalet.R;
 import com.tidevalet.interfaces.ViolationListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -20,20 +31,24 @@ import com.tidevalet.interfaces.ViolationListener;
  * Use the {@link Violation2#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Violation2 extends Fragment {
+public class Violation2 extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    public ViolationListener violationListener;
+    public ViolationListener vL;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private CheckBox cb1;
 
-//    private MainListener violationListener;
-
+//    private MainListener vL;
+    private String[] checkBoxListLeft = { "Not Tied", "Over Weight", "Sharp Objects", "Pet Waste", "Hazardous", "CardBoard" };
+    private String[] checkBoxListRight = {"Not bagged", "Oversized Trash", "Leaking Trash", "Outside Hours", "Recycling", "Other" };
+    private List<CheckBox> cbList = new ArrayList<CheckBox>();
+    private StringBuilder violationTypes = new StringBuilder();
+    private TextView errorTextView;
     public Violation2() {
         // Required empty public constructor
     }
@@ -62,6 +77,7 @@ public class Violation2 extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
@@ -70,14 +86,53 @@ public class Violation2 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_violation2, container, false);
-        cb1 = (CheckBox)v.findViewById(R.id.cb1);
-        return v;
+        sendview(v);
+        errorTextView = (TextView) v.findViewById(R.id.errorTextView2);
+        for (int i=0; i < checkBoxListLeft.length; i++) {
+            LinearLayout leftside = (LinearLayout) v.findViewById(R.id.left);
+            CheckBox cb = new CheckBox(App.getInstance());
+            Drawable drawable = DrawableCompat.wrap(ContextCompat.getDrawable(cb.getContext(), R.drawable.abc_btn_check_material));
+            cb.setButtonDrawable(drawable);
+            cb.setText(checkBoxListLeft[i]);
+            cb.setOnClickListener(this);
+            cb.setTextColor(getResources().getColor(R.color.TideBlue));
+            leftside.addView(cb);
+            cbList.add(cb);
+        }
+        for (int i=0; i<checkBoxListRight.length;i++) {
+            LinearLayout rightside = (LinearLayout) v.findViewById(R.id.right);
+            CheckBox cb = new CheckBox(App.getInstance());
+            Drawable drawable = DrawableCompat.wrap(ContextCompat.getDrawable(cb.getContext(), R.drawable.abc_btn_check_material));
+            cb.setButtonDrawable(drawable);
+            cb.setText(checkBoxListRight[i]);
+            cb.setOnClickListener(this);
+            cb.setTextSize(15);
+            cb.setTextColor(getResources().getColor(R.color.TideBlue));
+            rightside.addView(cb);
+            cbList.add(cb);
+        }
+       return v;
     }
+    @Override
+    public void onClick(View v) {
+        errorTextView.setText("");
+        for (int i = 0; i < cbList.size(); i++) {
+            if (cbList.get(i).isChecked()) {
+                violationTypes.append(cbList.get(i).getText().toString()+",");
+            }
+        }
+        if (violationTypes.length() == 0) {
+            errorTextView.setText("You must choose a violation type.");
+            errorTextView.setTextColor(Color.RED);
+        }
+        else { giveViolationTypes(violationTypes.toString()); }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof ViolationListener) {
-            violationListener = (ViolationListener) context;
+            vL = (ViolationListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement MainListener");
@@ -86,18 +141,19 @@ public class Violation2 extends Fragment {
 
     @Override
     public void onDetach() {
-        if (cb1.isChecked()) {
-            violationTypes((String) cb1.getText());
-        }
-        super.onDetach();
 
-        violationListener = null;
+        super.onDetach();
+        vL = null;
     }
-    public void violationTypes(String string) {
-        if (violationListener != null) {
-            violationListener.violationTypes(string);
+    public void giveViolationTypes(String list) {
+        if (vL != null) {
+            vL.violationTypes(list);
         }
     }
+    public void sendview(View v) {
+        vL.sendview(v, 2);
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this

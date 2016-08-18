@@ -1,5 +1,7 @@
 package com.tidevalet.fragments;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -10,17 +12,19 @@ import android.view.ViewGroup;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 import com.tidevalet.R;
+import com.tidevalet.interfaces.MainListener;
+import com.tidevalet.interfaces.ViolationListener;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Violation1.OnFragmentInteractionListener} interface
+ * {@link } interface
  * to handle interaction events.
  * Use the {@link Violation1#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Violation3 extends Fragment implements Step {
+public class Violation3 extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,7 +34,7 @@ public class Violation3 extends Fragment implements Step {
     private String mParam1;
     private String mParam2;
 
-//    private MainListener violationListener;
+    public ViolationListener vL;
 
     public Violation3() {
         // Required empty public constructor
@@ -70,38 +74,13 @@ public class Violation3 extends Fragment implements Step {
         return inflater.inflate(R.layout.fragment_violation3, container, false);
     }
 
-    @Override
-    public int getName() {
-        return 0;
-    }
 
-    @Override
-    public VerificationError verifyStep() {
-        return null;
-    }
-
-    @Override
-    public void onSelected() {
-
-    }
-
-    @Override
-    public void onError(@NonNull VerificationError error) {
-
-    }
-
-    /*// TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (violationListener != null) {
-            violationListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof MainListener) {
-            violationListener = (MainListener) context;
+        if (context instanceof ViolationListener) {
+            vL = (ViolationListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement MainListener");
@@ -111,21 +90,7 @@ public class Violation3 extends Fragment implements Step {
     @Override
     public void onDetach() {
         super.onDetach();
-        violationListener = null;
+        vL = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     *
-    public interface MainListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }*/
 }

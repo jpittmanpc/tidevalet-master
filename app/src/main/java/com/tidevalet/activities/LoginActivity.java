@@ -1,4 +1,4 @@
-package com.tidevalet.activities;
+/*package com.tidevalet.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -109,3 +109,4 @@ public class LoginActivity extends AppCompatActivity {
 
 }
 
+*/

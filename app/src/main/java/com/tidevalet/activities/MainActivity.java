@@ -11,11 +11,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -47,9 +45,6 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     private static final String TAG = "MainActivity";
     private static SessionManager sM = new SessionManager(App.getInstance());
     final FragmentManager fm = getSupportFragmentManager();
-    FragmentTransaction ft;
-
-
     ImageView propertyImage;
     TextView propertyName;
     Button newViolation;

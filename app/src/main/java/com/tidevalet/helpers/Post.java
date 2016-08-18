@@ -1,5 +1,8 @@
 package com.tidevalet.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Justin on 4/22/16.
  */

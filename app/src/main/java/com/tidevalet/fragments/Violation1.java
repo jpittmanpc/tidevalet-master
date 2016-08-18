@@ -25,7 +25,7 @@ import java.util.Locale;
  * Use the {@link Violation1#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Violation1 extends Fragment {
+public class Violation1 extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -35,8 +35,8 @@ public class Violation1 extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    public ViolationListener violationListener;
-
+    public ViolationListener vL;
+    private TextView errorText;
     public Violation1() {
         // Required empty public constructor
     }
@@ -72,18 +72,16 @@ public class Violation1 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_violation1, container, false);
+        sendview(v);
+        errorText = (TextView) v.findViewById(R.id.errorTextView1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm:ssa", Locale.getDefault());
         TextView propViol = (TextView)v.findViewById(R.id.violProp);
         TextView dateTxt = (TextView)v.findViewById(R.id.dateTxt);
         TextView timeTxt = (TextView)v.findViewById(R.id.timeTxt);
         ImageButton takePic = (ImageButton)v.findViewById(R.id.imageButton);
-        takePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture(v);
-            }
-        });
+        takePic.setOnClickListener(this);
+        takePic.setOnClickListener(this);
     //    ImageView img1 = (ImageView)v.findViewById(R.id.img1);
         propViol.setText("rpop");
         dateTxt.setText(dateFormat.format(new Date()));
@@ -95,8 +93,8 @@ public class Violation1 extends Fragment {
 
 
     public void takePicture(View view) {
-        if (violationListener != null) {
-            violationListener.clicked(view);
+        if (vL != null) {
+            vL.clicked(view);
         }
     }
     @Override
@@ -109,7 +107,7 @@ public class Violation1 extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof ViolationListener) {
-            violationListener = (ViolationListener) context;
+            vL = (ViolationListener) context;
         } else {
             throw new ClassCastException(context.toString() + "must implement MainListener");
         }
@@ -118,11 +116,18 @@ public class Violation1 extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        violationListener = null;
+        vL = null;
     }
 
+    public void sendview(View v) {
+        vL.sendview(v, 1);
+    }
 
-
+    @Override
+    public void onClick(View v) {
+        errorText.setText("");
+        takePicture(v);
+    }
 
 
     /**

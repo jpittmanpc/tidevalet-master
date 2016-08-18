@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.tidevalet.App;
 import com.tidevalet.R;
@@ -66,7 +68,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
      * The pager adapter, which provides the pages to the view pager widget.
      */
     private PagerAdapter mPagerAdapter;
-    
+    private List<String> violationTypes = new ArrayList<>();
     private List<ImageView> dots;
     Button back;
     Button next;
@@ -80,6 +82,9 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     Post post;
     ArrayList<String> uriList = new ArrayList<String>();
     ArrayList<Uri> arrayUri = new ArrayList<Uri>();
+    private View Violation1v;
+    private View Violation2v;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,9 +112,23 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, post.getViolationType() + " ...types");
                 if (mPager.getCurrentItem() == 2) {
-                    Snackbar.make(v, "Submitting", Snackbar.LENGTH_LONG).show();
-                    startSubmit();
+                    if (post.getViolationType() == null) {
+                        mPager.setCurrentItem(1);
+                        TextView tv1 = (TextView) Violation2v.findViewById(R.id.errorTextView2);
+                        tv1.setText("Please choose a violation type");
+                        tv1.setTextColor(Color.RED);
+                    }
+                    if (uriList.isEmpty()) {
+                        mPager.setCurrentItem(0);
+                        TextView tv0 = (TextView) Violation1v.findViewById(R.id.errorTextView1);
+                        tv0.setText("Please take a picture");
+                    }
+                    else {
+                        Snackbar.make(v, "Submitting", Snackbar.LENGTH_LONG).show();
+                        startSubmit();
+                    }
                 }
                 else { mPager.setCurrentItem((mPager.getCurrentItem()) + 1); }
             }
@@ -217,9 +236,19 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         }
     }
     @Override
-    public void violationTypes(String string) {
-        post.setViolationType(string);
+    public void violationTypes(String list) {
+        post.setViolationType(list);
     }
+
+    @Override
+    public void sendview(View v, int id) {
+        switch (id) {
+            case 1: Violation1v = v; break;
+            case 2: Violation2v = v; break;
+            default: break;
+        }
+    }
+
     @Override
     public void clicked(View v) {
         dispatchTakePictureIntent();

@@ -45,7 +45,7 @@ public class WebUtils {
         content.put("post_content", prepareBodyOfPost(violation_type, imageURL));
         content.put("post_status", "publish");
         // Term Fields
-        Hashtable tax = new Hashtable();
+        HashMap<String, List<String>> tax = new HashMap<String, List<String>>();
         List<String> property = new ArrayList<String>();
         property.add(String.valueOf(sessionManager.propertySelected()));
         tax.put("properties", property);
@@ -94,9 +94,9 @@ public class WebUtils {
     }
     public static String callWp(String method, Context context)
         throws XMLRPCException, UnsupportedEncodingException, ClientProtocolException, IOException {
-
+        adapter dbAdapter = new adapter(App.getInstance());
         sessionManager = new SessionManager(context);
-                String sXmlRpcMethod = method;
+        String sXmlRpcMethod = method;
         String result = null;
         XMLRPCClient client = new XMLRPCClient(sessionManager.getDefUrl() + "xmlrpc.php");
         HashMap<String, Object> theCall = new HashMap<String, Object>();
@@ -108,33 +108,34 @@ public class WebUtils {
                 1, sessionManager.getUsername(), sessionManager.getPassword(), taxonomy, theCall
         };
         Object[] obj = (Object[]) client.call(method, params);
-        adapter dbAdapter = new adapter(App.getInstance());
-        dbAdapter.open();
+
         Integer propId = 0;
         String name = "", address = "", image = "";
         List contractors = new ArrayList();
-        for (int i=0; i<obj.length;i++) {
-            Map<String, Object> each = (HashMap<String, Object>) obj[i];
+        for (int i = 0; i < obj.length; i++) {
+            Map<String, Object> each = (Map<String, Object>) obj[i];
             name = (String) each.get("name");
             address = (String) each.get("address");
             propId = Integer.valueOf(String.valueOf(each.get("term_id")));
             for (Map.Entry<String, Object> entry : each.entrySet()) {
                 if (entry.getValue() instanceof String) {
-                    if (entry.getKey() == constants.PROPERTY_NAME) { name = (String) entry.getValue(); }
+                    if (entry.getKey() == constants.PROPERTY_NAME) {
+                        name = (String) entry.getValue();
+                    }
 
                     Log.d("STRING", entry.getKey() + " val:" + entry.getValue().toString());
-                }
-                else if (entry.getValue() instanceof Object) {
+                } else if (entry.getValue() instanceof Object) {
                     String t = entry.getValue().getClass().getName();
                     Log.d("TAG", "Class for " + entry.getKey() + " is: " + t);
-                    if (t == "java.lang.Boolean") { Log.d("TAG", "Boolean: " + entry.getValue() + " for " + entry.getKey()); }
-                    else if (t == "java.lang.Integer") { Log.d("TAG", "Int: " + entry.getValue() + " for " + entry.getKey()); }
-                    else if (t == "java.util.HashMap") {
+                    if (t == "java.lang.Boolean") {
+                        Log.d("TAG", "Boolean: " + entry.getValue() + " for " + entry.getKey());
+                    } else if (t == "java.lang.Integer") {
+                        Log.d("TAG", "Int: " + entry.getValue() + " for " + entry.getKey());
+                    } else if (t == "java.util.HashMap") {
                         Map<String, String> imageMap = (HashMap<String, String>) entry.getValue();
                         image = (String) imageMap.get("image");
                         Log.d("HASHMAP", entry.getValue().toString() + " for " + entry.getKey());
-                    }
-                    else {
+                    } else {
                         Object[] breakdown = (Object[]) entry.getValue();
                         for (int j = 0; j < breakdown.length; j++) {
                             Log.d("BREAKDOWN", breakdown[j].toString());
@@ -142,6 +143,8 @@ public class WebUtils {
                             if (entry.getKey() == "contractor") {
                                 contractors.add(entry.getValue());
                             }
+
+
                             //Map<String, Object> wtf = (HashMap<String, Object>) breakdown[i];
                         /*for (Map.Entry<String, Object> entries : wtf.entrySet()) {
                             if (entries.getValue() instanceof String) {
@@ -154,14 +157,15 @@ public class WebUtils {
                         }*/
                         }
                     }
-                                    }
-                else if (entry.getValue() instanceof Map) {
-                    Log.d("MAP", "Fuck if i know");
+                    if (entry.getValue() instanceof Map || entry.getValue() instanceof HashMap) {
+                        Log.d("MAP", "Fuck if i know");
+                    }
                 }
+                String contractorList = String.valueOf(new JSONArray(contractors));
+                dbAdapter.open();
+                dbAdapter.addProperty(propId, name, address, image, contractorList);
+                dbAdapter.close();
             }
-            String contractorList = String.valueOf(new JSONArray(contractors));
-            dbAdapter.addProperty(propId, name, address, image, contractorList);
-        }
         /*for (int i=0; i<obj.length;i++) {
 
             Class<? extends Object> c = obj[i].getClass();
@@ -180,17 +184,18 @@ public class WebUtils {
             Log.d("TAG2", v.toString());
         }*/
 
-        //String term_id = contentHash.get("term_id").toString();
-        //String name = contentHash.get("name").toString();
-        //Log.d("WebUtils", "Term ID: " + term_id + " Name:" + name);
-        if (sessionManager.noProperties()) {
-            Intent intent = new Intent("updateListView");
-            LocalBroadcastManager.getInstance(App.getInstance()).sendBroadcast(intent);
-            sessionManager.setNoProperties(false);
-            Log.d("WebUtils", "updating list after retrieval");
+            //String term_id = contentHash.get("term_id").toString();
+            //String name = contentHash.get("name").toString();
+            //Log.d("WebUtils", "Term ID: " + term_id + " Name:" + name);
+            if (sessionManager.noProperties()) {
+                Intent intent = new Intent("updateListView");
+                LocalBroadcastManager.getInstance(App.getInstance()).sendBroadcast(intent);
+                sessionManager.setNoProperties(false);
+                Log.d("WebUtils", "updating list after retrieval");
+            }
         }
-        return result;
-     }
+       return result;
+    }
     public interface ListenerCallback {
         void onUpdate();
     }

@@ -44,7 +44,7 @@
     <style name="Actionbar" parent="Platform.ThemeOverlay.AppCompat.Dark">
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:colorForeground">@color/white</item>
-        <item name="android:colorForegroundInverse">@color/common_plus_signin_btn_text_light_pressed</item>
+        <item name="android:colorForegroundInverse">@android:color/primary_text_light</item>
         <item name="android:colorBackground">@color/TideBlue</item>
         <item name="android:colorBackgroundCacheHint">@android:color/white</item>
 
@@ -61,10 +61,14 @@
 
         <item name="colorControlNormal">?android:attr/textColorSecondary</item>
         <item name="colorControlHighlight">@android:color/primary_text_dark</item>
-        <item name="colorButtonNormal">@color/wallet_bright_foreground_holo_dark</item>
+        <item name="colorButtonNormal">@android:color/primary_text_dark</item>
         <item name="colorSwitchThumbNormal">@color/TideBlue</item>
     </style>
-
+    <style name="checkBoxStyle" parent="Widget.AppCompat.Button">
+        <item name="colorControlActivated">@color/TideBlue</item>
+        <item name="colorControlNormal">@color/dkgrey</item>
+        <item name="backgroundTint">@color/TideBlue</item>
+    </style>
     <color name="TideBlue">#272262</color>
     <color name="TideBlueDark">#180e51</color>
     <color name="white">#ffffff</color>

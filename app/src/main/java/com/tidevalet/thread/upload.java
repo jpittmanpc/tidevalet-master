@@ -69,7 +69,7 @@ public class upload extends Thread {
                     .getService(context, (int) postId, intent, 0);
             NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
             notification
-                    .setSmallIcon(R.drawable.cast_ic_notification_0)
+                    .setSmallIcon(R.drawable.ms_circle)
                     .setContentTitle("Error Uploading")
                     .setContentText("Try again?");
             TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
