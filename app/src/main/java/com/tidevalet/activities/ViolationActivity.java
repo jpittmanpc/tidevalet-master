@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stepstone.stepper.StepperLayout;
+import com.stepstone.stepper.VerificationError;
 import com.stepstone.stepper.adapter.AbstractStepAdapter;
 import com.tidevalet.App;
 import com.tidevalet.R;
@@ -54,14 +55,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class ViolationActivity extends AppCompatActivity implements ViolationListener {
+public class ViolationActivity extends AppCompatActivity implements ViolationListener, StepperLayout.StepperListener {
     private static final int NUM_PAGES = 3;
-    private ViewPager mPager;
-    private PagerAdapter mPagerAdapter;
     private List<String> violationTypes = new ArrayList<>();
     private List<ImageView> dots;
-    Button back;
-    Button next;
     private Uri filePath;
     ImageView img1;
     ImageView img2;
@@ -74,7 +71,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     private View Violation1v;
     private View Violation2v;
     private View Violation3v;
-
+    StepperLayout stepperLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,15 +80,10 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         SessionManager session = new SessionManager(this);
         adapter adapter = new adapter(this);
         setContentView(R.layout.violation_slider);
-        StepperLayout mStepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
-        mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager()));
-        // Instantiate a ViewPager and a PagerAdapter.
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-
-        /*addDots();
-        selectDot(0);
+        stepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
+        stepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager()));
+        stepperLayout.setListener(this);
+        /*
         back = (Button) findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,7 +216,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
 
     @Override
     public void onBackPressed() {
-        if (mPager.getCurrentItem() == 0) {
+        if (stepperLayout.getCurrentStepPosition() == 0) {
             // If the user is currently looking at the first step, allow the system to handle the
             // Back button. This calls finish() on this activity and pops the back stack.
             Intent i = new Intent(this, MainActivity.class);
@@ -232,7 +224,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             finish();
         } else {
             // Otherwise, select the previous step.
-            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+            stepperLayout.setCurrentStepPosition((stepperLayout.getCurrentStepPosition()) - 1);
         }
     }
     @Override
@@ -264,37 +256,39 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         img4 = (ImageView) v.getRootView().findViewById(R.id.img4);
     }
 
+    @Override
+    public void onCompleted(View completeButton) {
+        EditText comments = (EditText) Violation3v.findViewById(R.id.comments);
+        post.setContractorComments(comments.getText().toString());
+        if (post.getViolationType() == null) {
+            stepperLayout.setCurrentStepPosition(1);
+            TextView tv1 = (TextView) Violation2v.findViewById(R.id.errorTextView2);
+            tv1.setText(R.string.errorForNoViolationType);
+            tv1.setTextColor(Color.RED);
+        }
+        if (uriList.size() == 0) {
+            stepperLayout.setCurrentStepPosition(0);
+            TextView tv0 = (TextView) Violation1v.findViewById(R.id.errorTextView1);
+            tv0.setText(R.string.errorForNoPic);
+        }
+        else { startSubmit(); }
+    }
+
+    @Override
+    public void onError(VerificationError verificationError) {
+
+    }
+
+    @Override
+    public void onStepSelected(int newStepPosition) {
+
+    }
+
 
     /**
      * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
      * sequence.
      */
-    private class PagerAdapter extends FragmentPagerAdapter {
-        public PagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return new Violation1();
-                case 1:
-                    return new Violation2();
-                case 2:
-                    return new Violation3();
-                default: break;
-            }
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            return NUM_PAGES;
-        }
-
-    }
-
     private void startSubmit() {
         post.setIsPosted(0);
         post.setLocalImagePath(uriList);
@@ -325,56 +319,6 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
 
     }
 
-   /* private void addDots() {
-        dots = new ArrayList<>();
-        LinearLayout dotsLayout = (LinearLayout) findViewById(R.id.dots);
-
-        for (int i = 0; i < NUM_PAGES; i++) {
-            ImageView dot = new ImageView(this);
-            dot.setImageDrawable(getResources().getDrawable(R.drawable.pager_dot_not_selected));
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            dotsLayout.addView(dot, params);
-            dots.add(dot);
-        }
-        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                selectDot(position);
-                switch (position) {
-                    case 0:
-                        back.setVisibility(View.INVISIBLE);
-                        break;
-                    case 1: next.setText("Next");
-                        back.setVisibility(View.VISIBLE);
-                        break;
-                    case 2: next.setText("Submit");
-                        break;
-                    default: break;
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-    }
-*/
-    public void selectDot(int idx) {
-        Resources res = getResources();
-        for(int i = 0; i < NUM_PAGES; i++) {
-            int drawableId = (i==idx)?(R.drawable.pager_dot_selected):(R.drawable.pager_dot_not_selected);
-            Drawable drawable = res.getDrawable(drawableId);
-            dots.get(i).setImageDrawable(drawable);
-        }
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -399,24 +343,22 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
 
         @Override
         public Fragment createStep(int position) {
+            Bundle b = new Bundle();
             switch (position) {
                 case 0:
                     final Violation1 step = new Violation1();
-                    Bundle b = new Bundle();
                     b.putInt(CURRENT_STEP_POSITION_KEY, position);
                     step.setArguments(b);
                     return step;
                 case 1:
                     final Violation2 step2 = new Violation2();
-                    Bundle b2 = new Bundle();
-                    b2.putInt(CURRENT_STEP_POSITION_KEY, position);
-                    step2.setArguments(b2);
+                    b.putInt(CURRENT_STEP_POSITION_KEY, position);
+                    step2.setArguments(b);
                     return step2;
                 case 2:
                     final Violation3 step3 = new Violation3();
-                    Bundle b3 = new Bundle();
-                    b3.putInt(CURRENT_STEP_POSITION_KEY, position);
-                    step3.setArguments(b3);
+                    b.putInt(CURRENT_STEP_POSITION_KEY, position);
+                    step3.setArguments(b);
                     return step3;
             }
             return null;
