@@ -142,59 +142,71 @@
         android:layout_alignRight="@+id/imageButton"
         android:layout_alignEnd="@+id/imageButton">
 
-        <android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/image_grid"
-            android:background="@android:color/holo_blue_bright"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            app:alignmentMode="alignBounds"
-            app:columnCount="4"
-            app:rowCount="1"
-            app:rowOrderPreserved="false">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+        <LinearLayout android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:clickable="false">
+            <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:id="@+id/img1"
+               android:background="@drawable/placeholder"
+               android:layout_alignParentTop="true"
+               android:layout_alignParentLeft="true"
+               android:layout_alignParentStart="true"
+               />
+            </LinearLayout>
+        <LinearLayout android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:clickable="false">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/img2"
+                android:background="@drawable/placeholder"
+                android:src="@drawable/placeholder"
+                android:layout_alignParentTop="true"
+                 />
+            </LinearLayout>
+        <LinearLayout android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:clickable="false">
 
             <ImageView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/img3"
                 android:background="@drawable/placeholder"
-                android:gravity="center"
-                android:text="Tile1"
-                app:layout_columnWeight="1"
-                app:layout_rowWeight="1"
-                app:layout_gravity="fill_horizontal"
-                android:id="@+id/img1"/>
+                android:layout_alignParentTop="true"
+
+                />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:clickable="false">
 
             <ImageView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/img4"
                 android:background="@drawable/placeholder"
-                android:gravity="center"
-                android:text="Tile2"
-                app:layout_columnWeight="1"
-                app:layout_rowWeight="1"
-                app:layout_gravity="fill_horizontal"
-                android:id="@+id/img2"/>
-
-            <ImageView
-                android:layout_width="0dp"
-                android:background="@drawable/placeholder"
-                android:gravity="center"
-                android:text="Tile3"
-                app:layout_columnWeight="1"
-                app:layout_rowWeight="1"
-                app:layout_gravity="fill_horizontal"
-                android:id="@+id/img3"/>
-
-            <ImageView
-                android:layout_width="0dp"
-                android:background="@drawable/placeholder"
-                android:gravity="center"
-                android:text="Tile4"
-                app:layout_columnWeight="1"
-                app:layout_rowWeight="1"
-                app:layout_gravity="fill_horizontal"
-                android:id="@+id/img4"/>
-        </android.support.v7.widget.GridLayout>
-
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                />
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
 
     <TextView

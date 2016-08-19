@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
@@ -31,7 +32,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 import com.stepstone.stepper.adapter.AbstractStepAdapter;
@@ -48,7 +48,10 @@ import com.tidevalet.interfaces.ViolationListener;
 import com.tidevalet.service.ulservice;
 import com.tidevalet.thread.adapter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -124,6 +127,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         property = adapter.getPropertyById(attributes.getPropertyId());
         adapter.close();
     }
+
     private void dispatchTakePictureIntent() {
         if (isStoragePermissionGranted()) {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -135,36 +139,40 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             }
         }
     }
-    public  boolean isStoragePermissionGranted() {
+
+    public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
-                Log.v("TAG","Permission is granted");
+                Log.v("TAG", "Permission is granted");
                 return true;
             } else {
 
-                Log.v("TAG","Permission is revoked");
+                Log.v("TAG", "Permission is revoked");
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted");
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG, "Permission is granted");
             return true;
         }
     }
+
     static String TAG = "TAG";
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-            Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.v(TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
             dispatchTakePictureIntent();
         }
     }
+
     public Uri getOutputMediaFileUri(int type) {
         return Uri.fromFile(getOutputMediaFile(type));
     }
+
     private static File getOutputMediaFile(int type) {
         // External sdcard location
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
@@ -174,8 +182,9 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             if (!mediaStorageDir.mkdirs()) {
                 Log.d("TAG", "no write access");
                 return null;
+            } else {
+                mediaStorageDir.mkdir();
             }
-            else { mediaStorageDir.mkdir(); }
         }
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
@@ -183,36 +192,121 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
         return mediaFile;
     }
+
     private File getFileName() {
         File folder = getApplicationContext().getFilesDir();
         Log.d("TAG", folder.toString());
-        if(!folder.exists()){ folder.mkdir(); Log.d("TAG", "folder created"); }
+        if (!folder.exists()) {
+            folder.mkdir();
+            Log.d("TAG", "folder created");
+        }
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "tide_"+ timeStamp + "_";
+        String imageFileName = "tide_" + timeStamp + "_";
         File image_file = null;
-        try { image_file = File.createTempFile(imageFileName,".jpg",folder); }
-        catch (IOException e) { e.printStackTrace(); }
+        try {
+            image_file = File.createTempFile(imageFileName, ".jpg", folder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return image_file;
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("TAG", "OnActResult" + requestCode + " resultcode: " + resultCode);
         if (requestCode == 1 && resultCode == RESULT_OK) {
             try {
-                uriList.add(filePath.getPath());
                 Log.d("ONACTIVITYRESULT", "Got pic");
                 Bitmap image = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                saveScaledPhotoToFile(image, filePath.getPath());
                 switch (uriList.size()) {
-                    case 1: img1.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img1.getWidth(), img1.getHeight())); break;
-                    case 2: img2.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img2.getWidth(), img2.getHeight())); break;
-                    case 3: img3.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img3.getWidth(), img3.getHeight())); break;
-                    case 4: img4.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img4.getWidth(), img4.getHeight())); break;
-                    default: break;
+                    case 1:
+                        img1.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img1.getWidth(), img1.getHeight()));
+                        break;
+                    case 2:
+                        img2.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img2.getWidth(), img2.getHeight()));
+                        break;
+                    case 3:
+                        img3.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img3.getWidth(), img3.getHeight()));
+                        break;
+                    case 4:
+                        img4.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img4.getWidth(), img4.getHeight()));
+                        break;
+                    default:
+                        break;
                 }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            catch (Exception e) { e.printStackTrace(); }
 
         }
+    }
+
+    public void saveScaledPhotoToFile(Bitmap photoBm, String oldFile) {
+        int bmOriginalWidth = photoBm.getWidth();
+        int bmOriginalHeight = photoBm.getHeight();
+        double originalWidthToHeightRatio =  1.0 * bmOriginalWidth / bmOriginalHeight;
+        double originalHeightToWidthRatio =  1.0 * bmOriginalHeight / bmOriginalWidth;
+        //choose a maximum height
+        int maxHeight = 640;
+        //choose a max width
+        int maxWidth = 480;
+        //call the method to get the scaled bitmap
+        photoBm = getScaledBitmap(photoBm, bmOriginalWidth, bmOriginalHeight,
+                originalWidthToHeightRatio, originalHeightToWidthRatio,
+                maxHeight, maxWidth);
+
+        /**********THE REST OF THIS IS FROM Prabu's answer*******/
+        //create a byte array output stream to hold the photo's bytes
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        //compress the photo's bytes into the byte array output stream
+        photoBm.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+        photoBm.recycle();
+        //construct a File object to save the scaled file to
+        File f = getOutputMediaFile(1);
+        //create an FileOutputStream on the created file
+        try {
+            FileOutputStream fo = new FileOutputStream(f);
+            //write the photo's bytes to the file
+            fo.write(bytes.toByteArray());
+            //finish by closing the FileOutputStream
+            fo.close();
+            uriList.add(f.getPath());
+            File old = new File(oldFile);
+            boolean deleted = old.delete();
+        }
+        catch (IOException e) { e.printStackTrace(); }
+    }
+
+    private static Bitmap getScaledBitmap(Bitmap bm, int bmOriginalWidth, int bmOriginalHeight, double originalWidthToHeightRatio, double originalHeightToWidthRatio, int maxHeight, int maxWidth) {
+        if(bmOriginalWidth > maxWidth || bmOriginalHeight > maxHeight) {
+            Log.v(TAG, "RESIZING bitmap FROM %sx%s " + bmOriginalWidth + bmOriginalHeight);
+
+            if(bmOriginalWidth > bmOriginalHeight) {
+                bm = scaleDeminsFromWidth(bm, maxWidth, bmOriginalHeight, originalHeightToWidthRatio);
+            } else if (bmOriginalHeight > bmOriginalWidth){
+                bm = scaleDeminsFromHeight(bm, maxHeight, bmOriginalHeight, originalWidthToHeightRatio);
+            }
+
+            Log.v(TAG, "RESIZED bitmap TO %sx%s " + bm.getWidth() + bm.getHeight());
+        }
+        return bm;
+    }
+
+    private static Bitmap scaleDeminsFromHeight(Bitmap bm, int maxHeight, int bmOriginalHeight, double originalWidthToHeightRatio) {
+        int newHeight = (int) Math.max(maxHeight, bmOriginalHeight * .55);
+        int newWidth = (int) (newHeight * originalWidthToHeightRatio);
+        bm = Bitmap.createScaledBitmap(bm, newWidth, newHeight, true);
+        return bm;
+    }
+
+    private static Bitmap scaleDeminsFromWidth(Bitmap bm, int maxWidth, int bmOriginalWidth, double originalHeightToWidthRatio) {
+        //scale the width
+        int newWidth = (int) Math.max(maxWidth, bmOriginalWidth * .75);
+        int newHeight = (int) (newWidth * originalHeightToWidthRatio);
+        bm = Bitmap.createScaledBitmap(bm, newWidth, newHeight, true);
+        return bm;
     }
 
     @Override
