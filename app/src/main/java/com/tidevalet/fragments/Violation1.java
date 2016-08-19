@@ -79,7 +79,7 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
         errorText = (TextView) v.findViewById(R.id.errorTextView1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm:ssa", Locale.getDefault());
-        TextView propViol = (TextView)v.findViewById(R.id.violProp);
+        //TextView propViol = (TextView)v.findViewById(R.id.violProp);
         TextView dateTxt = (TextView)v.findViewById(R.id.dateTxt);
         TextView timeTxt = (TextView)v.findViewById(R.id.timeTxt);
 
@@ -87,7 +87,7 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
         takePic.setOnClickListener(this);
         takePic.setOnClickListener(this);
     //    ImageView img1 = (ImageView)v.findViewById(R.id.img1);
-        propViol.setText("rpop");
+        //propViol.setText("rpop");
         dateTxt.setText(dateFormat.format(new Date()));
         timeTxt.setText(timeFormat.format(new Date()));
         return v;
