@@ -1,12 +1,16 @@
 package com.tidevalet.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Justin on 4/22/16.
  */
 public class Post {
     private long id, violationId, propertyId;
     private int isPosted;
-    private String type, contractorComments, timestamp, returnedString, localImagePath, bldg, unit;
+    private String type, contractorComments, timestamp, returnedString, bldg, unit;
+    private List<String> localImagePath;
     public long getId() {
         return id;
     }
@@ -21,10 +25,10 @@ public class Post {
     public void setViolationId(long violationId) {
         this.violationId = violationId;
     }
-    public String getLocalImagePath() {
+    public List<String> getLocalImagePath() {
         return localImagePath;
     }
-    public void setLocalImagePath(String localImagePath) {
+    public void setLocalImagePath(List<String> localImagePath) {
         this.localImagePath = localImagePath;
     }
     public int getIsPosted() {

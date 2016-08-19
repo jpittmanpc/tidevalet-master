@@ -14,7 +14,9 @@ import com.tidevalet.helpers.Attributes;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.helpers.Properties;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class adapter {
@@ -122,8 +124,9 @@ public class adapter {
 		ContentValues values = new ContentValues();
 		values.put(constants.POST_VIOLATION_ID, post.getViolationId());
 		values.put(constants.POST_IS_POSTED, post.getIsPosted());
-		values.put(constants.POST_LOCAL_IMAGE_PATH, post
-						.getLocalImagePath());
+		for (String imgPath : post.getLocalImagePath()) {
+			values.put(constants.POST_LOCAL_IMAGE_PATH, imgPath);
+		}
 		values.put(constants.POST_RETURNED_STRING, post.getReturnedString());
 		values.put(constants.POST_TIMESTAMP, post.getTimestamp());
 		values.put(constants.POST_VIOLATION_TYPE, post.getViolationType().toString());
@@ -141,7 +144,12 @@ public class adapter {
 			post.setId(postId);
 			post.setViolationId(cursor.getLong(cursor.getColumnIndex(constants.POST_VIOLATION_ID)));
 			post.setIsPosted(cursor.getInt(cursor.getColumnIndex(constants.POST_IS_POSTED)));
-			post.setLocalImagePath(cursor.getString(cursor.getColumnIndex(constants.POST_LOCAL_IMAGE_PATH)));
+			List<String> images = new ArrayList<>();
+			Log.d("TESTADAPTER", cursor.getString(cursor.getColumnIndex(constants.POST_LOCAL_IMAGE_PATH)).toString());
+			for (String image : cursor.getString(cursor.getColumnIndex(constants.POST_LOCAL_IMAGE_PATH)).split(",")) {
+				images.add(image);
+			}
+			post.setLocalImagePath(images);
 			post.setReturnedString(cursor.getString(cursor.getColumnIndex(constants.POST_RETURNED_STRING)));
 			post.setTimestamp(cursor.getString(cursor.getColumnIndex(constants.POST_TIMESTAMP)));
 			post.setViolationType(cursor.getString(cursor.getColumnIndex(constants.POST_VIOLATION_TYPE)));

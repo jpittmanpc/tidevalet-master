@@ -29,12 +29,16 @@ import java.util.Map;
 public class WebUtils {
     static SessionManager sessionManager;
 
-    public static String uploadPostToWordpress(Properties properties, String image, String violation_type, String bldg, String unit,
+    public static String uploadPostToWordpress(Properties properties, List<String> image, String violation_type, String bldg, String unit, String comments,
             Attributes service, Context context) throws XMLRPCException {
-
+        List<String> imageURL = new ArrayList<>();
         sessionManager = new SessionManager(context);
         service.setUrl(sessionManager.getDefUrl());
-        String imageURL = uploadImage(image, service, context);
+        for (int i=0;i<image.size();i++) {
+            Log.d("uploading", i + " image");
+            String result = uploadImage(image.get(i), service, context);
+            imageURL.add(result);
+        }
         XMLRPCClient client = new XMLRPCClient(service.getUrl() + "xmlrpc.php");
         // Setup Post
         HashMap<String, Object> content = new HashMap<String, Object>();
@@ -51,20 +55,24 @@ public class WebUtils {
         //Custom Fields
         List<Hashtable> customFieldsList = new ArrayList<Hashtable>();
         Hashtable customField = new Hashtable();
-        customField.put("key", "_image");
-        customField.put("value", imageURL);
+        customField.put("key", constants.POST_LOCAL_IMAGE_PATH);
+        customField.put("value", imageURL.toString());
         customFieldsList.add(customField);
         customField = new Hashtable();
-        customField.put("key", "_violation_type");
+        customField.put("key", constants.POST_VIOLATION_TYPE);
         customField.put("value", violation_type);
         customFieldsList.add(customField);
         customField = new Hashtable();
-        customField.put("key", "_violation_bldg");
+        customField.put("key", constants.POST_BLDG);
         customField.put("value", bldg);
         customFieldsList.add(customField);
         customField = new Hashtable();
-        customField.put("key", "_violation_unit");
+        customField.put("key", constants.POST_UNIT);
         customField.put("value", unit);
+        customFieldsList.add(customField);
+        customField = new Hashtable();
+        customField.put("key", constants.POST_COMMENTS);
+        customField.put("value", comments);
         customFieldsList.add(customField);
         content.put("custom_fields", customFieldsList);
         String username = sessionManager.getUsername();
@@ -256,10 +264,12 @@ public class WebUtils {
     private static String wpGetProps() {
      return null;
     }
-    private static String prepareBodyOfPost(String violation_type, String imageURL) {
+    private static String prepareBodyOfPost(String violation_type, List<String> imageURL) {
         StringBuffer body = new StringBuffer();
-        body.append("<img style=\"display:block;margin-right:auto;margin-left:auto;\" src=\""
-                + imageURL + "\" alt=\"image\" />");
+        for (int i = 0; i < imageURL.size(); i++) {
+            body.append("<img style=\"display:block;margin-right:auto;margin-left:auto;\" src=\""
+                    + imageURL.get(i) + "\" alt=\"image\" />");
+        }
         body.append("\n" + violation_type);
         System.out.println(body.toString());
         String formattedString = body.toString();

@@ -62,12 +62,15 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     private Uri filePath;
     ImageView img1;
     ImageView img2;
+    ImageView img3;
+    ImageView img4;
     Properties property;
     Attributes attributes = new Attributes();
     Post post;
-    ArrayList<String> uriList = new ArrayList<String>();
+    List<String> uriList = new ArrayList<>();
     private View Violation1v;
     private View Violation2v;
+    private View Violation3v;
 
 
     @Override
@@ -98,13 +101,15 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             public void onClick(View v) {
                 Log.d(TAG, post.getViolationType() + " ...types");
                 if (mPager.getCurrentItem() == 2) {
+                    EditText comments = (EditText) Violation3v.findViewById(R.id.comments);
+                    post.setContractorComments(comments.getText().toString());
                     if (post.getViolationType() == null) {
                         mPager.setCurrentItem(1);
                         TextView tv1 = (TextView) Violation2v.findViewById(R.id.errorTextView2);
                         tv1.setText(R.string.errorForNoViolationType);
                         tv1.setTextColor(Color.RED);
                     }
-                    if (uriList.isEmpty()) {
+                    if (uriList.size() == 0) {
                         mPager.setCurrentItem(0);
                         TextView tv0 = (TextView) Violation1v.findViewById(R.id.errorTextView1);
                         tv0.setText(R.string.errorForNoPic);
@@ -199,7 +204,13 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
                 uriList.add(filePath.getPath());
                 Log.d("ONACTIVITYRESULT", "Got pic");
                 Bitmap image = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                img1.setImageBitmap( ThumbnailUtils.extractThumbnail(image, img1.getWidth(), img1.getHeight()));
+                switch (uriList.size()) {
+                    case 1: img1.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img1.getWidth(), img1.getHeight())); break;
+                    case 2: img2.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img2.getWidth(), img2.getHeight())); break;
+                    case 3: img3.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img3.getWidth(), img3.getHeight())); break;
+                    case 4: img4.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img4.getWidth(), img4.getHeight())); break;
+                    default: break;
+                }
             }
             catch (Exception e) { e.printStackTrace(); }
 
@@ -229,6 +240,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         switch (id) {
             case 1: Violation1v = v; break;
             case 2: Violation2v = v; break;
+            case 3: Violation3v = v; break;
             default: break;
         }
     }
@@ -242,6 +254,9 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     public void clicked(View v) {
         dispatchTakePictureIntent();
         img1 = (ImageView) v.getRootView().findViewById(R.id.img1);
+        img2 = (ImageView) v.getRootView().findViewById(R.id.img2);
+        img3 = (ImageView) v.getRootView().findViewById(R.id.img3);
+        img4 = (ImageView) v.getRootView().findViewById(R.id.img4);
     }
 
 
@@ -277,7 +292,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
 
     private void startSubmit() {
         post.setIsPosted(0);
-        post.setLocalImagePath(Uri.parse(uriList.get(0)).toString());
+        post.setLocalImagePath(uriList);
         post.setPropertyId(attributes.getPropertyId());
         EditText bldgV = (EditText) Violation1v.findViewById(R.id.bldg);
         EditText unitV = (EditText) Violation1v.findViewById(R.id.unit);

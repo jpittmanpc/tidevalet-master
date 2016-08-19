@@ -34,11 +34,8 @@ public class Violation3 extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private EditText comments;
-
     public ViolationListener vL;
-
-    public Violation3() {
+public Violation3() {
         // Required empty public constructor
     }
 
@@ -74,7 +71,7 @@ public class Violation3 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_violation3, container, false);
-        comments = (EditText) v.findViewById(R.id.comments);
+        sendview(v);
         return v;
     }
 
@@ -94,8 +91,10 @@ public class Violation3 extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        vL.sendComments(comments.getText().toString());
         vL = null;
+    }
+    public void sendview(View v) {
+        vL.sendview(v, 3);
     }
 
 }

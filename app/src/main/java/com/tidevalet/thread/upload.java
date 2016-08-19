@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.tidevalet.App;
 import com.tidevalet.R;
+import com.tidevalet.activities.MainActivity;
 import com.tidevalet.helpers.Attributes;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.helpers.Properties;
@@ -44,7 +45,7 @@ public class upload extends Thread {
             //if (service.getIsEnabled() == Attributes.SERVICE_ENABLED) {
                 dbAdapter.open();
                 String url = WebUtils.uploadPostToWordpress(property, post.getLocalImagePath(), ""
-                        + post.getViolationType(), post.getBldg(), post.getUnit(), service, context);
+                        + post.getViolationType(), post.getBldg(), post.getUnit(), post.getContractorComments(), service, context);
                 post.setIsPosted(1);
                 post.setReturnedString(url);
                 dbAdapter.updatePost(post);
@@ -63,7 +64,7 @@ public class upload extends Thread {
             e.printStackTrace();
             NotificationManager nManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
-            Intent intent = new Intent(context, App.class);
+            Intent intent = new Intent(context, upload.class);
             intent.putExtra("id", postId);
             PendingIntent pendingIntent = PendingIntent
                     .getService(context, (int) postId, intent, 0);
