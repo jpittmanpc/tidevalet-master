@@ -138,7 +138,9 @@
     android:layout_below="@+id/bldg"
     android:layout_centerHorizontal="true"
     android:layout_marginTop="63dp"
-    android:id="@+id/relativeLayout">
+    android:id="@+id/relativeLayout"
+    android:layout_marginRight="8dp"
+    android:layout_marginLeft="8dp">
 
     <ImageView
         android:layout_width="wrap_content"
