@@ -132,58 +132,67 @@
         android:layout_alignStart="@+id/textView5"
         android:layout_alignRight="@+id/textView5"
         android:layout_alignEnd="@+id/textView5" />
-<RelativeLayout
+
+    <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/bldg"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="63dp"
-    android:id="@+id/relativeLayout"
-    android:layout_marginRight="8dp"
-    android:layout_marginLeft="8dp">
+    android:layout_height="match_parent"
+        android:id="@+id/relativeLayout"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/bldg"
+        android:layout_alignRight="@+id/imageButton"
+        android:layout_alignEnd="@+id/imageButton">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/img1"
-        android:background="@drawable/placeholder"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="90dp"
+            android:numColumns="auto_fit"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:stretchMode="columnWidth"
+            android:gravity="center">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/img2"
-        android:background="@drawable/placeholder"
-        android:src="@drawable/placeholder"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/img1"
-        android:layout_toEndOf="@+id/img1"
-        android:layout_marginLeft="44dp"
-        android:layout_marginStart="44dp" />
+            <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:id="@+id/img1"
+               android:background="@drawable/placeholder"
+               android:layout_alignParentTop="true"
+               android:layout_alignParentLeft="true"
+               android:layout_alignParentStart="true"
+               />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/img3"
-        android:background="@drawable/placeholder"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/img2"
-        android:layout_toEndOf="@+id/img2"
-        android:layout_marginLeft="35dp"
-        android:layout_marginStart="35dp" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/img2"
+                android:background="@drawable/placeholder"
+                android:src="@drawable/placeholder"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/img1"
+                android:layout_toEndOf="@+id/img1" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/img4"
-        android:background="@drawable/placeholder"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/img3"
+                android:background="@drawable/placeholder"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/img4"
+                android:layout_toStartOf="@+id/img4" />
 
- </RelativeLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/img4"
+                android:background="@drawable/placeholder"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                />
+        </GridLayout>
+
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"

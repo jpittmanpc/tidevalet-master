@@ -10,16 +10,16 @@
         <item name="colorPrimary">@color/TideBlue</item>
         <item name="colorPrimaryDark">@color/TideBlueDark</item>
         <item name="colorAccent">#7ea538</item>
-        <item name="android:colorBackground">#e2e3e4</item>
+        <item name="android:colorBackground">#ffffff</item>
         <item name="android:colorForeground">#757571</item>
         <item name="android:navigationBarColor">@android:color/black</item>
         <item name="android:statusBarColor">@color/TideBlueDark</item>
         <item name="android:textColorPrimary">@color/TideBlue</item>
         <item name="android:textColorPrimaryInverse">@android:color/black</item>
         <item name="android:textColorSecondary">@color/TideBlue</item>
-        <item name="android:textColorSecondaryInverse">@color/dkgrey</item>
+        <item name="android:textColorSecondaryInverse">@color/TideLightGrey</item>
         <item name="android:windowBackground">@color/dkgrey</item>
     </style>
-    <color name="dkgrey">#e2e3e4</color>
+    <color name="dkgrey">#ffffff</color>
 
 </resources>

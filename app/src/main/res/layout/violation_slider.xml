@@ -14,7 +14,6 @@ xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="wrap_c
         android:layout_width="match_parent"
        android:layout_height="match_parent"
         android:background="@android:color/white"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         />
@@ -26,7 +25,13 @@ xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="wrap_c
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:ms_stepperType="dots" />
+        app:ms_stepperType="dots"
+        app:ms_activeStepColor="@color/TideBlue"
+        app:ms_inactiveStepColor="#959595"
+        app:ms_backButtonColor="@color/TideBlue"
+        app:ms_nextButtonColor="@color/TideBlue"
+        app:ms_completeButtonColor="@color/TideBlue"
+        app:ms_bottomNavigationBackground="@color/TideLightGrey"/>
 
 
 

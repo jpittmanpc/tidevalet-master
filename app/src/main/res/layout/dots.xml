@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<View xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="10dp"
     android:layout_height="10dp"
-    android:background="@drawable/circle_bg" />
+    android:background="@drawable/circle_bg"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp" />

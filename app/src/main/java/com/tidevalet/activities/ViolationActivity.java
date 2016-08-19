@@ -325,7 +325,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
 
     }
 
-    private void addDots() {
+   /* private void addDots() {
         dots = new ArrayList<>();
         LinearLayout dotsLayout = (LinearLayout) findViewById(R.id.dots);
 
@@ -366,7 +366,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             }
         });
     }
-
+*/
     public void selectDot(int idx) {
         Resources res = getResources();
         for(int i = 0; i < NUM_PAGES; i++) {
