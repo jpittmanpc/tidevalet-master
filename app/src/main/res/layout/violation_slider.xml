@@ -17,70 +17,17 @@ xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="wrap_c
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/linearLayout" />
+        />
 
-    <RelativeLayout
+
+    <com.stepstone.stepper.StepperLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/stepperLayout"
         android:layout_width="match_parent"
-        android:background="#f6f6f6"
-        android:orientation="horizontal"
-        android:layout_height="48sp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/linearLayout"
-        android:elevation="2dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:ms_stepperType="dots" />
 
-        <Button
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:drawableLeft="@drawable/ic_navigate_before_black_36dp"
-            android:drawableStart="@drawable/ic_navigate_before_black_36dp"
-            android:paddingRight="10sp"
-            android:paddingEnd="10sp"
-            android:paddingLeft="0sp"
-            android:paddingStart="0sp"
-            android:text="Back"
-            android:textColor="@color/TideBlue"
-            android:textSize="15sp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:id="@+id/dots"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp"
-                android:layout_marginEnd="3dp"
-                android:layout_marginBottom="3dp"
-                android:layout_marginRight="5dp"
-                android:layout_centerInParent="true" />
-
-        <Button
-            android:id="@+id/next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:drawableRight="@drawable/ic_navigate_next_black_36dp"
-            android:drawableEnd="@drawable/ic_navigate_next_black_36dp"
-            android:paddingLeft="5sp"
-            android:paddingStart="10sp"
-            android:paddingRight="0sp"
-            android:paddingEnd="0sp"
-            android:text="Next"
-            android:textColor="@color/TideBlue"
-            android:textSize="15sp"
-            android:layout_alignTop="@+id/back"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-
-    </RelativeLayout>
 
 
 </RelativeLayout>

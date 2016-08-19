@@ -25,7 +25,7 @@ import com.tidevalet.interfaces.ViolationListener;
  * Use the {@link Violation1#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Violation3 extends Fragment {
+public class Violation3 extends Fragment implements Step {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -97,4 +97,23 @@ public Violation3() {
         vL.sendview(v, 3);
     }
 
+    @Override
+    public int getName() {
+        return 2;
+    }
+
+    @Override
+    public VerificationError verifyStep() {
+        return null;
+    }
+
+    @Override
+    public void onSelected() {
+
+    }
+
+    @Override
+    public void onError(@NonNull VerificationError error) {
+
+    }
 }

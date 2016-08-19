@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -14,6 +15,8 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.stepstone.stepper.Step;
+import com.stepstone.stepper.VerificationError;
 import com.tidevalet.App;
 import com.tidevalet.R;
 import com.tidevalet.interfaces.ViolationListener;
@@ -22,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Violation2 extends Fragment implements View.OnClickListener {
+public class Violation2 extends Fragment implements View.OnClickListener, Step {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -147,5 +150,25 @@ public class Violation2 extends Fragment implements View.OnClickListener {
     }
     public void sendview(View v) {
         vL.sendview(v, 2);
+    }
+
+    @Override
+    public int getName() {
+        return 1;
+    }
+
+    @Override
+    public VerificationError verifyStep() {
+        return null;
+    }
+
+    @Override
+    public void onSelected() {
+
+    }
+
+    @Override
+    public void onError(@NonNull VerificationError error) {
+
     }
 }

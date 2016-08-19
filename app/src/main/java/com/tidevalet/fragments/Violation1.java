@@ -2,6 +2,7 @@ package com.tidevalet.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.stepstone.stepper.Step;
+import com.stepstone.stepper.VerificationError;
 import com.tidevalet.R;
 import com.tidevalet.interfaces.ViolationListener;
 
@@ -25,7 +28,7 @@ import java.util.Locale;
  * Use the {@link Violation1#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Violation1 extends Fragment implements View.OnClickListener {
+public class Violation1 extends Fragment implements View.OnClickListener, Step {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -128,5 +131,25 @@ public class Violation1 extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         errorText.setText("");
         takePicture(v);
+    }
+
+    @Override
+    public int getName() {
+        return 0;
+    }
+
+    @Override
+    public VerificationError verifyStep() {
+        return null;
+    }
+
+    @Override
+    public void onSelected() {
+
+    }
+
+    @Override
+    public void onError(@NonNull VerificationError error) {
+
     }
 }

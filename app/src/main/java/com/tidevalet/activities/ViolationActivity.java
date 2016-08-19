@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -30,6 +31,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.stepstone.stepper.StepperLayout;
+import com.stepstone.stepper.adapter.AbstractStepAdapter;
 import com.tidevalet.App;
 import com.tidevalet.R;
 import com.tidevalet.SessionManager;
@@ -80,12 +83,14 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         SessionManager session = new SessionManager(this);
         adapter adapter = new adapter(this);
         setContentView(R.layout.violation_slider);
+        StepperLayout mStepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
+        mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager()));
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
 
-        addDots();
+        /*addDots();
         selectDot(0);
         back = (Button) findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +126,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
                 }
                 else { mPager.setCurrentItem((mPager.getCurrentItem()) + 1); }
             }
-        });
+        });*/
         adapter.open();
         property = adapter.getPropertyById(attributes.getPropertyId());
         adapter.close();
@@ -385,5 +390,42 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public static class StepperAdapter extends AbstractStepAdapter {
+        private static final String CURRENT_STEP_POSITION_KEY = "position";
+        public StepperAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment createStep(int position) {
+            switch (position) {
+                case 0:
+                    final Violation1 step = new Violation1();
+                    Bundle b = new Bundle();
+                    b.putInt(CURRENT_STEP_POSITION_KEY, position);
+                    step.setArguments(b);
+                    return step;
+                case 1:
+                    final Violation2 step2 = new Violation2();
+                    Bundle b2 = new Bundle();
+                    b2.putInt(CURRENT_STEP_POSITION_KEY, position);
+                    step2.setArguments(b2);
+                    return step2;
+                case 2:
+                    final Violation3 step3 = new Violation3();
+                    Bundle b3 = new Bundle();
+                    b3.putInt(CURRENT_STEP_POSITION_KEY, position);
+                    step3.setArguments(b3);
+                    return step3;
+            }
+            return null;
+        }
+
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
     }
 }
