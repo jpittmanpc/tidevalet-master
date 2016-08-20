@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
 
     private void startViolationView() {
         Fragment violationViewFragment = new ViewViolations();
-        fm.beginTransaction().replace(R.id.main_fragment, violationViewFragment).commit();
+        fm.beginTransaction().replace(R.id.main_fragment, violationViewFragment).addToBackStack("PropView").commit();
     }
 
     private void startListView() {
@@ -272,5 +272,17 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     };
     private void sendBroadcast() {
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("updateListView"));
+    }
+    @Override
+    public void onBackPressed() {
+        int count = getFragmentManager().getBackStackEntryCount();
+        Log.d("onBackPressed", count + "");
+        if (count == 0) {
+            super.onBackPressed();
+            //additional code
+        } else {
+            getFragmentManager().popBackStack();
+        }
+
     }
 }

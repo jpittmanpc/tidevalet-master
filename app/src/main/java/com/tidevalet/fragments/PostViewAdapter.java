@@ -1,10 +1,16 @@
 package com.tidevalet.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tidevalet.App;
@@ -14,7 +20,6 @@ import com.tidevalet.helpers.Post;
 import com.tidevalet.interfaces.MainListener;
 import com.tidevalet.thread.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,12 +27,12 @@ import java.util.List;
  * specified {@link MainListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyPostRecyclerViewAdapter extends RecyclerView.Adapter<MyPostRecyclerViewAdapter.ViewHolder> {
+public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHolder> {
     public static List<Post> posts = getPosts();
     private final MainListener mListener;
 
 
-    public MyPostRecyclerViewAdapter(List<Post> items, MainListener listener) {
+    public PostViewAdapter(List<Post> items, MainListener listener) {
         Log.d("RECYCLER", items.size() + "");
         posts = items;
         mListener = listener;
@@ -37,22 +42,29 @@ public class MyPostRecyclerViewAdapter extends RecyclerView.Adapter<MyPostRecycl
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_violation_posts, parent, false);
+                .inflate(R.layout.view_violation_card, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = posts.get(position);
-        holder.mIdView.setText("Type " + posts.get(position).getViolationType());
-        holder.mContentView.setText("Posted? " + posts.get(position).getIsPosted() + " Bldg: " + posts.get(position).getBldg() + " Unit: " + posts.get(position).getUnit());
+        holder.post = posts.get(position);
+        String[] imagePath = holder.post.getLocalImagePath().split(",");
+
+        Bitmap image = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imagePath[0]),
+                (holder.firstImage.getDrawable().getIntrinsicWidth()) /2, (holder.firstImage.getDrawable().getIntrinsicHeight()) /2);
+        holder.bldgunit.setText(" Location: " + holder.post.getBldg() + "/" + holder.post.getUnit());
+        holder.violtype.setText(holder.post.getViolationType());
+        if (holder.post.getIsPosted() == 0) { holder.posted.setVisibility(View.VISIBLE); }
+        else { holder.posted.setVisibility(View.VISIBLE); }
+        holder.firstImage.setImageBitmap(image);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(holder.post);
                 }
             }
         });
@@ -78,20 +90,23 @@ public class MyPostRecyclerViewAdapter extends RecyclerView.Adapter<MyPostRecycl
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public Post mItem;
+        public final TextView bldgunit, posted;
+        public final TextView violtype;
+        public final ImageView firstImage;
+        public Post post;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            posted = (TextView) view.findViewById(R.id.posted);
+            firstImage = (ImageView) view.findViewById(R.id.firstImage);
+            bldgunit = (TextView) view.findViewById(R.id.bldgunit);
+            violtype = (TextView) view.findViewById(R.id.violation_type_text);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + violtype.getText() + "'";
         }
     }
 }
