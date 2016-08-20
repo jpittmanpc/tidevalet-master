@@ -60,22 +60,17 @@ import java.util.List;
 import java.util.Locale;
 
 public class ViolationActivity extends AppCompatActivity implements ViolationListener, StepperLayout.StepperListener {
-    private static final int NUM_PAGES = 3;
-    private List<String> violationTypes = new ArrayList<>();
-    private List<ImageView> dots;
     private Uri filePath;
-    ImageView img1;
-    ImageView img2;
-    ImageView img3;
-    ImageView img4;
-    Properties property;
-    Attributes attributes = new Attributes();
-    Post post;
-    List<String> uriList = new ArrayList<>();
+    private ImageView img1, img2, img3, img4;
+    private Properties property;
+    private Attributes attributes = new Attributes();
+    private Post post;
+    private List<String> uriList = new ArrayList<>();
     private View Violation1v;
     private View Violation2v;
     private View Violation3v;
-    StepperLayout stepperLayout;
+    private boolean upload = true;
+    private StepperLayout stepperLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,44 +82,8 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         stepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
         stepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager()));
         stepperLayout.setListener(this);
-        /*
-        back = (Button) findViewById(R.id.back);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        back.setVisibility(View.INVISIBLE);
-        next = (Button) findViewById(R.id.next);
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, post.getViolationType() + " ...types");
-                if (mPager.getCurrentItem() == 2) {
-                    EditText comments = (EditText) Violation3v.findViewById(R.id.comments);
-                    post.setContractorComments(comments.getText().toString());
-                    if (post.getViolationType() == null) {
-                        mPager.setCurrentItem(1);
-                        TextView tv1 = (TextView) Violation2v.findViewById(R.id.errorTextView2);
-                        tv1.setText(R.string.errorForNoViolationType);
-                        tv1.setTextColor(Color.RED);
-                    }
-                    if (uriList.size() == 0) {
-                        mPager.setCurrentItem(0);
-                        TextView tv0 = (TextView) Violation1v.findViewById(R.id.errorTextView1);
-                        tv0.setText(R.string.errorForNoPic);
-                    }
-                    else {
-                        Snackbar.make(v, "Submitting", Snackbar.LENGTH_LONG).show();
-                        startSubmit();
-                    }
-                }
-                else { mPager.setCurrentItem((mPager.getCurrentItem()) + 1); }
-            }
-        });*/
         adapter.open();
-        property = adapter.getPropertyById(attributes.getPropertyId());
+        property = adapter.getPropertyById(session.propertySelected());
         adapter.close();
     }
 
@@ -272,9 +231,9 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             fo.write(bytes.toByteArray());
             //finish by closing the FileOutputStream
             fo.close();
+            fo.flush();
             uriList.add(f.getPath());
-            File old = new File(oldFile);
-            boolean deleted = old.delete();
+            boolean deleted = new File(oldFile).delete();
         }
         catch (IOException e) { e.printStackTrace(); }
     }
@@ -386,8 +345,14 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
      */
     private void startSubmit() {
         post.setIsPosted(0);
-        post.setLocalImagePath(uriList);
-        post.setPropertyId(attributes.getPropertyId());
+        StringBuilder stringBuilder = new StringBuilder();
+        String prefix = "";
+        for (int i = 0; i<uriList.size();i++) {
+            stringBuilder.append(prefix);
+            prefix = ",";
+            stringBuilder.append(uriList.get(i));
+        }
+        post.setLocalImagePath(stringBuilder.toString());
         EditText bldgV = (EditText) Violation1v.findViewById(R.id.bldg);
         EditText unitV = (EditText) Violation1v.findViewById(R.id.unit);
         String unit = "";
@@ -397,15 +362,18 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         Log.d("BLDG", bldg + unit + " ");
         post.setBldg(bldg);
         post.setUnit(unit);
+        post.setPropertyId(new SessionManager(this).propertySelected());
         adapter dbAdapter = new adapter(this);
         dbAdapter.open();
         post = dbAdapter.addPost(post);
         dbAdapter.close();
-        Intent service = new Intent(this,  ulservice.class);
-        service.putExtra("id", post.getId());
-        startService(service);
-        setResult(RESULT_OK);
-        finish();
+        if (upload) {
+            Intent service = new Intent(this, ulservice.class);
+            service.putExtra("id", post.getId());
+            startService(service);
+            setResult(RESULT_OK);
+            finish();
+        }
         //start submit, then call new intent to go back to the property screen
         Intent i = new Intent(this, MainActivity.class);
         i.putExtra("snackbar", "The violation has been successfully submitted");

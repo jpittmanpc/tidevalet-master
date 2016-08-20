@@ -31,13 +31,14 @@ public class upload extends Thread {
     @Override
     public void run() {
         adapter dbAdapter = new adapter(context);
+        Post post = null;
         try {
             NotificationManager nManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             nManager.cancel((int) (R.string.app_name + postId));
             dbAdapter.open();
             Log.e(TAG, "Adapter opened");
-            Post post = dbAdapter.getPostById(postId);
+            post = dbAdapter.getPostById(postId);
             Properties property = dbAdapter.getPropertyById(post.getViolationId());
             Attributes service = dbAdapter.getViolationByPropertyId(post.getViolationId(),
                     Attributes.TYPE_PRIMARYBLOGGER);
@@ -51,7 +52,6 @@ public class upload extends Thread {
                 dbAdapter.updatePost(post);
                 dbAdapter.close();
             //} else {
-                post.setReturnedString("");
           //  }
             //dbAdapter.open();
           //  service = dbAdapter.getViolationByPropertyId(post.getViolationId(),
@@ -61,6 +61,13 @@ public class upload extends Thread {
                 //WebUtils.uploadPostToXPArena(service, pupil, post.getReturnedString(), "500");
           //  }
         } catch (Exception e) {
+            if (post != null) {
+                post.setIsPosted(0);
+                post.setReturnedString("");
+                dbAdapter.open();
+                dbAdapter.updatePost(post);
+                dbAdapter.close();
+            }
             e.printStackTrace();
             NotificationManager nManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);

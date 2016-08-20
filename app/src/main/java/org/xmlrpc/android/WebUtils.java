@@ -29,14 +29,13 @@ import java.util.Map;
 public class WebUtils {
     static SessionManager sessionManager;
 
-    public static String uploadPostToWordpress(Properties properties, List<String> image, String violation_type, String bldg, String unit, String comments,
+    public static String uploadPostToWordpress(Properties properties, String image, String violation_type, String bldg, String unit, String comments,
             Attributes service, Context context) throws XMLRPCException {
         List<String> imageURL = new ArrayList<>();
         sessionManager = new SessionManager(context);
         service.setUrl(sessionManager.getDefUrl());
-        for (int i=0;i<image.size();i++) {
-            Log.d("uploading", i + " image");
-            String result = uploadImage(image.get(i), service, context);
+        for (String img : image.split(",")) {
+            String result = uploadImage(img, service, context);
             imageURL.add(result);
         }
         XMLRPCClient client = new XMLRPCClient(service.getUrl() + "xmlrpc.php");
