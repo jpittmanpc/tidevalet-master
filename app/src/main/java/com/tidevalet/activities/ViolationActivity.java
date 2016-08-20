@@ -124,7 +124,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             }
         });*/
         adapter.open();
-        property = adapter.getPropertyById(attributes.getPropertyId());
+        property = adapter.getPropertyById(session.propertySelected());
         adapter.close();
     }
 
@@ -386,8 +386,14 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
      */
     private void startSubmit() {
         post.setIsPosted(0);
-        post.setLocalImagePath(uriList);
-        post.setPropertyId(attributes.getPropertyId());
+        StringBuilder stringBuilder = new StringBuilder();
+        String prefix = "";
+        for (int i = 0; i<uriList.size();i++) {
+            stringBuilder.append(prefix);
+            prefix = ",";
+            stringBuilder.append(uriList.get(i));
+        }
+        post.setLocalImagePath(stringBuilder.toString());
         EditText bldgV = (EditText) Violation1v.findViewById(R.id.bldg);
         EditText unitV = (EditText) Violation1v.findViewById(R.id.unit);
         String unit = "";
@@ -397,6 +403,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         Log.d("BLDG", bldg + unit + " ");
         post.setBldg(bldg);
         post.setUnit(unit);
+        post.setPropertyId(new SessionManager(this).propertySelected());
         adapter dbAdapter = new adapter(this);
         dbAdapter.open();
         post = dbAdapter.addPost(post);

@@ -63,7 +63,7 @@ public interface constants {
 	// Create Query for Posts Table
 	public static final String SQL_POSTS = "create table "
 		+ constants.TABLE_POSTS + "(" + constants.COL_KEY_ROW + " integer primary key autoincrement,"
-		+ constants.POST_VIOLATION_ID + " integer," + constants.POST_LOCAL_IMAGE_PATH + " text,"
+		+ constants.POST_VIOLATION_ID + " integer," + constants.PROPERTY_ID + " integer," + constants.POST_LOCAL_IMAGE_PATH + " text,"
 		+ constants.POST_RETURNED_STRING + " text," + constants.POST_IS_POSTED + " integer,"
 		+ constants.POST_TIMESTAMP + " text,"+constants.POST_VIOLATION_TYPE +" text,"+constants.POST_UNIT +" text," + constants.POST_BLDG + " text," + constants.POST_COMMENTS + " text);";
 	// create table pservices (_id integer primary key autoincrement,

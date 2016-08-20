@@ -7,11 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -32,18 +30,17 @@ import com.tidevalet.SessionManager;
 import com.tidevalet.fragments.LoginActivityFragment;
 import com.tidevalet.fragments.PropertyChosen;
 import com.tidevalet.fragments.PropertyList;
+import com.tidevalet.fragments.ViewViolations;
 import com.tidevalet.helpers.Attributes;
+import com.tidevalet.helpers.Post;
 import com.tidevalet.helpers.Properties;
 import com.tidevalet.interfaces.MainListener;
 import com.tidevalet.service.wp_service;
 import com.tidevalet.thread.adapter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements MainListener {
 
@@ -61,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     private static ArrayAdapter<Object> listAdapter;
     private static adapter propAdapter = new adapter(App.getInstance());
     private static Map<String, Object> propertyList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
             @Override
             public void onClick(View v) {
                 Log.d("View Violations", "Click");
+                startViolationView();
             }
         });
         changeProperty = (Button) v.findViewById(R.id.changeProperty);
@@ -141,6 +140,11 @@ public class MainActivity extends AppCompatActivity implements MainListener {
                 startListView();
             }
         });
+    }
+
+    private void startViolationView() {
+        Fragment violationViewFragment = new ViewViolations();
+        fm.beginTransaction().replace(R.id.main_fragment, violationViewFragment).commit();
     }
 
     private void startListView() {
@@ -223,6 +227,11 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     }
 
     @Override
+    public void onListFragmentInteraction(Post item) {
+        Log.d("TAG", "hi");
+    }
+
+    @Override
     public void clicked(View v) {
 
     }
@@ -235,6 +244,8 @@ public class MainActivity extends AppCompatActivity implements MainListener {
                 progressDialog.setTitle("Logging In");
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setMax(100);
+                progressDialog.setProgress(50);
                 progressDialog.setMessage(value);
                 progressDialog.show();
                 break;

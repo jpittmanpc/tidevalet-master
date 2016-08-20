@@ -19,10 +19,13 @@ public class ulservice extends Service {
         @Override
         public void onStart(Intent intent, int startId) {
             super.onStart(intent, startId);
-            long postId = intent.getLongExtra("id", 0);
-            upload thread = new upload(postId, this);
-            thread.start();
-            Toast.makeText(this, "Starting", Toast.LENGTH_LONG).show();
+try {
+    long postId = intent.getLongExtra("id", 0);
+    upload thread = new upload(postId, this);
+    thread.start();
+    Toast.makeText(this, "Starting", Toast.LENGTH_LONG).show();
+}
+catch (NullPointerException e) { e.printStackTrace(); }
         }
 
     }

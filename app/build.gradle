@@ -57,4 +57,5 @@ dependencies {
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
     compile 'com.android.support:design:23.4.0'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'com.android.support:recyclerview-v7:23.4.0'
 }
