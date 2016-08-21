@@ -107,9 +107,8 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         ImageLoader imgLoader = ImageLoader.getInstance();
         Log.d("TAG", sM.propertySelected() + "");
         attributes.setPropertyId(sM.propertySelected());
-        try {
-            imgLoader.displayImage(property.getImage(), propertyImage);
-        } catch(NullPointerException e) { e.printStackTrace(); }
+        try {        imgLoader.displayImage(property.getImage(), propertyImage); }
+        catch(NullPointerException e) { e.printStackTrace(); }
         propertyName = (TextView) v.findViewById(R.id.propertyName);
         try {
             propertyName.setText(property.getName());
@@ -214,11 +213,11 @@ public class MainActivity extends AppCompatActivity implements MainListener {
                             .make(view, "You are not a contractor for this property.", Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
-                sM.setPropertySelected(id);
+                sM.setPropertySelected(ids);
                 propAdapter.close();
                 startPropView();
                 Log.d(TAG, propertyList.get(listAdapter.getItem(pos).toString()).toString());
-                Log.d("MainAct", pos + " pos " + " id: " + id + "name: " + listAdapter.getItem(pos).toString() + " ID:");
+                Log.d("MainAct", pos + " pos " + " id: " + id + "name: " + listAdapter.getItem(pos).toString() + " ID:" + ids);
             }
         });
     }
