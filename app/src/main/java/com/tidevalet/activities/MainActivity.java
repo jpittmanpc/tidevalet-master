@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
                             .make(view, "You are not a contractor for this property.", Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
-                sM.setPropertySelected(property.getId());
+                sM.setPropertySelected(id);
                 propAdapter.close();
                 startPropView();
                 Log.d(TAG, propertyList.get(listAdapter.getItem(pos).toString()).toString());
