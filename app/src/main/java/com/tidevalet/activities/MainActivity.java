@@ -107,7 +107,9 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         ImageLoader imgLoader = ImageLoader.getInstance();
         Log.d("TAG", sM.propertySelected() + "");
         attributes.setPropertyId(sM.propertySelected());
-        imgLoader.displayImage(property.getImage(), propertyImage);
+        try {
+            imgLoader.displayImage(property.getImage(), propertyImage);
+        } catch(NullPointerException e) { e.printStackTrace(); }
         propertyName = (TextView) v.findViewById(R.id.propertyName);
         try {
             propertyName.setText(property.getName());
