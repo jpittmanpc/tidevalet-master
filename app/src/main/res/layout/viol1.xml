@@ -68,7 +68,7 @@
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/dateTxt"
+        android:id="@+id/textView00"
         android:text="date"
         android:gravity="left"
         android:layout_below="@+id/dateTitle"
@@ -83,20 +83,20 @@
         android:text=""
         android:id="@+id/timeTxt"
         android:gravity="right"
-        android:layout_alignTop="@+id/dateTxt"
-        android:layout_alignBottom="@+id/dateTxt"
+        android:layout_alignTop="@+id/textView00"
+        android:layout_alignBottom="@+id/textView00"
         android:layout_alignRight="@+id/textView3"
         android:layout_alignEnd="@+id/textView3"
         android:singleLine="true"
-        android:layout_toRightOf="@+id/dateTxt"
-        android:layout_toEndOf="@+id/dateTxt" />
+        android:layout_toRightOf="@+id/textView00"
+        android:layout_toEndOf="@+id/textView00" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Building Number"
         android:id="@+id/textView4"
-        android:layout_below="@+id/dateTxt"
+        android:layout_below="@+id/textView00"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="68dp" />

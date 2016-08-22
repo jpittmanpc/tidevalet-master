@@ -5,7 +5,7 @@
     <string name="longitude_label">Longitude</string>
     <string name="last_update_time_label">Last location update time</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="tide_default_url">http://tide.jpitt.xyz</string>
+    <string name="tide_default_url">http://tide.jpitt.xyz/</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="found_complex">The following locations were found: </string>
     <string name="step1">violation1</string>

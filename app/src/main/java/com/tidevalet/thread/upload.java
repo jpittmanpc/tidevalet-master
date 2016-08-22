@@ -7,16 +7,13 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
-import com.tidevalet.App;
 import com.tidevalet.R;
-import com.tidevalet.activities.MainActivity;
-import com.tidevalet.helpers.Attributes;
 import com.tidevalet.helpers.Post;
-import com.tidevalet.helpers.Properties;
 
 import org.xmlrpc.android.WebUtils;
+
+import java.util.HashMap;
 
 public class upload extends Thread {
     private long postId;
@@ -31,42 +28,24 @@ public class upload extends Thread {
     @Override
     public void run() {
         adapter dbAdapter = new adapter(context);
+        dbAdapter.open();
         Post post = null;
         try {
             NotificationManager nManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             nManager.cancel((int) (R.string.app_name + postId));
-            dbAdapter.open();
-            Log.e(TAG, "Adapter opened");
             post = dbAdapter.getPostById(postId);
-            Properties property = dbAdapter.getPropertyById(post.getViolationId());
-            Attributes service = dbAdapter.getViolationByPropertyId(post.getViolationId(),
-                    Attributes.TYPE_PRIMARYBLOGGER);
-            dbAdapter.close();
-            //if (service.getIsEnabled() == Attributes.SERVICE_ENABLED) {
-                dbAdapter.open();
-                String url = WebUtils.uploadPostToWordpress(property, post.getLocalImagePath(), ""
-                        + post.getViolationType(), post.getBldg(), post.getUnit(), post.getContractorComments(), service, context);
-                post.setIsPosted(1);
-                post.setReturnedString(url);
-                dbAdapter.updatePost(post);
-                dbAdapter.close();
-            //} else {
-          //  }
-            //dbAdapter.open();
-          //  service = dbAdapter.getViolationByPropertyId(post.getViolationId(),
-            //        Attributes.TYPE_XPARENA);
-            //dbAdapter.close();
-        //    if (service.getIsEnabled() == Attributes.SERVICE_ENABLED) {
-                //WebUtils.uploadPostToXPArena(service, pupil, post.getReturnedString(), "500");
-          //  }
+            HashMap<String, String> pair = WebUtils.uploadPostToWordpress(post.getLocalImagePath(), ""+ post.getViolationType(), post.getBldg(), post.getUnit(), post.getContractorComments(), context);
+            post.setIsPosted(1);
+            post.setReturnedString(pair.get("url"));
+            post.setImagePath(pair.get("images"));
+            post.setViolationId(Integer.valueOf(pair.get("violation_id")));
+            dbAdapter.updatePost(post);
         } catch (Exception e) {
             if (post != null) {
                 post.setIsPosted(0);
                 post.setReturnedString("");
-                dbAdapter.open();
                 dbAdapter.updatePost(post);
-                dbAdapter.close();
             }
             e.printStackTrace();
             NotificationManager nManager = (NotificationManager) context

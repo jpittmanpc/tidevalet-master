@@ -19,7 +19,7 @@ import java.util.Objects;
 public class Properties {
     private long id;
     private String name;
-    private String term_id, image, address, contractors;
+    private String term_id, image, address, contractors, complexmgrs;
     public void setImage(String image) {
         this.image = image;
     }
@@ -53,12 +53,17 @@ public class Properties {
         String test = contractors.replaceAll("\"", "");
         test = test.substring(1,test.length()-1);
         for (String isCont : test.split(",")) {
-            Log.d("TAG", isCont + " " + sM.getUserId());
             if (Objects.equals(isCont, sM.getUserId())) { isContractor = true; }
         }
         return isContractor;
     }
     public void setContractors(String contractors) {
         this.contractors = contractors;
+    }
+    public void setComplexMgrs(String complexMgrs) {
+        this.complexmgrs = complexMgrs;
+    }
+    public String getComplexMgrs() {
+        return complexmgrs;
     }
 }

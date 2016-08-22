@@ -19,7 +19,19 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:id="@+id/snackbarlocation">
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/snackbarlocation"
+                android:text="The Violation has been submitted."
+                android:background="@android:color/black"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:layout_margin="5dp"
+                android:padding="10dp"
+                />
+
         </android.support.design.widget.CoordinatorLayout>
         <ImageView
             android:layout_width="match_parent"

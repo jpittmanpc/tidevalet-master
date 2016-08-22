@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.tidevalet.App;
 import com.tidevalet.R;
 import com.tidevalet.SessionManager;
@@ -28,12 +30,13 @@ import java.util.List;
  * TODO: Replace the implementation with code for your data type.
  */
 public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHolder> {
-    public static List<Post> posts = getPosts();
+    public static List<Post> posts;
     private final MainListener mListener;
 
 
+
     public PostViewAdapter(List<Post> items, MainListener listener) {
-        Log.d("RECYCLER", items.size() + "");
+        Log.d("PostViewAdapter", "Size: " + items.size() + "");
         posts = items;
         mListener = listener;
     }
@@ -41,38 +44,50 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.view_violation_card, parent, false);
-        return new ViewHolder(view);
+                    View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.view_violation_card, parent, false);
+            return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.post = posts.get(position);
-        String[] imagePath = holder.post.getLocalImagePath().split(",");
-
-        Bitmap image = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imagePath[0]),
-                (holder.firstImage.getDrawable().getIntrinsicWidth()) /2, (holder.firstImage.getDrawable().getIntrinsicHeight()) /2);
-        holder.bldgunit.setText(" Location: " + holder.post.getBldg() + "/" + holder.post.getUnit());
-        holder.violtype.setText(holder.post.getViolationType());
-        if (holder.post.getIsPosted() == 0) { holder.posted.setVisibility(View.VISIBLE); }
-        else { holder.posted.setVisibility(View.VISIBLE); }
-        holder.firstImage.setImageBitmap(image);
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.post);
-                }
+        if (!posts.isEmpty()) {
+            holder.post = posts.get(position);
+            String[] imagePath = holder.post.getImagePath().split(",");
+            ImageLoader imgLoader = ImageLoader.getInstance();
+            ImageSize size = new ImageSize(80, 50);
+            try { imgLoader.displayImage(imagePath[0].replaceAll("\\[", "").replaceAll("\\]",""), holder.firstImage, size); }
+            catch(NullPointerException e) { e.printStackTrace(); }
+            holder.bldgunit.setText(" Location: " + holder.post.getBldg() + "/" + holder.post.getUnit());
+            holder.violtype.setText(holder.post.getViolationType());
+            holder.datetext.setText(holder.post.getTimestamp());
+            if (holder.post.getIsPosted() == 0) {
+                holder.posted.setVisibility(View.VISIBLE);
+            } else {
+                holder.posted.setVisibility(View.INVISIBLE);
             }
-        });
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != mListener) {
+                        // Notify the active callbacks interface (the activity, if the
+                        // fragment is attached to one) that an item has been selected.
+                        mListener.onListFragmentInteraction(holder.post);
+                    }
+                }
+            });
+        }
+        else {  }
     }
 
     @Override
     public int getItemCount() {
         return posts.size();
+    }
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        Log.d("DETACHED", "");
     }
 
     public static List<Post> getPosts() {
@@ -89,19 +104,20 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView bldgunit, posted;
-        public final TextView violtype;
-        public final ImageView firstImage;
-        public Post post;
+        private final View mView;
+        private final TextView bldgunit, posted, violtype, datetext;
+        private final ImageView firstImage;
 
-        public ViewHolder(View view) {
+        private Post post;
+
+        private ViewHolder(View view) {
             super(view);
             mView = view;
             posted = (TextView) view.findViewById(R.id.posted);
             firstImage = (ImageView) view.findViewById(R.id.firstImage);
             bldgunit = (TextView) view.findViewById(R.id.bldgunit);
             violtype = (TextView) view.findViewById(R.id.violation_type_text);
+            datetext = (TextView) view.findViewById(R.id.date_text);
         }
 
         @Override

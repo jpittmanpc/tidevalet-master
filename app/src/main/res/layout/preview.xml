@@ -43,7 +43,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/dateTxt"
+            android:id="@+id/textView00"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/dateTitleTxt"
@@ -56,8 +56,8 @@
             android:id="@+id/timeTitleTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/dateTxt"
-            android:layout_below="@+id/dateTxt"
+            android:layout_alignLeft="@+id/textView00"
+            android:layout_below="@+id/textView00"
             android:layout_marginTop="16dp"
             android:text="Time of Violation:"
             android:textAppearance="?android:attr/textAppearanceMedium" />

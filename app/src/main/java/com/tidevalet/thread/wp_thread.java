@@ -23,16 +23,15 @@ public class wp_thread extends Thread {
     @Override
     public void run() {
         adapter dbAdapter = new adapter(context);
-
-        Log.d(TAG, "We are here");
-
+        dbAdapter.open();
         try {
-            dbAdapter.open();
             String url = WebUtils.callWp("wp.getTerms", context);
-            dbAdapter.close();
         }
         catch (Exception e) {
             e.printStackTrace();
+        }
+        finally {
+            dbAdapter.close();
         }
 
     }
