@@ -31,6 +31,7 @@
             android:layout_height="20dp"
             android:background="@color/TideBlue"
             android:text="Bldg / Unit"
+            android:transitionName="violation"
             android:gravity="center_vertical"
             android:textColor="@android:color/white"
             android:textSize="14dp"/>

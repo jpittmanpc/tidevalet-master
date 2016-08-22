@@ -10,8 +10,12 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -34,6 +38,7 @@ import com.tidevalet.fragments.LoginActivityFragment;
 import com.tidevalet.fragments.PropertyChosen;
 import com.tidevalet.fragments.PropertyList;
 import com.tidevalet.fragments.ViewViolations;
+import com.tidevalet.fragments.ViolationExpand;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.helpers.Properties;
 import com.tidevalet.interfaces.MainListener;
@@ -259,7 +264,21 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     }
 
     @Override
-    public void onListFragmentInteraction(Post item) {
+    public void onListFragmentInteraction(Post item, View view) {
+        Fragment violationViewFragment = new ViewViolations();
+        Fragment violationExpand = ViolationExpand.newInstance("",item);
+        Transition changeTransform = TransitionInflater.from(this).inflateTransition(R.transition.change_image_transform);
+        Transition explodeTransform = TransitionInflater.from(this).inflateTransition(android.R.transition.explode);
+        violationViewFragment.setSharedElementReturnTransition(changeTransform);
+        violationViewFragment.setExitTransition(explodeTransform);
+        violationExpand.setSharedElementEnterTransition(changeTransform);
+        violationExpand.setEnterTransition(explodeTransform);
+        TextView textView = (TextView) view.findViewById(R.id.bldgunit);
+        fm.beginTransaction()
+                .replace(R.id.topLevelViewViolation, violationExpand)
+                .addToBackStack("transaction")
+                .addSharedElement(textView, "violation")
+        .commit();
         Log.d("TAG", "Clicked on post " + item.getViolationId() + " InDBAS: " + item.getId());
     }
 
