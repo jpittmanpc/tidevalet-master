@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="4dp"
+    android:elevation="@dimen/cardview_default_elevation"
     android:layout_margin="5dp"
     android:background="@color/TideBlue">
 
@@ -13,11 +14,13 @@
         android:layout_height="wrap_content"
         android:background="@color/dkgrey">
         <ImageView
+            android:layout_margin="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/placeholder"
+            android:height="20dp"
+            android:minWidth="20dp"
             android:id="@+id/firstImage"
-            android:background="@drawable/placeholder"
             android:layout_below="@+id/bldgunit"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />

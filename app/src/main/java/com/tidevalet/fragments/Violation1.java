@@ -82,12 +82,8 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
         //TextView propViol = (TextView)v.findViewById(R.id.violProp);
         TextView dateTxt = (TextView)v.findViewById(R.id.textView00);
         TextView timeTxt = (TextView)v.findViewById(R.id.timeTxt);
-
         ImageButton takePic = (ImageButton)v.findViewById(R.id.imageButton);
         takePic.setOnClickListener(this);
-        takePic.setOnClickListener(this);
-    //    ImageView img1 = (ImageView)v.findViewById(R.id.img1);
-        //propViol.setText("rpop");
         dateTxt.setText(dateFormat.format(new Date()));
         timeTxt.setText(timeFormat.format(new Date()));
         return v;

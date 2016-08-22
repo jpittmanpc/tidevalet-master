@@ -55,7 +55,7 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
             holder.post = posts.get(position);
             String[] imagePath = holder.post.getImagePath().split(",");
             ImageLoader imgLoader = ImageLoader.getInstance();
-            ImageSize size = new ImageSize(80, 50);
+            ImageSize size = new ImageSize(60, 60);
             try { imgLoader.displayImage(imagePath[0].replaceAll("\\[", "").replaceAll("\\]",""), holder.firstImage, size); }
             catch(NullPointerException e) { e.printStackTrace(); }
             holder.bldgunit.setText(" Location: " + holder.post.getBldg() + "/" + holder.post.getUnit());
@@ -107,9 +107,7 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
         private final View mView;
         private final TextView bldgunit, posted, violtype, datetext;
         private final ImageView firstImage;
-
         private Post post;
-
         private ViewHolder(View view) {
             super(view);
             mView = view;

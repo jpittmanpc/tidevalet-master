@@ -29,6 +29,7 @@ import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 import com.stepstone.stepper.adapter.AbstractStepAdapter;
 import com.tidevalet.App;
+import com.tidevalet.BitmapText;
 import com.tidevalet.R;
 import com.tidevalet.SessionManager;
 import com.tidevalet.fragments.Violation1;
@@ -174,7 +175,10 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         photoBm = getScaledBitmap(photoBm, bmOriginalWidth, bmOriginalHeight,
                 originalWidthToHeightRatio, originalHeightToWidthRatio,
                 maxHeight, maxWidth);
-
+        SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yy", Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma", Locale.getDefault());
+        String text = dateFormat.format(new Date()) + " " + timeFormat.format(new Date());
+        BitmapText.drawTextBitmap(photoBm, text);
         /**********THE REST OF THIS IS FROM Prabu's answer*******/
         //create a byte array output stream to hold the photo's bytes
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();

@@ -76,6 +76,7 @@ public class adapter {
 		Log.d("Adapter", cursor.getCount() + " count" + "property: " + propId);
 		while (cursor.moveToNext()) {
 			Post post = new Post();
+			post.setId(cursor.getLong(cursor.getColumnIndex(constants.COL_KEY_ROW)));
 			post.setViolationId(cursor.getLong(cursor.getColumnIndex(constants.POST_VIOLATION_ID)));
 			post.setIsPosted(cursor.getInt(cursor.getColumnIndex(constants.POST_IS_POSTED)));
 			post.setPropertyId(cursor.getInt(cursor.getColumnIndex(constants.PROPERTY_ID)));
