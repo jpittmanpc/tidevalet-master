@@ -19,4 +19,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="viol3_title">Please leave additional \ndetailed comments.</string>
     <string name="contractor_comments">Contractor Comments</string>
+    <string name="building_number">Building #</string>
+    <string name="unit_number">Unit #</string>
 </resources>

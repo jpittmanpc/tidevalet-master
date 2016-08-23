@@ -85,4 +85,13 @@
         <item name="colorControlHighlight">#272262</item>
     </style>
 
+    <style name="TextLabel" parent="TextAppearance.AppCompat">
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="colorAccent">@android:color/white</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+    </style>
+
 </resources>
