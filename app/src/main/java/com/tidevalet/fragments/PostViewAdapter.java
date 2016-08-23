@@ -48,7 +48,9 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         if (!posts.isEmpty()) {
             holder.post = posts.get(position);
-            String[] imagePath = holder.post.getImagePath().split(",");
+            String[] imagePath;
+            try { imagePath = holder.post.getImagePath().split(","); }
+            catch(NullPointerException e) { imagePath = holder.post.getLocalImagePath().split(","); }
             ImageLoader imgLoader = ImageLoader.getInstance();
             ImageSize size = new ImageSize(60, 60);
             try { imgLoader.displayImage(imagePath[0].replaceAll("\\[", "").replaceAll("\\]",""), holder.firstImage, size); }

@@ -213,7 +213,7 @@ public class WebUtils {
         }
         catch (XMLRPCException e) {
             Log.d("ERROR!", "caught error");
-            throw e;
+            e.printStackTrace();
         }
         HashMap<String, Object> contentHash = new HashMap<String, Object>();
         contentHash = (HashMap<String, Object>) result;

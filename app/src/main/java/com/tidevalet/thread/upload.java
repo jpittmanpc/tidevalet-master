@@ -1,6 +1,7 @@
 
 package com.tidevalet.thread;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -22,7 +23,6 @@ public class upload extends Thread {
     public upload(long postId, Context context) {
         this.postId = postId;
         this.context = context;
-
     }
 
     @Override
@@ -53,15 +53,15 @@ public class upload extends Thread {
             Intent intent = new Intent(context, upload.class);
             intent.putExtra("id", postId);
             PendingIntent pendingIntent = PendingIntent
-                    .getService(context, (int) postId, intent, 0);
-            NotificationCompat.Builder notification = new NotificationCompat.Builder(context);
-            notification
-                    .setSmallIcon(R.drawable.ms_circle)
-                    .setContentTitle("Error Uploading")
-                    .setContentText("Try again?");
+                    .getService(context, (int) (R.string.app_name + postId), intent, 0);
+            NotificationCompat.Builder notification = new NotificationCompat.Builder(context)
+                    .setContentIntent(pendingIntent)
+                    .setSmallIcon(R.drawable.logotide_logo)
+                    .setContentTitle("Tide Valet")
+                    .setContentText("Error uploading post " + post.getBldg() + "/" + post.getUnit());
             TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
-            PendingIntent resultPendingIntent = taskStackBuilder.getPendingIntent((int) (R.string.app_name + postId), PendingIntent.FLAG_UPDATE_CURRENT);
             taskStackBuilder.addNextIntent(intent);
+            PendingIntent resultPendingIntent = taskStackBuilder.getPendingIntent((int) (R.string.app_name + postId), PendingIntent.FLAG_UPDATE_CURRENT);
             notification.setContentIntent(resultPendingIntent);
             nManager.notify((int) (R.string.app_name + postId), notification.build());
         } finally {
