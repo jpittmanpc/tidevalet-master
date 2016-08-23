@@ -12,9 +12,7 @@ public class SessionManager {
 	SharedPreferences pref;
 	Editor editor;
 	String PREF_NAME = "pref_name";
-
 	int PREF_MODE = 0;
-
 	static final String LATITUDE = "latitude";
 	static final String LONGITUDE = "longitude";
 	static final String ADDRESS = "address";
@@ -35,8 +33,6 @@ public class SessionManager {
 		pref = context.getSharedPreferences(PREF_NAME, PREF_MODE);
 		editor = pref.edit();
 	}
-
-
 	public void ShareValues
 			(String latitude, String longitude, String address, String date, String time) {
 		editor.putString(LATITUDE, latitude);
@@ -92,7 +88,7 @@ public class SessionManager {
 	}
 	public void setLoggedIn(Boolean value) { editor.putBoolean(DEF_LOGGED_IN, value); editor.commit(); }
 	public boolean isLoggedIn() { return pref.getBoolean(DEF_LOGGED_IN, false); }
-	public String getDefUrl() { return pref.getString(DEF_URL, null); }
+	public String a() { return pref.getString(DEF_URL, null); }
 	public String getUsername() { return pref.getString(DEF_USR, null); }
 	public String getPassword() { return pref.getString(DEF_PWD, null); }
 	public String getUserId() { return pref.getString(WP_USER_ID, "").toString(); }

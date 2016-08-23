@@ -28,8 +28,7 @@ public class App extends Application {
                 .defaultDisplayImageOptions(defaultOptions)
                 .build();
         ImageLoader.getInstance()
-                .init(config);
-    }
+                .init(config);    }
     public static Context getAppContext() {
         return App.mContext;
     }

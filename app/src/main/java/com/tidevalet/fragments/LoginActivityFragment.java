@@ -2,7 +2,6 @@ package com.tidevalet.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.tidevalet.App;
 import com.tidevalet.R;
 import com.tidevalet.SessionManager;
-import com.tidevalet.activities.MainActivity;
 import com.tidevalet.interfaces.MainListener;
 
 import org.xmlrpc.android.XMLRPCClient;
@@ -119,7 +117,7 @@ public class LoginActivityFragment extends Fragment {
 
         @Override
         protected String doInBackground(String[] params) {
-            XMLRPCClient client = new XMLRPCClient(session.getDefUrl() + "xmlrpc.php");
+            XMLRPCClient client = new XMLRPCClient(session.a() + "xmlrpc.php");
             Object[] paramaters = {1, params[0], params[1], true};
             Object result = null;
             try {

@@ -23,7 +23,7 @@ try {
     long postId = intent.getLongExtra("id", 0);
     upload thread = new upload(postId, this);
     thread.start();
-    Toast.makeText(this, "Starting", Toast.LENGTH_LONG).show();
+    Toast.makeText(this, "Posting Violation", Toast.LENGTH_LONG).show();
 }
 catch (NullPointerException e) { e.printStackTrace(); }
         }

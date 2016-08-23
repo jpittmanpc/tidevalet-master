@@ -8,10 +8,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.tidevalet.App;
 import com.tidevalet.R;
+import com.tidevalet.activities.MainActivity;
+import com.tidevalet.helpers.Post;
+import com.tidevalet.SessionManager;
 import com.tidevalet.interfaces.MainListener;
+import com.tidevalet.thread.adapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -26,6 +34,7 @@ public class ViewViolations extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private MainListener mListener;
+    private List<Post> posts = new ArrayList<>();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -47,28 +56,47 @@ public class ViewViolations extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+        adapter dBadapter = new adapter(App.getAppContext());
+        SessionManager sm = new SessionManager(App.getAppContext());
+        try {
+            dBadapter.open();
+            posts = dBadapter.getPostsByPropertyId(sm.propertySelected());
+            dBadapter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_view_violations, container, false);
-         Context context = view.getContext();
-         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
-         recyclerView.setHasFixedSize(true);
-         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-         layoutManager.setOrientation((LinearLayoutManager.VERTICAL));
-         recyclerView.setLayoutManager(layoutManager);
-         PostViewAdapter postViewAdapter = new PostViewAdapter(PostViewAdapter.posts, mListener);
-         recyclerView.setAdapter(postViewAdapter);
-        return view;
+        if (!posts.isEmpty()) {
+            View view = inflater.inflate(R.layout.fragment_view_violations, container, false);
+            Context context = view.getContext();
+            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+            recyclerView.setHasFixedSize(false);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+            layoutManager.setOrientation((LinearLayoutManager.VERTICAL));
+            recyclerView.setLayoutManager(layoutManager);
+            //PostViewAdapter postViewAdapter = new PostViewAdapter(PostViewAdapter.posts, mListener);
+            recyclerView.setAdapter(new PostViewAdapter(posts, mListener));
+            recyclerView.invalidate();
+            return view;
+        }
+        else {
+            View v = inflater.inflate(R.layout.noproperties, container, false);
+            Button goBack = (Button) v.findViewById(R.id.backbutton);
+            goBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().onBackPressed();
+                    v.invalidate();
+                }
+            });
+            return v;
+        }
     }
-
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -83,7 +111,7 @@ public class ViewViolations extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+         mListener = null;
     }
     /**
      * This interface must be implemented by activities that contain this

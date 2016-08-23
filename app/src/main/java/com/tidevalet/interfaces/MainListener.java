@@ -15,6 +15,6 @@ public interface MainListener {
     void propertyList(View v);
 
     void onFragmentInteraction(Uri uri);
-    void onListFragmentInteraction(Post item);
+    void onListFragmentInteraction(Post item, View view);
     void propertyView(View v);
 }

@@ -1,47 +1,40 @@
 package com.tidevalet.activities;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 import com.stepstone.stepper.adapter.AbstractStepAdapter;
 import com.tidevalet.App;
+import com.tidevalet.BitmapText;
 import com.tidevalet.R;
 import com.tidevalet.SessionManager;
 import com.tidevalet.fragments.Violation1;
 import com.tidevalet.fragments.Violation2;
 import com.tidevalet.fragments.Violation3;
-import com.tidevalet.helpers.Attributes;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.helpers.Properties;
 import com.tidevalet.interfaces.ViolationListener;
@@ -50,7 +43,6 @@ import com.tidevalet.thread.adapter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -63,7 +55,6 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     private Uri filePath;
     private ImageView img1, img2, img3, img4;
     private Properties property;
-    private Attributes attributes = new Attributes();
     private Post post;
     private List<String> uriList = new ArrayList<>();
     private View Violation1v;
@@ -102,28 +93,17 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v("TAG", "Permission is granted");
-                return true;
-            } else {
-
-                Log.v("TAG", "Permission is revoked");
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        } else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG, "Permission is granted");
-            return true;
-        }
+                    == PackageManager.PERMISSION_GRANTED) { return true; }
+            else {  ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false; }
+        } else { return true;  }
     }
-
     static String TAG = "TAG";
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.v(TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
             dispatchTakePictureIntent();
         }
     }
@@ -139,7 +119,6 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d("TAG", "no write access");
                 return null;
             } else {
                 mediaStorageDir.mkdir();
@@ -151,25 +130,6 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
         return mediaFile;
     }
-
-    private File getFileName() {
-        File folder = getApplicationContext().getFilesDir();
-        Log.d("TAG", folder.toString());
-        if (!folder.exists()) {
-            folder.mkdir();
-            Log.d("TAG", "folder created");
-        }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "tide_" + timeStamp + "_";
-        File image_file = null;
-        try {
-            image_file = File.createTempFile(imageFileName, ".jpg", folder);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return image_file;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("TAG", "OnActResult" + requestCode + " resultcode: " + resultCode);
@@ -215,7 +175,10 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         photoBm = getScaledBitmap(photoBm, bmOriginalWidth, bmOriginalHeight,
                 originalWidthToHeightRatio, originalHeightToWidthRatio,
                 maxHeight, maxWidth);
-
+        SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yy", Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma", Locale.getDefault());
+        String text = dateFormat.format(new Date()) + " " + timeFormat.format(new Date());
+        BitmapText.drawTextBitmap(photoBm, text);
         /**********THE REST OF THIS IS FROM Prabu's answer*******/
         //create a byte array output stream to hold the photo's bytes
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -300,7 +263,6 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     public void sendComments(String s) {
         post.setContractorComments(s);
     }
-
     @Override
     public void clicked(View v) {
         dispatchTakePictureIntent();
@@ -309,7 +271,6 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         img3 = (ImageView) v.getRootView().findViewById(R.id.img3);
         img4 = (ImageView) v.getRootView().findViewById(R.id.img4);
     }
-
     @Override
     public void onCompleted(View completeButton) {
         EditText comments = (EditText) Violation3v.findViewById(R.id.comments);
@@ -327,22 +288,12 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         }
         else { startSubmit(); }
     }
-
     @Override
     public void onError(VerificationError verificationError) {
-
     }
-
     @Override
     public void onStepSelected(int newStepPosition) {
-
     }
-
-
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
     private void startSubmit() {
         post.setIsPosted(0);
         StringBuilder stringBuilder = new StringBuilder();
@@ -363,6 +314,8 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         post.setBldg(bldg);
         post.setUnit(unit);
         post.setPropertyId(new SessionManager(this).propertySelected());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MM-dd h:mma");
+        post.setTimestamp(dateFormat.format(new Date()));
         adapter dbAdapter = new adapter(this);
         dbAdapter.open();
         post = dbAdapter.addPost(post);
@@ -372,11 +325,11 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             service.putExtra("id", post.getId());
             startService(service);
             setResult(RESULT_OK);
+            LocalBroadcastManager.getInstance(App.getAppContext()).registerReceiver(MainActivity.broadcastReceiver, new IntentFilter("sendSnackBar"));
             finish();
         }
         //start submit, then call new intent to go back to the property screen
         Intent i = new Intent(this, MainActivity.class);
-        i.putExtra("snackbar", "The violation has been successfully submitted");
         startActivity(i);
         finish();
 
@@ -426,8 +379,6 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             }
             return null;
         }
-
-
         @Override
         public int getCount() {
             return 3;

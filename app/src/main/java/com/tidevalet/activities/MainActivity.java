@@ -10,11 +10,17 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tidevalet.App;
@@ -31,7 +38,7 @@ import com.tidevalet.fragments.LoginActivityFragment;
 import com.tidevalet.fragments.PropertyChosen;
 import com.tidevalet.fragments.PropertyList;
 import com.tidevalet.fragments.ViewViolations;
-import com.tidevalet.helpers.Attributes;
+import com.tidevalet.fragments.ViolationExpand;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.helpers.Properties;
 import com.tidevalet.interfaces.MainListener;
@@ -46,15 +53,16 @@ public class MainActivity extends AppCompatActivity implements MainListener {
 
     private static final String TAG = "MainActivity";
     private static SessionManager sM = new SessionManager(App.getInstance());
+    public static BroadcastReceiver broadcastReceiver;
     final FragmentManager fm = getSupportFragmentManager();
     ImageView propertyImage;
     TextView propertyName;
     Button newViolation;
     Button viewViolation;
     Button changeProperty;
+    private TextView snackbar;
 
     private static Context mContext;
-    public static final Attributes attributes = new Attributes();
     private static ArrayAdapter<Object> listAdapter;
     private static adapter propAdapter = new adapter(App.getInstance());
     private static Map<String, Object> propertyList;
@@ -67,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         mContext = this;
         sM.setDefUrl(App.getSiteUrl());
         InitializeUI();
-
     }
 
 
@@ -98,16 +105,45 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         fm.popBackStack();
 
     }
+
+    private void showToast() {
+        AlphaAnimation alphaAnim = new AlphaAnimation(1.0f, 0.5f);
+        alphaAnim.setDuration(5000);
+        alphaAnim.setStartOffset(1);
+        alphaAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                snackbar.setVisibility(View.INVISIBLE);
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        snackbar.setAnimation(alphaAnim);
+        snackbar.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void propertyView(View v) {
+        snackbar = (TextView) v.findViewById(R.id.snackbarlocation);
+        if (broadcastReceiver == null) {
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    showToast();
+                }
+            };
+        }
+        snackbar.setVisibility(View.INVISIBLE);
         propAdapter.open();
         Properties property = propAdapter.getPropertyById(sM.propertySelected());
         propAdapter.close();
         propertyImage = (ImageView) v.findViewById(R.id.propertyImg);
         ImageLoader imgLoader = ImageLoader.getInstance();
-        Log.d("TAG", sM.propertySelected() + "");
-        attributes.setPropertyId(sM.propertySelected());
-        imgLoader.displayImage(property.getImage(), propertyImage);
+        try {        imgLoader.displayImage(property.getImage(), propertyImage); }
+        catch(NullPointerException e) { e.printStackTrace(); }
         propertyName = (TextView) v.findViewById(R.id.propertyName);
         try {
             propertyName.setText(property.getName());
@@ -137,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
             @Override
             public void onClick(View v) {
                 sM.setPropertySelected(0);
+
                 startListView();
             }
         });
@@ -212,11 +249,11 @@ public class MainActivity extends AppCompatActivity implements MainListener {
                             .make(view, "You are not a contractor for this property.", Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
-                sM.setPropertySelected(property.getId());
+                sM.setPropertySelected(ids);
                 propAdapter.close();
                 startPropView();
                 Log.d(TAG, propertyList.get(listAdapter.getItem(pos).toString()).toString());
-                Log.d("MainAct", pos + " pos " + " id: " + id + "name: " + listAdapter.getItem(pos).toString() + " ID:");
+                Log.d("MainAct", pos + " pos " + " id: " + id + "name: " + listAdapter.getItem(pos).toString() + " ID:" + ids);
             }
         });
     }
@@ -227,8 +264,22 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     }
 
     @Override
-    public void onListFragmentInteraction(Post item) {
-        Log.d("TAG", "hi");
+    public void onListFragmentInteraction(Post item, View view) {
+        Fragment violationViewFragment = new ViewViolations();
+        Fragment violationExpand = ViolationExpand.newInstance("",item);
+        Transition changeTransform = TransitionInflater.from(this).inflateTransition(R.transition.change_image_transform);
+        Transition explodeTransform = TransitionInflater.from(this).inflateTransition(android.R.transition.explode);
+        violationViewFragment.setSharedElementReturnTransition(changeTransform);
+        violationViewFragment.setExitTransition(explodeTransform);
+        violationExpand.setSharedElementEnterTransition(changeTransform);
+        violationExpand.setEnterTransition(explodeTransform);
+        TextView textView = (TextView) view.findViewById(R.id.bldgunit);
+        fm.beginTransaction()
+                .replace(R.id.topLevelViewViolation, violationExpand)
+                .addToBackStack("transaction")
+                .addSharedElement(textView, "violation")
+        .commit();
+        Log.d("TAG", "Clicked on post " + item.getViolationId() + " InDBAS: " + item.getId());
     }
 
     @Override
@@ -261,6 +312,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     public void authenticated() {
         startListView();
     }
+
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

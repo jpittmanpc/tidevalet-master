@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="4dp"
+    android:elevation="@dimen/cardview_default_elevation"
     android:layout_margin="5dp"
     android:background="@color/TideBlue">
 
@@ -13,11 +14,13 @@
         android:layout_height="wrap_content"
         android:background="@color/dkgrey">
         <ImageView
+            android:layout_margin="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/placeholder"
+            android:height="20dp"
+            android:minWidth="20dp"
             android:id="@+id/firstImage"
-            android:background="@drawable/placeholder"
             android:layout_below="@+id/bldgunit"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
@@ -28,6 +31,7 @@
             android:layout_height="20dp"
             android:background="@color/TideBlue"
             android:text="Bldg / Unit"
+            android:transitionName="violation"
             android:gravity="center_vertical"
             android:textColor="@android:color/white"
             android:textSize="14dp"/>
@@ -51,21 +55,22 @@
             android:text="Violation Type"
             android:gravity="center_vertical"
             android:textColor="@color/ms_black"
-            android:textSize="10dp"
+            android:textSize="14dp"
             android:layout_marginLeft="20dp"
             android:layout_below="@+id/bldgunit"
             android:layout_toRightOf="@+id/firstImage"
             android:layout_toEndOf="@+id/firstImage"
-            android:layout_marginStart="20dp" />
+            android:layout_marginStart="20dp"
+            android:textIsSelectable="false" />
 
         <TextView
-            android:id="@+id/txtSurname"
+            android:id="@+id/textView00"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/ms_black"
-            android:text="Comments"
+            android:text="Date"
             android:gravity="center_vertical"
-            android:textSize="10dp"
+            android:textSize="14dp"
             android:layout_below="@+id/violation_text"
             android:layout_alignLeft="@+id/violation_text"
             android:layout_alignStart="@+id/violation_text"
@@ -77,12 +82,23 @@
             android:layout_height="wrap_content"
             android:textColor="@color/ms_black"
             android:text="type"
-            android:textSize="10dp"
+            android:textSize="14dp"
             android:layout_marginTop="10dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="150dp"
             android:layout_alignBaseline="@id/violation_text"/>
 
+        <TextView
+            android:id="@+id/date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/ms_black"
+            android:textSize="14dp"
+            android:layout_alignBaseline="@+id/textView00"
+            android:layout_alignBottom="@+id/textView00"
+            android:layout_alignLeft="@+id/violation_type_text"
+            android:layout_alignStart="@+id/violation_type_text"
+            android:text="date" />
 
 
     </RelativeLayout>

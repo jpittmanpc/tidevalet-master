@@ -10,7 +10,7 @@ public class Post {
     private long id, violationId, propertyId;
     private int isPosted;
     private String type, contractorComments, timestamp, returnedString, bldg, unit;
-    private String localImagePath;
+    private String localImagePath, imagePath;
     public char[] content;
 
     public long getId() {
@@ -74,4 +74,10 @@ public class Post {
         return unit;
     }
 
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+    public String getImagePath() {
+        return imagePath;
+    }
 }

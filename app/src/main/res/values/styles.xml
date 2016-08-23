@@ -40,6 +40,14 @@
         <item name="android:textColorSecondary">@color/TideBlue</item>
         <item name="android:textColorSecondaryInverse">@color/TideLightGrey</item>
         <item name="android:windowBackground">@color/TideBlue</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowEnterTransition">@transition/change_image_transform</item>
+        <item name="android:windowExitTransition">@transition/change_image_transform</item>
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_image_transform</item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_image_transform</item>
     </style>
     <style name="Actionbar" parent="Platform.ThemeOverlay.AppCompat.Dark">
         <item name="android:windowBackground">@android:color/white</item>
