@@ -10,13 +10,14 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
@@ -28,8 +29,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tidevalet.App;
 import com.tidevalet.R;
@@ -44,7 +43,6 @@ import com.tidevalet.helpers.Properties;
 import com.tidevalet.interfaces.MainListener;
 import com.tidevalet.service.wp_service;
 import com.tidevalet.thread.adapter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
+        getSupportActionBar().setTitle("Tide Valet");
         sM.setDefUrl(App.getSiteUrl());
         InitializeUI();
     }
@@ -336,5 +335,26 @@ public class MainActivity extends AppCompatActivity implements MainListener {
             getFragmentManager().popBackStack();
         }
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (sM.isLoggedIn()) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_main, menu);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                SessionManager byebye = new SessionManager(App.getInstance());
+                byebye.resetUser();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -76,6 +76,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         adapter.open();
         property = adapter.getPropertyById(session.propertySelected());
         adapter.close();
+        getSupportActionBar().setSubtitle("New Violation - " + property.getName());
     }
 
     private void dispatchTakePictureIntent() {

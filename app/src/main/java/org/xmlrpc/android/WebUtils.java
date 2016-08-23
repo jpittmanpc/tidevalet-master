@@ -175,7 +175,6 @@ public class WebUtils {
                 }
             }
             String contractorList = String.valueOf(new JSONArray(contractors));
-            Log.d("Contractor List", contractorList.toString());
             String complexmgrList = String.valueOf(new JSONArray(complex_mgrs));
             dbAdapter.open();
             dbAdapter.addProperty(propId, name, address, image, contractorList, complexmgrList);
