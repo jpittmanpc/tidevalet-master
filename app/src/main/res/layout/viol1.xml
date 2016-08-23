@@ -86,7 +86,7 @@
                 android:text="Time"
                 android:id="@+id/textView3"
                     android:textStyle="bold"
-                android:layout_above="@+id/textView00"
+                android:layout_above="@+id/dateTxt"
                     android:textSize="18sp"
                 android:layout_centerHorizontal="true"
                     android:gravity="end" />
@@ -105,7 +105,7 @@
             <TextView
                 android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView00"
+            android:id="@+id/dateTxt"
             android:text="date"
                 android:layout_below="@+id/dateTitle"
             android:layout_alignParentLeft="true"
@@ -126,7 +126,7 @@
                 android:text=""
                 android:id="@+id/timeTxt"
                     android:singleLine="true"
-                android:layout_alignTop="@+id/textView00"
+                android:layout_alignTop="@+id/dateTxt"
                 android:layout_alignLeft="@+id/textView3"
                 android:layout_alignStart="@+id/textView3"
                 android:layout_toStartOf="@+id/textView6"
@@ -214,8 +214,8 @@
             android:src="@drawable/ic_add_a_photo_black_48dp"
             android:background="#00ffffff"
                 android:layout_alignParentBottom="true"
-                android:layout_alignRight="@+id/textView00"
-                android:layout_alignEnd="@+id/textView00"
+                android:layout_alignRight="@+id/dateTxt"
+                android:layout_alignEnd="@+id/dateTxt"
                 android:layout_weight="2" />
 
         </LinearLayout>

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tidevalet.App;
@@ -25,7 +26,8 @@ import org.xmlrpc.android.XMLRPCException;
  * A placeholder fragment containing a simple view.
  */
 public class LoginActivityFragment extends Fragment {
-    TextView username, password, logintext;
+    TextView logintext;
+    EditText username, password;
     CheckBox remember;
     ProgressDialog progress;
 
@@ -38,8 +40,8 @@ public class LoginActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
         logintext = (TextView) v.findViewById(R.id.logintext);
-        username = (TextView) v.findViewById(R.id.editUsername);
-        password = (TextView) v.findViewById(R.id.editPassword);
+        username = (EditText) v.findViewById(R.id.input_email);
+        password = (EditText) v.findViewById(R.id.input_password);
         CheckBox remember = (CheckBox) v.findViewById(R.id.rememberCheckbox);
         remember.setChecked(true);
         Button loginButton = (Button) v.findViewById(R.id.loginButton);

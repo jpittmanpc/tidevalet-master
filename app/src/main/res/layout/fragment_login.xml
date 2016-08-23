@@ -1,9 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:showIn="@layout/activity_login"
     tools:context=".fragments.LoginActivityFragment$PlaceholderFragment"
     android:background="@drawable/loginloginwallpaper" >
 
@@ -25,7 +24,11 @@
             android:layout_gravity="center"
             android:layout_marginBottom="24dp" />
 
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/logintext"
+            />
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,7 +48,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:theme="@style/TextLabel">
-            <EditText android:id="@+id/editPassword"
+            <EditText android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
