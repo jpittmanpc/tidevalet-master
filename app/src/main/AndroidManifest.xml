@@ -31,7 +31,8 @@
         <activity
             android:name=".activities.ViolationActivity"
             android:theme="@style/TideValet"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+           />
         <service android:name=".service.ulservice" >
         </service>
         <service android:name=".service.wp_service" >

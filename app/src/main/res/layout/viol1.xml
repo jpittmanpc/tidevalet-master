@@ -5,15 +5,9 @@
     android:orientation="vertical" >
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_weight="1"
-    android:orientation="horizontal"
+    android:layout_weight=".5"
+    android:orientation="vertical"
     android:layout_height="0dp">
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:padding="@dimen/fab_margin"
-    android:id="@+id/topRLayout"
-    android:layout_height="wrap_content">
 
     <TextView
         android:layout_width="match_parent"
@@ -25,12 +19,20 @@
         android:gravity="center"
         android:layout_weight="0.22"
         android:textAlignment="center"
-                android:layout_alignParentTop="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="51dp" />
-    <TextView
-        android:layout_width="wrap_content"
+        android:layout_alignParentStart="true" />
+</LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight=".15">
+
+        <TextView
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/errorTextView1"
         android:textColor="@android:color/holo_red_dark"
@@ -41,117 +43,187 @@
         android:layout_alignParentEnd="true"
         android:paddingBottom="15dp"
         android:gravity="center_horizontal" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Violation Date"
-        android:id="@+id/dateTitle"
-        android:layout_marginTop="25dp"
-        android:layout_below="@+id/violation_type_text_top"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/timeTxt"
-        android:layout_toStartOf="@+id/timeTxt" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Time"
-        android:id="@+id/textView3"
-        android:layout_gravity="center_horizontal"
-        android:layout_alignTop="@+id/dateTitle"
-        android:layout_alignRight="@+id/errorTextView1"
-        android:layout_alignEnd="@+id/errorTextView1" />
-
-    <TextView
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView00"
-        android:text="date"
-        android:gravity="left"
-        android:layout_below="@+id/dateTitle"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/textView5"
-        android:layout_alignEnd="@+id/textView5" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/timeTxt"
-        android:gravity="right"
-        android:layout_alignTop="@+id/textView00"
-        android:layout_alignBottom="@+id/textView00"
-        android:layout_alignRight="@+id/textView3"
-        android:layout_alignEnd="@+id/textView3"
-        android:singleLine="true"
-        android:layout_toRightOf="@+id/textView00"
-        android:layout_toEndOf="@+id/textView00" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Building Number"
-        android:id="@+id/textView4"
-        android:layout_below="@+id/textView00"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="68dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Unit Number"
-        android:id="@+id/textView5"
-        android:layout_alignTop="@+id/textView4"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Photos"
-        android:id="@+id/textView6"
-        android:layout_above="@+id/imageButton"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/abc_action_button_min_height_material"
-        android:id="@+id/imageButton"
-        android:src="@drawable/ic_add_a_photo_black_48dp"
-        android:background="#00ffffff"
-        android:layout_alignBottom="@+id/unit"
-        android:layout_alignRight="@+id/textView6"
-        android:layout_alignEnd="@+id/textView6" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/bldg"
-        android:layout_below="@+id/textView4"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/textView4"
-        android:layout_alignEnd="@+id/textView4" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/unit"
-        android:layout_alignBottom="@+id/bldg"
-        android:layout_alignLeft="@+id/textView5"
-        android:layout_alignStart="@+id/textView5"
-        android:layout_alignRight="@+id/textView5"
-        android:layout_alignEnd="@+id/textView5" />
-    </RelativeLayout>
     </LinearLayout>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:layout_weight=".75">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp">
+
+            <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Violation Date"
+            android:id="@+id/dateTitle"
+                android:layout_below="@+id/violation_type_text_top"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/timeTxt"
+            android:layout_toStartOf="@+id/timeTxt"
+            android:textStyle="bold"
+            android:textSize="18sp"
+                android:gravity="start"
+                android:layout_weight="0.50" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time"
+                android:id="@+id/textView3"
+                    android:textStyle="bold"
+                android:layout_above="@+id/textView00"
+                    android:textSize="18sp"
+                android:layout_centerHorizontal="true"
+                    android:gravity="end" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="0.50"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView00"
+            android:text="date"
+                android:layout_below="@+id/dateTitle"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="13sp"
+            android:layout_centerHorizontal="true"
+                android:gravity="start"
+                android:layout_weight="0.74" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="84dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:id="@+id/timeTxt"
+                    android:singleLine="true"
+                android:layout_alignTop="@+id/textView00"
+                android:layout_alignLeft="@+id/textView3"
+                android:layout_alignStart="@+id/textView3"
+                android:layout_toStartOf="@+id/textView6"
+                android:layout_alignRight="@+id/textView6"
+                android:layout_alignEnd="@+id/textView6"
+                android:textSize="13sp"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentLeft="false"
+                    android:gravity="end"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_bldg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_toLeftOf="@+id/textView3"
+                android:layout_toStartOf="@+id/textView3">
+
+                <EditText
+                    android:id="@+id/bldg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Building #"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignRight="@+id/textView4"
+                    android:layout_alignEnd="@+id/textView4"
+                    android:inputType="number" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_unit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="2"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@+id/input_layout_bldg"
+                android:layout_alignRight="@+id/textView3"
+                android:layout_alignEnd="@+id/textView3">
+
+                <EditText
+                    android:id="@+id/unit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Unit #"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignRight="@+id/textView4"
+                    android:layout_alignEnd="@+id/textView4" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton"
+            android:src="@drawable/ic_add_a_photo_black_48dp"
+            android:background="#00ffffff"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/textView00"
+                android:layout_alignEnd="@+id/textView00"
+                android:layout_weight="2" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
     android:layout_gravity="center_horizontal"
         android:orientation="horizontal"
     android:layout_marginTop="@dimen/activity_horizontal_margin"
