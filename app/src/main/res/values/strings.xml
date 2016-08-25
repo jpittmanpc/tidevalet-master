@@ -21,4 +21,8 @@
     <string name="contractor_comments">Contractor Comments</string>
     <string name="building_number">Building #</string>
     <string name="unit_number">Unit #</string>
+    <string name="property_image">Property Image</string>
+    <string name="new_violation">NEW VIOLATION</string>
+    <string name="view_violations">VIEW VIOLATIONS</string>
+    <string name="change_location">CHANGE LOCATION</string>
 </resources>

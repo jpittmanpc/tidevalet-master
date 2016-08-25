@@ -39,7 +39,7 @@ public class LoginActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
-        logintext = (TextView) v.findViewById(R.id.logintext);
+
         username = (EditText) v.findViewById(R.id.input_email);
         password = (EditText) v.findViewById(R.id.input_password);
         CheckBox remember = (CheckBox) v.findViewById(R.id.rememberCheckbox);

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="property_image">Property Image</string>
+    <string name="new_violation">NEW VIOLATION</string>
+    <string name="view_violations">VIEW VIOLATIONS</string>
+    <string name="change_location">CHANGE LOCATION</string>
+</resources>

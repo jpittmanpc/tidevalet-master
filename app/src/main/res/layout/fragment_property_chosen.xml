@@ -11,15 +11,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="40dp"
         android:id="@+id/topLayout"
-        android:maxHeight="80dp" >
+        android:maxHeight="80dp"
+        android:background="@drawable/ratio16x9">
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            >
+            android:translationZ="@dimen/design_snackbar_elevation">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -34,75 +34,80 @@
 
         </android.support.design.widget.CoordinatorLayout>
         <ImageView
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/propertyImg"
-            android:contentDescription="Property Image"
-            android:layout_alignParentTop="true"
-            android:maxHeight="60dp"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/tidevalet"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/property_image"
+            android:src="@drawable/ratio16x9"
+
+            android:scaleType="centerCrop"
+            />
 
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Property Name"
-        android:textAlignment="center"
-        android:textAppearance="@style/LargeText"
-        android:id="@+id/propertyName"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:paddingBottom="16dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/topLayout"
-        android:layout_above="@+id/newViolation" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:layout_below="@+id/topLayout">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="NEW VIOLATION"
-        android:id="@+id/newViolation"
-        android:background="@android:color/transparent"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-        android:padding="@dimen/abc_button_padding_horizontal_material"
-        android:theme="@style/FlatButton"
-        style="@style/Widget.AppCompat.Button.Borderless"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Property Name"
+            android:textAlignment="center"
+            android:textAppearance="@style/LargeText"
+            android:id="@+id/propertyName"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:textSize="@dimen/abc_text_size_headline_material" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="VIEW VIOLATIONS"
-        android:id="@+id/viewViolation"
-        android:background="@android:color/transparent"
-        android:layout_marginTop="44dp"
-        android:layout_below="@+id/newViolation"
-        android:layout_centerHorizontal="true"
-        android:padding="@dimen/abc_button_padding_horizontal_material"
-        android:textStyle="bold"
-        android:theme="@style/FlatButton"
-        style="@style/Widget.AppCompat.Button.Borderless"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/new_violation"
+            android:id="@+id/newViolation"
+            android:background="@android:color/transparent"
+            android:textStyle="bold"
+            android:padding="@dimen/abc_button_padding_horizontal_material"
+            android:theme="@style/FlatButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_gravity="center_horizontal"
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CHANGE LOCATION"
-        android:id="@+id/changeProperty"
-        android:background="@android:color/transparent"
-        android:layout_marginTop="44dp"
-        android:layout_below="@+id/viewViolation"
-        android:layout_centerHorizontal="true"
-        android:padding="@dimen/abc_button_padding_horizontal_material"
-        android:textStyle="bold"
-        android:theme="@style/FlatButton"
-        style="@style/Widget.AppCompat.Button.Borderless"/>
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/view_violations"
+            android:id="@+id/viewViolation"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/abc_button_padding_horizontal_material"
+            android:textStyle="bold"
+            android:theme="@style/FlatButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/change_location"
+            android:id="@+id/changeProperty"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="8dp"
+            android:padding="@dimen/abc_button_padding_horizontal_material"
+            android:textStyle="bold"
+            android:theme="@style/FlatButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
 </RelativeLayout>
