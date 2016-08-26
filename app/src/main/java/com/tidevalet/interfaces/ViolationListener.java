@@ -12,7 +12,7 @@ public interface ViolationListener {
 
     void clicked(View view);
 
-    void violationTypes(String list);
+    void violationTypes(String list, int PICKEDUP);
 
     void sendview(View v, int id);
 

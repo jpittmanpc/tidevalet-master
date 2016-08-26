@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,15 +40,15 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private CheckBox cb1;
+    private RadioButton got, not;
 
-//    private MainListener vL;
     private String[] checkBoxListLeft = { "Not Tied", "Over Weight", "Sharp Objects", "Pet Waste", "Hazardous", "CardBoard" };
     private String[] checkBoxListRight = {"Not Bagged", "Oversized Trash", "Leaking Trash", "Outside Hours", "Recycling", "Empty Bin" };
     private List<CheckBox> cbList = new ArrayList<CheckBox>();
     private StringBuilder violationTypes = new StringBuilder();
     private TextView errorTextView;
     private RelativeLayout.LayoutParams params;
+    private int PICKEDUP = 1;
     public Violation2() {
         // Required empty public constructor
     }
@@ -89,7 +91,12 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.viol2, container, false);
         sendview(v);
+
         errorTextView = (TextView) v.findViewById(R.id.errorTextView2);
+        got = (RadioButton) v.findViewById(R.id.pickedup);
+        not = (RadioButton) v.findViewById(R.id.notpickedup);
+        got.setOnClickListener(this);
+        not.setOnClickListener(this);
         for (String aCheckBoxListLeft : checkBoxListLeft) {
             LinearLayout leftside = (LinearLayout) v.findViewById(R.id.left);
             CheckBox cb = new CheckBox(App.getAppContext());
@@ -122,21 +129,35 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
     }
     @Override
     public void onClick(View v) {
-        errorTextView.setText("");
-        violationTypes = new StringBuilder();
-        for (int i = 0; i < cbList.size(); i++) {
-            if (cbList.get(i).isChecked()) {
-                String type = cbList.get(i).getText().toString();
-                violationTypes.append(type).append(", ");
-            }
+        switch (v.getId()) {
+            case R.id.pickedup:
+                Log.d("pu", "picked up");
+                not.setChecked(false);
+                got.setChecked(true);
+                break;
+            case R.id.notpickedup:
+                Log.d("pu", "not picked up");
+                got.setChecked(false);
+                not.setChecked(true);
+                break;
+            default:
+                errorTextView.setText("");
+                violationTypes = new StringBuilder();
+                for (int i = 0; i < cbList.size(); i++) {
+                    if (cbList.get(i).isChecked()) {
+                        String type = cbList.get(i).getText().toString();
+                        violationTypes.append(type).append(", ");
+                    }
+                }
+                if (violationTypes.length() == 0) {
+                    errorTextView.setText(R.string.errorForNoViolationType);
+                    errorTextView.setTextColor(Color.RED);
+                } else {
+                    violationTypes.setLength(violationTypes.length() - 2); //removing the last ", "
+                    giveViolationTypes(violationTypes.toString(), PICKEDUP());
+                }
+                break;
         }
-        if (violationTypes.length() == 0) {
-            errorTextView.setText(R.string.errorForNoViolationType);
-            errorTextView.setTextColor(Color.RED);
-        }
-        else {
-            violationTypes.setLength(violationTypes.length() - 2); //removing the last ", "
-            giveViolationTypes(violationTypes.toString()); }
     }
 
     @Override
@@ -149,16 +170,20 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
                     + " must implement MainListener");
         }
     }
-
+    public int PICKEDUP() {
+        if (not.isChecked()) { PICKEDUP = 0; }
+        else { PICKEDUP = 1; }
+        return PICKEDUP;
+    }
     @Override
     public void onDetach() {
 
         super.onDetach();
         vL = null;
     }
-    public void giveViolationTypes(String list) {
+    public void giveViolationTypes(String list, int PICKEDUP) {
         if (vL != null) {
-            vL.violationTypes(list);
+            vL.violationTypes(list, PICKEDUP);
         }
     }
     public void sendview(View v) {

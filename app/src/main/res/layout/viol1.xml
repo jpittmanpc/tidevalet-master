@@ -154,6 +154,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginRight="8dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:layout_marginLeft="8dp">
 
             <android.support.design.widget.TextInputLayout
@@ -173,13 +175,14 @@
                     android:id="@+id/bldg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textCapCharacters"
                     android:hint="Building #"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignRight="@+id/textView4"
                     android:layout_alignEnd="@+id/textView4"
-                    android:inputType="number" />
+                     />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -199,6 +202,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Unit #"
+                    android:inputType="number"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"

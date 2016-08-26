@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Post {
     private long id, violationId, propertyId;
-    private int isPosted;
+    private int isPosted, pickedup;
     private String type, contractorComments, timestamp, returnedString, bldg, unit;
     private String localImagePath, imagePath;
     public char[] content;
@@ -66,6 +66,10 @@ public class Post {
     }
     public String getBldg() {
         return bldg;
+    }
+    public int getPU() { return pickedup; }
+    public void setPU(int pickedup) {
+        this.pickedup = pickedup;
     }
     public void setUnit(String unit) {
         this.unit = unit;

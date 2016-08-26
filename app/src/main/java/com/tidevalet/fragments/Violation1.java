@@ -3,9 +3,11 @@ package com.tidevalet.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -75,6 +77,8 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.viol1, container, false);
         sendview(v);
+        EditText bldg = (EditText)v.findViewById(R.id.bldg);
+        bldg.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
         errorText = (TextView) v.findViewById(R.id.errorTextView1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma", Locale.getDefault());

@@ -246,8 +246,9 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         }
     }
     @Override
-    public void violationTypes(String list) {
+    public void violationTypes(String list, int PICKEDUP) {
         post.setViolationType(list);
+        post.setPU(PICKEDUP);
     }
 
     @Override

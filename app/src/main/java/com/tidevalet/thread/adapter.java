@@ -97,7 +97,6 @@ public class adapter {
 
 	public Map<String, Object> getAllProperties() throws NullPointerException, IllegalStateException {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		try {
 			Cursor cursor = sqlDB.query(constants.TABLE_PROPERTIES, null, null, null,
 					null, null, null, null);
 			Properties property = null;
@@ -107,10 +106,14 @@ public class adapter {
 						.getColumnIndex(constants.COL_KEY_ROW)));
 				property.setName(cursor.getString(cursor
 						.getColumnIndex(constants.PROPERTY_NAME)));
-				property.setAddress(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_ADDRESS)));
-				property.setImage(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_IMG)));
-				property.setContractors(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_CONTRACTOR)));
-				property.setComplexMgrs(cursor.getString(cursor.getColumnIndex(constants.PROPERTY_COMPLEXMGRS)));
+				property.setAddress(cursor.getString(cursor
+						.getColumnIndex(constants.PROPERTY_ADDRESS)));
+				property.setImage(cursor.getString(cursor
+						.getColumnIndex(constants.PROPERTY_IMG)));
+				property.setContractors(cursor.getString(cursor
+						.getColumnIndex(constants.PROPERTY_CONTRACTOR)));
+				property.setComplexMgrs(cursor.getString(cursor
+						.getColumnIndex(constants.PROPERTY_COMPLEXMGRS)));
 				if (!property.getName().equals("")) {
 					String name = cursor.getString(cursor
 							.getColumnIndex(constants.PROPERTY_NAME));
@@ -127,10 +130,6 @@ public class adapter {
 				}
 			}
 			cursor.close();
-		}
-		catch (IllegalStateException i) {
-			i.printStackTrace();
-		}
 		return map;
 	}
 	private void trashProperty(long id){
@@ -148,6 +147,7 @@ public class adapter {
 		values.put(constants.POST_VIOLATION_TYPE, post.getViolationType());
 		values.put(constants.POST_BLDG, post.getBldg());
 		values.put(constants.POST_UNIT, post.getUnit());
+		values.put(constants.PICKEDUP, post.getPU());
 		values.put(constants.POST_COMMENTS, post.getContractorComments());
 		post.setId(sqlDB.insert(constants.TABLE_POSTS, null, values));
 		Log.d("addPost", post.getPropertyId() + " " + post.getViolationId() + " " + post.getId());
@@ -170,6 +170,7 @@ public class adapter {
 			post.setContractorComments(cursor.getString(cursor.getColumnIndex(constants.POST_COMMENTS)));
 			post.setBldg(cursor.getString(cursor.getColumnIndex(constants.POST_BLDG)));
 			post.setUnit(cursor.getString(cursor.getColumnIndex(constants.POST_UNIT)));
+			post.setPU(cursor.getInt(cursor.getColumnIndex(constants.PICKEDUP)));
 		}
 		cursor.close();
 		return post;
@@ -211,15 +212,17 @@ public class adapter {
 
 	public void updatePost(Post post) {
 		ContentValues values = new ContentValues();
-		values.put(constants.POST_IS_POSTED, post.getIsPosted());
-		values.put(constants.POST_IMAGES, post.getImagePath());
-		values.put(constants.PROPERTY_ID, post.getPropertyId());
 		values.put(constants.POST_VIOLATION_ID, post.getViolationId());
+		values.put(constants.POST_IS_POSTED, post.getIsPosted());
+		values.put(constants.POST_LOCAL_IMAGE_PATH, post.getLocalImagePath());
 		values.put(constants.POST_RETURNED_STRING, post.getReturnedString());
+		values.put(constants.PROPERTY_ID, post.getPropertyId());
+		values.put(constants.POST_IMAGES, post.getImagePath());
 		values.put(constants.POST_TIMESTAMP, post.getTimestamp());
 		values.put(constants.POST_VIOLATION_TYPE, post.getViolationType());
 		values.put(constants.POST_BLDG, post.getBldg());
 		values.put(constants.POST_UNIT, post.getUnit());
+		values.put(constants.PICKEDUP, post.getPU());
 		values.put(constants.POST_COMMENTS, post.getContractorComments());
 		sqlDB.update(constants.TABLE_POSTS, values, constants.COL_KEY_ROW
 				+ "=" + post.getId(), null);

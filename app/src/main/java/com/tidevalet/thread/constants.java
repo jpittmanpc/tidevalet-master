@@ -30,6 +30,7 @@ public interface constants {
 	public static final String POST_COMMENTS = "comments";
 	public static final String POST_IMAGES = "images";
 	public static final String PROPERTY_ID = "property_id";
+	public static final String PICKEDUP = "picked_up";
 
 	// Create Query for Properties Table
 	public static final String SQL_PROPERTIES = "create table "
@@ -40,7 +41,7 @@ public interface constants {
 	// Create Query for Posts Table
 	public static final String SQL_POSTS = "create table "
 		+ constants.TABLE_POSTS + "(" + constants.COL_KEY_ROW + " integer primary key autoincrement,"
-		+ constants.POST_VIOLATION_ID + " integer," + constants.PROPERTY_ID + " integer," + constants.POST_LOCAL_IMAGE_PATH + " text,"
+		+ constants.POST_VIOLATION_ID + " integer," + constants.PICKEDUP + " integer," + constants.PROPERTY_ID + " integer," + constants.POST_LOCAL_IMAGE_PATH + " text,"
 		+ constants.POST_RETURNED_STRING + " text," + constants.POST_IS_POSTED + " integer,"
 		+ constants.POST_TIMESTAMP + " text,"+constants.POST_VIOLATION_TYPE +" text,"
 		+ constants.POST_UNIT +" text,"+ constants.POST_BLDG + " text,"

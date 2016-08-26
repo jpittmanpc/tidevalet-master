@@ -27,8 +27,14 @@ import java.util.Map;
 public class WebUtils {
     static SessionManager sessionManager;
     static String URL = App.getSiteUrl();
-    public static HashMap<String, String> uploadPostToWordpress(String image, String violation_type, String bldg, String unit, String comments,
-                                                                Context context) throws XMLRPCException {
+    public static HashMap<String, String> uploadPostToWordpress(String image,
+                                                                String violation_type,
+                                                                String bldg,
+                                                                String unit,
+                                                                String comments,
+                                                                Integer picked_up,
+                                                                Context context)
+            throws XMLRPCException {
         List<String> imageURL = new ArrayList<>();
         sessionManager = new SessionManager(context);
         for (String img : image.split(",")) {
@@ -70,6 +76,11 @@ public class WebUtils {
         customField.put("key", constants.POST_COMMENTS);
         customField.put("value", comments);
         customFieldsList.add(customField);
+        customField = new Hashtable();
+        customField.put("key", constants.PICKEDUP);
+        customField.put("value", picked_up);
+        customFieldsList.add(customField);
+
         content.put("custom_fields", customFieldsList);
         String username = sessionManager.getUsername();
         String password = sessionManager.getPassword();

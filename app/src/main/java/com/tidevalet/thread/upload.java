@@ -35,7 +35,14 @@ public class upload extends Thread {
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             nManager.cancel((int) (R.string.app_name + postId));
             post = dbAdapter.getPostById(postId);
-            HashMap<String, String> pair = WebUtils.uploadPostToWordpress(post.getLocalImagePath(), ""+ post.getViolationType(), post.getBldg(), post.getUnit(), post.getContractorComments(), context);
+            HashMap<String, String> pair = WebUtils.uploadPostToWordpress(
+                    post.getLocalImagePath(),
+                    ""+ post.getViolationType(),
+                    post.getBldg(),
+                    post.getUnit(),
+                    post.getContractorComments(),
+                    post.getPU(),
+                    context);
             post.setIsPosted(1);
             post.setReturnedString(pair.get("url"));
             post.setImagePath(pair.get("images"));
