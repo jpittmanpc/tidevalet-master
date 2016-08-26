@@ -4,15 +4,18 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.stepstone.stepper.Step;
@@ -43,6 +46,7 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
     private List<CheckBox> cbList = new ArrayList<CheckBox>();
     private StringBuilder violationTypes = new StringBuilder();
     private TextView errorTextView;
+    private RelativeLayout.LayoutParams params;
     public Violation2() {
         // Required empty public constructor
     }
@@ -73,36 +77,45 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
             mParam2 = getArguments().getString(ARG_PARAM2);
 
         }
+        params = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setLayoutDirection(Gravity.CENTER_HORIZONTAL);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_violation2, container, false);
+        View v = inflater.inflate(R.layout.viol2, container, false);
         sendview(v);
         errorTextView = (TextView) v.findViewById(R.id.errorTextView2);
         for (String aCheckBoxListLeft : checkBoxListLeft) {
             LinearLayout leftside = (LinearLayout) v.findViewById(R.id.left);
-            CheckBox cb = new CheckBox(App.getInstance());
+            CheckBox cb = new CheckBox(App.getAppContext());
             Drawable drawable = DrawableCompat.wrap(ContextCompat.getDrawable(cb.getContext(), R.drawable.abc_btn_check_material));
+            drawable.setBounds(100,100,100,100);
             cb.setButtonDrawable(drawable);
             cb.setText(aCheckBoxListLeft);
             cb.setOnClickListener(this);
+            cb.setTextSize(16);
             cb.setTextColor(getResources().getColor(R.color.TideBlue));
-            leftside.addView(cb);
+            cb.setPadding(20,50,0,50);
+            leftside.addView(cb, params);
             cbList.add(cb);
         }
         for (String aCheckBoxListRight : checkBoxListRight) {
             LinearLayout rightside = (LinearLayout) v.findViewById(R.id.right);
-            CheckBox cb = new CheckBox(App.getInstance());
+            CheckBox cb = new CheckBox(App.getAppContext());
             Drawable drawable = DrawableCompat.wrap(ContextCompat.getDrawable(cb.getContext(), R.drawable.abc_btn_check_material));
+            drawable.setBounds(100,100,100,100);
             cb.setButtonDrawable(drawable);
             cb.setText(aCheckBoxListRight);
             cb.setOnClickListener(this);
-            cb.setTextSize(15);
+            cb.setTextSize(16);
             cb.setTextColor(getResources().getColor(R.color.TideBlue));
-            rightside.addView(cb);
+            cb.setPadding(20,50,0,50);
+            rightside.addView(cb, params);
             cbList.add(cb);
         }
        return v;
@@ -154,7 +167,8 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
 
     @Override
     public int getName() {
-        return 1;
+        String one = "1";
+        return Integer.parseInt(one);
     }
 
     @Override
@@ -168,7 +182,7 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
     }
 
     @Override
-    public void onError(@NonNull VerificationError error) {
+    public void onError(VerificationError error) {
 
     }
 }

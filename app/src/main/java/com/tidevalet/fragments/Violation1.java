@@ -2,7 +2,6 @@ package com.tidevalet.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,11 +73,11 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_violation1, container, false);
+        View v = inflater.inflate(R.layout.viol1, container, false);
         sendview(v);
         errorText = (TextView) v.findViewById(R.id.errorTextView1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yy", Locale.getDefault());
-        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm:ssa", Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma", Locale.getDefault());
         //TextView propViol = (TextView)v.findViewById(R.id.violProp);
         TextView dateTxt = (TextView)v.findViewById(R.id.dateTxt);
         TextView timeTxt = (TextView)v.findViewById(R.id.timeTxt);
@@ -145,7 +144,7 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
     }
 
     @Override
-    public void onError(@NonNull VerificationError error) {
+    public void onError(VerificationError error) {
 
     }
 }
