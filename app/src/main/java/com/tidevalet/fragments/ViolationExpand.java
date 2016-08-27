@@ -2,23 +2,32 @@ package com.tidevalet.fragments;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.tidevalet.App;
 import com.tidevalet.R;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.interfaces.MainListener;
 import com.tidevalet.thread.adapter;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,7 +38,6 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param1";
     private MainListener mListener;
-
     private String mParam1;
     private long mParam2;
 
@@ -90,12 +98,43 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
         location.setText("Location: " + post.getBldg() + "/" + post.getUnit());
         TextView comments = (TextView)view.findViewById(R.id.expand_comments);
         comments.setText("Comments: " + post.getContractorComments());
-        TextView violationType = (TextView)view.findViewById(R.id.expand_violation);
-        violationType.setText(post.getViolationType());
+        TextView violationType = (TextView)view.findViewById(R.id.violation_type);
+        violationType.setText(violationType.getText() + post.getViolationType());
+        TextView pickedup = (TextView)view.findViewById(R.id.expand_picked_up);
+        pickedup.setText(pickedup.getText() + (post.getPU() == 0 ? "No" : "Yes"));
         TextView postLink = (TextView)view.findViewById(R.id.expand_link);
+        TextView isPosted = (TextView)view.findViewById(R.id.expand_posted);
+        isPosted.setText("Posted: " + (post.getIsPosted() == 0 ? "No" : "Yes"));
+        String[] imgs = post.getImagePath().split(",");
+        Log.d("TAG", imgs.toString());
+        ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
+        imageButtons.add((ImageButton)view.findViewById(R.id.ximg1));
+        imageButtons.add((ImageButton)view.findViewById(R.id.ximg2));
+        imageButtons.add((ImageButton)view.findViewById(R.id.ximg3));
+        imageButtons.add((ImageButton)view.findViewById(R.id.ximg4));
+        ImageLoader imgLoader = ImageLoader.getInstance();
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(
+                        R.drawable.placeholder)
+                .showImageForEmptyUri(
+                        R.drawable.placeholder)
+                .showImageOnFail(R.drawable.placeholder)
+                .displayer(new FadeInBitmapDisplayer(500))
+                .cacheInMemory(true).cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565).build();
+        ImageSize size = new ImageSize(80,80);
+        for (int i=0;i<imgs.length;i++) {
+            ImageButton iz = imageButtons.get(i);
+            Log.d("IMAGES", imgs[i]);
+            imgLoader.displayImage(Uri.parse(imgs[i]).toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ", ""), iz, size);
+            iz.setOnClickListener(this);
+        }
         postLink.setText(post.getReturnedString() + "");
         postLink.setMovementMethod(LinkMovementMethod.getInstance());
-        ImageButton close = (ImageButton)view.findViewById(R.id.expand_close);
+        LinearLayout click = (LinearLayout)view.findViewById(R.id.expand_close_click);
+        click.setOnClickListener(this);
+        ImageButton close = (ImageButton)view.findViewById(R.id.expand_close_button);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,6 +188,10 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.expand_close_click: getActivity().onBackPressed(); break;
+            case R.id.expand_edit_click: Log.d(getTag(), "Edit click"); break;
+            default: Log.d("TAG", v.getId() + " clicked"); break;
+        }
     }
 }

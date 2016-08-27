@@ -28,6 +28,7 @@ import com.tidevalet.interfaces.ViolationListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class Violation2 extends Fragment implements View.OnClickListener, Step {
@@ -97,33 +98,27 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
         not = (RadioButton) v.findViewById(R.id.notpickedup);
         got.setOnClickListener(this);
         not.setOnClickListener(this);
-        for (String aCheckBoxListLeft : checkBoxListLeft) {
-            LinearLayout leftside = (LinearLayout) v.findViewById(R.id.left);
-            CheckBox cb = new CheckBox(App.getAppContext());
-            Drawable drawable = DrawableCompat.wrap(ContextCompat.getDrawable(cb.getContext(), R.drawable.abc_btn_check_material));
-            drawable.setBounds(100,100,100,100);
-            cb.setButtonDrawable(drawable);
-            cb.setText(aCheckBoxListLeft);
-            cb.setOnClickListener(this);
-            cb.setTextSize(16);
-            cb.setTextColor(getResources().getColor(R.color.TideBlue));
-            cb.setPadding(20,50,0,50);
-            leftside.addView(cb, params);
-            cbList.add(cb);
-        }
-        for (String aCheckBoxListRight : checkBoxListRight) {
-            LinearLayout rightside = (LinearLayout) v.findViewById(R.id.right);
-            CheckBox cb = new CheckBox(App.getAppContext());
-            Drawable drawable = DrawableCompat.wrap(ContextCompat.getDrawable(cb.getContext(), R.drawable.abc_btn_check_material));
-            drawable.setBounds(100,100,100,100);
-            cb.setButtonDrawable(drawable);
-            cb.setText(aCheckBoxListRight);
-            cb.setOnClickListener(this);
-            cb.setTextSize(16);
-            cb.setTextColor(getResources().getColor(R.color.TideBlue));
-            cb.setPadding(20,50,0,50);
-            rightside.addView(cb, params);
-            cbList.add(cb);
+        ViewGroup left = (ViewGroup) v.findViewById(R.id.left);
+        ViewGroup right = (ViewGroup) v.findViewById(R.id.right);
+        int x=0;
+        for (int i = 0; i<left.getChildCount(); i++) {
+            if (left.getChildAt(i) instanceof CheckBox) {
+                 CheckBox checkBox = (CheckBox) left.getChildAt(i);
+                 checkBox.setOnClickListener(this);
+                 checkBox.setText(checkBoxListLeft[x]);
+                 cbList.add(checkBox);
+                 x++;
+              }
+            }
+        x=0;
+        for (int i = 0; i<right.getChildCount(); i++) {
+            if (right.getChildAt(i) instanceof CheckBox) {
+                CheckBox checkBox = (CheckBox) right.getChildAt(i);
+                checkBox.setOnClickListener(this);
+                checkBox.setText(checkBoxListRight[x]);
+                cbList.add(checkBox);
+                x++;
+            }
         }
        return v;
     }
@@ -131,12 +126,10 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.pickedup:
-                Log.d("pu", "picked up");
                 not.setChecked(false);
                 got.setChecked(true);
                 break;
             case R.id.notpickedup:
-                Log.d("pu", "not picked up");
                 got.setChecked(false);
                 not.setChecked(true);
                 break;

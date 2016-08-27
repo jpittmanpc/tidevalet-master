@@ -53,11 +53,13 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
             catch(NullPointerException e) { imagePath = holder.post.getLocalImagePath().split(","); }
             ImageLoader imgLoader = ImageLoader.getInstance();
             ImageSize size = new ImageSize(60, 60);
-            try { imgLoader.displayImage(imagePath[0].replaceAll("\\[", "").replaceAll("\\]",""), holder.firstImage, size); }
+            try { imgLoader.displayImage(imagePath[0].replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ",""), holder.firstImage, size); }
             catch(NullPointerException e) { e.printStackTrace(); }
             holder.bldgunit.setText(" Location: " + holder.post.getBldg() + "/" + holder.post.getUnit());
             holder.violtype.setText(holder.post.getViolationType());
             holder.datetext.setText(holder.post.getTimestamp());
+
+            holder.pickedup.setText(holder.post.getPU() == 0 ? "No" : "Yes");
             if (holder.post.getIsPosted() == 0) {
                 holder.posted.setVisibility(View.VISIBLE);
             } else {
@@ -94,7 +96,6 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
             dBadapter.open();
             posts = dBadapter.getPostsByPropertyId(sm.propertySelected());
             dBadapter.close();
-            Log.d("getPosts()", "Posts: " + posts.size());
         }
         catch (Exception e) { e.printStackTrace(); }
         return posts;
@@ -102,7 +103,7 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final View mView;
-        private final TextView bldgunit, posted, violtype, datetext;
+        private final TextView bldgunit, posted, violtype, datetext, pickedup;
         private final ImageView firstImage;
         private Post post;
         private ViewHolder(View view) {
@@ -113,6 +114,7 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
             bldgunit = (TextView) view.findViewById(R.id.bldgunit);
             violtype = (TextView) view.findViewById(R.id.violation_type_text);
             datetext = (TextView) view.findViewById(R.id.date_text);
+            pickedup = (TextView) view.findViewById(R.id.pickedup);
         }
 
         @Override

@@ -264,20 +264,10 @@ public class MainActivity extends AppCompatActivity implements MainListener {
 
     @Override
     public void onListFragmentInteraction(Post item, View view) {
-        Fragment violationViewFragment = new ViewViolations();
         Fragment violationExpand = ViolationExpand.newInstance("",item);
-        Transition changeTransform = TransitionInflater.from(this).inflateTransition(R.transition.change_image_transform);
-        Transition explodeTransform = TransitionInflater.from(this).inflateTransition(android.R.transition.explode);
-        violationViewFragment.setSharedElementReturnTransition(changeTransform);
-        violationViewFragment.setExitTransition(explodeTransform);
-        violationExpand.setSharedElementEnterTransition(changeTransform);
-        violationExpand.setEnterTransition(explodeTransform);
-        TextView textView = (TextView) view.findViewById(R.id.bldgunit);
         fm.beginTransaction()
                 .replace(R.id.topLevelViewViolation, violationExpand)
-                .addToBackStack("transaction")
-                .addSharedElement(textView, "violation")
-        .commit();
+                .addToBackStack("transaction").commit();
         Log.d("TAG", "Clicked on post " + item.getViolationId() + " InDBAS: " + item.getId());
     }
 

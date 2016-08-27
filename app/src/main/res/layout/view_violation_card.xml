@@ -43,9 +43,7 @@
             android:textColor="@color/white"
             android:layout_alignParentRight="false"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="false"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp" />
+            android:layout_alignParentTop="false" />
 
         <TextView
             android:id="@+id/violation_text"
@@ -58,7 +56,28 @@
             android:paddingBottom="16dp"
             android:textStyle="bold"
             android:textColor="@color/ms_black" />
-
+        <TextView
+            android:id="@+id/pickedup_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Picked Up"
+            android:layout_toRightOf="@+id/firstImage"
+            android:layout_below="@+id/violation_text"
+            android:textIsSelectable="false"
+            android:paddingBottom="16dp"
+            android:textStyle="bold"
+            android:textColor="@color/ms_black" />
+        <TextView
+            android:id="@+id/pickedup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/ms_black"
+            android:layout_toRightOf="@+id/violation_text"
+            android:layout_below="@+id/violation_type_text"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp"
+            android:text="picked_up" />
         <TextView
             android:id="@+id/dateTxt"
             android:layout_width="wrap_content"
@@ -66,7 +85,7 @@
             android:textColor="@color/ms_black"
             android:text="Date"
             android:layout_toRightOf="@+id/firstImage"
-            android:layout_below="@+id/violation_text"
+            android:layout_below="@+id/pickedup_label"
             android:paddingBottom="16dp"
             android:textStyle="bold" />
 
@@ -87,12 +106,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/ms_black"
-            android:layout_toRightOf="@+id/violation_text"
-            android:layout_below="@+id/violation_type_text"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingBottom="16dp"
-            android:text="date" />
+            android:text="date"
+            android:layout_alignBaseline="@+id/dateTxt"
+            android:layout_alignBottom="@+id/dateTxt"
+            android:layout_alignStart="@+id/pickedup" />
 
    </RelativeLayout>
 </android.support.v7.widget.CardView>

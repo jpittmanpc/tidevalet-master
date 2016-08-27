@@ -32,6 +32,7 @@
             android:name=".activities.ViolationActivity"
             android:theme="@style/TideValet"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"
            />
         <service android:name=".service.ulservice" >
         </service>
@@ -39,6 +40,7 @@
         </service>
         <activity
             android:name=".activities.MainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

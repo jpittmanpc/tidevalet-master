@@ -7,6 +7,7 @@ import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -79,6 +80,7 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
         sendview(v);
         EditText bldg = (EditText)v.findViewById(R.id.bldg);
         bldg.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
+        showSoftKeyboard(bldg);
         errorText = (TextView) v.findViewById(R.id.errorTextView1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma", Locale.getDefault());
@@ -92,6 +94,12 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
         return v;
 
 
+    }
+    public void showSoftKeyboard(View view) {
+        if (view.requestFocus()) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+        }
     }
 
 

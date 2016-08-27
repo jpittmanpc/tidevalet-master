@@ -67,42 +67,42 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Not tied"
+                android:text="1"
                 android:id="@+id/checkBox"
                 android:layout_marginBottom="8dp" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Over weight"
+                android:text="2"
                 android:id="@+id/checkBox2"
                 android:layout_marginBottom="8dp" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sharp objects"
+                android:text="3"
                 android:id="@+id/checkBox3"
                 android:layout_marginBottom="8dp" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pet waste"
+                android:text="4"
                 android:id="@+id/checkBox4"
                 android:layout_marginBottom="8dp" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hazardous"
+                android:text="5"
                 android:id="@+id/checkBox5"
                 android:layout_marginBottom="8dp" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cardboard"
+                android:text="6"
                 android:id="@+id/checkBox6"
                 android:layout_marginBottom="8dp" />
         </LinearLayout>
@@ -177,6 +177,7 @@
                         android:layout_width="wrap_content"
                         android:id="@+id/pickedup"
                         android:text="Waste Picked up"
+                        android:checked="true"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
                 <LinearLayout
@@ -188,7 +189,6 @@
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:id="@+id/notpickedup"
-                        android:checked="true"
                         android:layout_height="wrap_content"
                         android:text="Waste Left"/>
                 </LinearLayout>

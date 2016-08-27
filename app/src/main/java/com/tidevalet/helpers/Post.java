@@ -27,9 +27,7 @@ public class Post {
     public void setViolationId(long violationId) {
         this.violationId = violationId;
     }
-    public String getLocalImagePath() {
-        return localImagePath;
-    }
+    public String getLocalImagePath() {  return localImagePath; }
     public void setLocalImagePath(String localImagePath) {
         this.localImagePath = localImagePath;
     }
