@@ -2,6 +2,7 @@ package com.tidevalet.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.tidevalet.App;
 import com.tidevalet.R;
+import com.tidevalet.activities.ViolationActivity;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.interfaces.MainListener;
 import com.tidevalet.thread.adapter;
@@ -40,6 +42,7 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
     private MainListener mListener;
     private String mParam1;
     private long mParam2;
+    private static Post post = null;
 
 
     public ViolationExpand() {
@@ -54,7 +57,8 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
      * @return A new instance of fragment ViolationExpand.
      */
     // TODO: Rename and change types and number of parameters
-    public static ViolationExpand newInstance(String param1, Post post) {
+    public static ViolationExpand newInstance(String param1, Post posted) {
+        post = posted;
         ViolationExpand fragment = new ViolationExpand();
         Bundle args = new Bundle();
         args.putLong(ARG_PARAM2, post.getId());
@@ -92,7 +96,7 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
         View view = inflater.inflate(R.layout.view_violation, container, false);
         adapter dbAdapter = new adapter(App.getAppContext());
         dbAdapter.open();
-        Post post = dbAdapter.getPostById(mParam2);
+        post = dbAdapter.getPostById(mParam2);
         dbAdapter.close();
         TextView location = (TextView)view.findViewById(R.id.expand_location);
         location.setText("Location: " + post.getBldg() + "/" + post.getUnit());
@@ -142,12 +146,7 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
             }
         });
         ImageButton edit = (ImageButton)view.findViewById(R.id.expand_edit);
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, "Edit", Snackbar.LENGTH_LONG).show();
-            }
-        });
+        edit.setOnClickListener(this);
         return view;
     }
 
@@ -190,8 +189,18 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.expand_close_click: getActivity().onBackPressed(); break;
-            case R.id.expand_edit_click: Log.d(getTag(), "Edit click"); break;
+            case R.id.expand_edit_click: editViolation(post.getId()); break;
+            case R.id.expand_edit: editViolation(post.getId()); break;
             default: Log.d("TAG", v.getId() + " clicked"); break;
         }
+    }
+
+    private void editViolation(long id) {
+        Intent i = new Intent(getActivity(), ViolationActivity.class);
+        i.putExtra("id", id);
+        Log.d("Viol", id + "");
+        startActivity(i);
+        getActivity().finish();
+        Log.d(getTag(), "Edit click");
     }
 }

@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.stepstone.stepper.StepperLayout;
@@ -62,13 +63,26 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     private View Violation3v;
     private boolean upload = true;
     private StepperLayout stepperLayout;
+    private long iE = -1;
+    private String subtitletext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        iE = intent.getLongExtra("id", -1);
         post = new Post();
         SessionManager session = new SessionManager(this);
         adapter adapter = new adapter(this);
+        if (iE != -1) {
+            adapter.open();
+            post = adapter.getPostById(iE);
+            adapter.close();
+            subtitletext = "Edit Violation " + post.getBldg() + "/" + post.getUnit() + " ";
+        }
+        else {
+            subtitletext = "New Violation ";
+        }
         setContentView(R.layout.violation_slider);
         stepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
         stepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager()));
@@ -76,7 +90,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         adapter.open();
         property = adapter.getPropertyById(session.propertySelected());
         adapter.close();
-        getSupportActionBar().setSubtitle("New Violation - " + property.getName());
+        getSupportActionBar().setSubtitle(subtitletext + property.getName());
     }
 
     private void dispatchTakePictureIntent() {
@@ -254,9 +268,31 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     @Override
     public void sendview(View v, int id) {
         switch (id) {
-            case 1: Violation1v = v; break;
-            case 2: Violation2v = v; break;
-            case 3: Violation3v = v; break;
+            case 1: Violation1v = v;
+                if (iE != -1) {
+                    ((TextView) v.findViewById(R.id.dateTxt)).setText(post.getTimestamp());
+                    ((EditText) v.findViewById(R.id.bldg)).setText(post.getBldg());
+                    ((EditText) v.findViewById(R.id.unit)).setText(post.getUnit());
+                }
+                break;
+            case 2: Violation2v = v;
+                if (iE != -1) {
+                    switch (post.getPU()) {
+                        case 0:
+                            ((RadioButton) v.findViewById(R.id.notpickedup)).setChecked(true);
+                            ((RadioButton) v.findViewById(R.id.pickedup)).setChecked(false);
+                            break;
+                        case 1:
+                            ((RadioButton) v.findViewById(R.id.notpickedup)).setChecked(false);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                break;
+            case 3: Violation3v = v;
+                ((EditText)v.findViewById(R.id.comments)).setText(post.getContractorComments());
+                break;
             default: break;
         }
     }

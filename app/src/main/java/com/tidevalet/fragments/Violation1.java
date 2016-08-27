@@ -77,10 +77,14 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.viol1, container, false);
-        sendview(v);
         EditText bldg = (EditText)v.findViewById(R.id.bldg);
         bldg.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
-        showSoftKeyboard(bldg);
+        bldg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSoftKeyboard(v);
+            }
+        });
         errorText = (TextView) v.findViewById(R.id.errorTextView1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma", Locale.getDefault());
@@ -91,6 +95,7 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
         takePic.setOnClickListener(this);
         dateTxt.setText(dateFormat.format(new Date()));
         timeTxt.setText(timeFormat.format(new Date()));
+        sendview(v);
         return v;
 
 

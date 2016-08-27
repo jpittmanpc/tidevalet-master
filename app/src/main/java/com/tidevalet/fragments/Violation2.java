@@ -91,7 +91,6 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.viol2, container, false);
-        sendview(v);
 
         errorTextView = (TextView) v.findViewById(R.id.errorTextView2);
         got = (RadioButton) v.findViewById(R.id.pickedup);
@@ -120,6 +119,7 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
                 x++;
             }
         }
+       sendview(v);
        return v;
     }
     @Override
