@@ -248,13 +248,15 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
 
     @Override
     public void onBackPressed() {
+        if (iE != -1) { super.onBackPressed(); return; }
         if (stepperLayout.getCurrentStepPosition() == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
-            Intent i = new Intent(this, MainActivity.class);
-            startActivity(i);
-            finish();
-        } else {
+                // If the user is currently looking at the first step, allow the system to handle the
+                // Back button. This calls finish() on this activity and pops the back stack.
+                Intent i = new Intent(this, MainActivity.class);
+                startActivity(i);
+                finish();
+        }
+        else {
             // Otherwise, select the previous step.
             stepperLayout.setCurrentStepPosition((stepperLayout.getCurrentStepPosition()) - 1);
         }
@@ -355,9 +357,16 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MM-dd h:mma");
         post.setTimestamp(dateFormat.format(new Date()));
         adapter dbAdapter = new adapter(this);
-        dbAdapter.open();
-        post = dbAdapter.addPost(post);
-        dbAdapter.close();
+        if (iE == -1) {
+            dbAdapter.open();
+            post = dbAdapter.addPost(post);
+            dbAdapter.close();
+        }
+        else {
+            dbAdapter.open();
+            dbAdapter.updatePost(post);
+            dbAdapter.close();
+        }
         if (upload) {
             Intent service = new Intent(this, ulservice.class);
             service.putExtra("id", post.getId());
@@ -367,9 +376,12 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             finish();
         }
         //start submit, then call new intent to go back to the property screen
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
-        finish();
+        if (iE == -1) {
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+            finish();
+        }
+        else { super.onBackPressed(); }
 
     }
 

@@ -199,7 +199,8 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
         Intent i = new Intent(getActivity(), ViolationActivity.class);
         i.putExtra("id", id);
         Log.d("Viol", id + "");
-        startActivity(i);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        getActivity().startActivity(i);
         getActivity().finish();
         Log.d(getTag(), "Edit click");
     }

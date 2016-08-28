@@ -95,6 +95,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/ms_black"
             android:text="type"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:layout_toRightOf="@+id/violation_text"
             android:layout_below="@+id/bldgunit"
             android:paddingLeft="16dp"
