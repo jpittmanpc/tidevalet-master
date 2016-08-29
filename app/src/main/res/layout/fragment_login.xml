@@ -3,9 +3,13 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:isScrollContainer="true"
     tools:context=".fragments.LoginActivityFragment$PlaceholderFragment"
     android:background="@drawable/loginloginwallpaper" >
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/scroller">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -81,5 +85,5 @@
 
 
     </LinearLayout>
-
+</ScrollView>
 </LinearLayout>

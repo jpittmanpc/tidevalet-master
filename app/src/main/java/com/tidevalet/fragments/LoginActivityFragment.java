@@ -2,16 +2,20 @@ package com.tidevalet.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.tidevalet.App;
@@ -39,7 +43,25 @@ public class LoginActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
+        final ScrollView scrollview = ((ScrollView) v.findViewById(R.id.scroller));
+        final View fragScrollView = v.findViewById(R.id.scroller);
+        v.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                fragScrollView.getWindowVisibleDisplayFrame(r);
 
+                int heightDiff = fragScrollView.getRootView().getHeight() - (r.bottom - r.top);
+                if (heightDiff > 100) {
+                    scrollview.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollview.scrollTo(0, scrollview.getBottom());
+                        }
+                    });
+                }
+            }
+        });
         username = (EditText) v.findViewById(R.id.input_email);
         password = (EditText) v.findViewById(R.id.input_password);
         CheckBox remember = (CheckBox) v.findViewById(R.id.rememberCheckbox);
@@ -59,6 +81,7 @@ public class LoginActivityFragment extends Fragment {
 
             }
         });
+
         return v;
     }
     private void InteractWithAct(int i, String message) {

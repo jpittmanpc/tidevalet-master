@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tidevalet.App;
@@ -85,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     private void loginUI() {
         LoginActivityFragment LAF = new LoginActivityFragment();
         fm.beginTransaction().replace(R.id.main_fragment, LAF).commit();
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
 
