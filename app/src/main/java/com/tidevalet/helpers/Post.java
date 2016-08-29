@@ -12,7 +12,6 @@ public class Post {
     private String type, contractorComments, timestamp, returnedString, bldg, unit;
     private String localImagePath, imagePath;
     public char[] content;
-
     public long getId() {
         return id;
     }
@@ -22,12 +21,19 @@ public class Post {
     public long getViolationId() {
         return violationId;
     }
-    public void setPropertyId(long propertyId) { this.propertyId = propertyId; }
-    public long getPropertyId() { return propertyId; }
+    public void setPropertyId(long propertyId) {
+        this.propertyId = propertyId;
+    }
+    public long getPropertyId() {
+        return propertyId;
+    }
     public void setViolationId(long violationId) {
         this.violationId = violationId;
     }
-    public String getLocalImagePath() {  return localImagePath; }
+    public String getLocalImagePath() {
+        if (isPosted == 1) return imagePath;
+       else return localImagePath;
+    }
     public void setLocalImagePath(String localImagePath) {
         this.localImagePath = localImagePath;
     }
