@@ -1,47 +1,74 @@
 <android.support.v7.widget.CardView
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="4dp"
-
-    android:layout_margin="5dp"
+android:layout_margin="5dp"
     android:background="@color/TideBlue">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dkgrey"
-        android:padding="16dp">
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/placeholder"
-            android:id="@+id/firstImage"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginRight="16dp"
-            android:scaleType="centerCrop"/>
+        android:orientation="horizontal">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/firstImage">
 
-            <TextView
-                android:id="@+id/bldgunit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Building / Unit"
+         <ImageView
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
+             android:minWidth="100dp"
+             android:contentDescription="@null"
+             android:scaleType="fitCenter"
+             android:src="@drawable/placeholder"
+             android:id="@+id/firstImage"
+             />
 
-                android:layout_alignParentTop="true"
-                android:textSize="22sp"
-                android:textColor="@color/TideBlue"
-                android:textStyle="bold"
-                android:paddingBottom="16dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
+
+
+                <TextView android:id="@+id/bldgunit"
+                    style="@style/Material_Card_Title"
+                    tools:text="Building / Unit"/>
+
+                <TextView android:id="@+id/date_text"
+                    style="@style/Material_Card_Subtitle_16dp"
+                    tools:text="Date"/>
+
+                <TextView
+                    android:id="@+id/violation_text"
+                    tools:text="Violation Type"
+                    style="@style/Material_Card_Subtitle_16dp"/>
+
+
+                <TextView
+                    style="@style/Material_Card_Supporting_Text_16dp"
+                    tools:text="Lorem ipsum dolor sit amet"
+                    android:id="@+id/violation_type_text"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:paddingLeft="8dp">
+
+                    <TextView style="@style/Material_Action"
+                        android:id="@+id/left_text_button"
+                        tools:text="View"/>
+
+                    <TextView style="@style/Material_Action"
+                        android:id="@+id/posted"
+                        tools:text="Not Posted"
+                        android:textColor="@android:color/holo_red_dark"/>
+                </LinearLayout>
+
+
+            <!-- <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="NOT POSTED"
@@ -120,8 +147,11 @@
                 android:paddingBottom="16dp"
                 android:text="date"
                 android:layout_below="@+id/pickedup"
-                android:layout_alignStart="@+id/pickedup" />
-        </RelativeLayout>
+                android:layout_alignStart="@+id/pickedup" /> -->
 
-    </RelativeLayout>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
 </android.support.v7.widget.CardView>

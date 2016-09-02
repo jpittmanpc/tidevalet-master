@@ -1,204 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:padding="@dimen/activity_horizontal_margin"
-    android:background="@android:drawable/dialog_holo_light_frame"    >
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/TideBlue"
-    android:orientation="horizontal"
-    android:layout_weight="1" >
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_gravity="center_vertical"
-        android:orientation="horizontal"
-        >
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Location"
-        android:paddingLeft="5sp"
-        android:layout_gravity="center_vertical"
-        android:id="@+id/expand_location"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/expand_edit_click"
-        android:layout_weight="1" >
+<FrameLayout android:layout_width="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="fill_parent" >
 
-   <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/edit_button"
-        android:background="@android:color/transparent"
-        android:id="@+id/expand_edit"
-       android:layout_margin="20sp"
-       android:layout_gravity="end"
-        android:scaleType="fitXY"
-        android:scaleX="2"
-        android:scaleY="2" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/expand_close_click"
-        android:layout_weight="1" >
-        <ImageButton
-            android:layout_width="wrap_content"
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <TextView android:id="@+id/bldgunit"
+            android:text="Building / Unit"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/close_button"
-            android:background="@android:color/transparent"
-            android:scaleType="fitXY"
-            android:layout_margin="20sp"
-            android:layout_gravity="end"
-            android:id="@+id/expand_close_button"
-            android:scaleX="2"
-            android:scaleY="2" />
-    </LinearLayout>
-    </LinearLayout>
-    </TableRow>
-    <LinearLayout android:layout_height="1px"
-        android:layout_width="match_parent"
-        android:background="@android:color/darker_gray">
-    </LinearLayout>
-    <TableRow android:layout_marginTop="2.5sp"
-        android:layout_marginBottom="2.5sp" >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Comments"
-        android:id="@+id/expand_comments" />
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:textColor="@color/TideBlue"
+            android:layout_marginBottom="16dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/expand_link"
-        android:clickable="true" />
-    </TableRow>
-    <LinearLayout android:layout_height="1px"
-        android:layout_width="match_parent"
-        android:background="@android:color/darker_gray">
-    </LinearLayout>
-    <TableRow android:layout_marginTop="2.5sp"
-        android:layout_marginBottom="2.5sp" >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/violation_type"
-            android:text="Violation Type: " />
-    </TableRow>
-    <LinearLayout android:layout_height="1px"
-        android:layout_width="match_parent"
-        android:background="@android:color/darker_gray">
-    </LinearLayout>
-    <TableRow android:layout_marginTop="2.5sp"
-        android:layout_marginBottom="2.5sp" >
+            android:text="Date"
+            android:id="@+id/textView2"
+            android:layout_below="@+id/bldgunit"
+            android:layout_marginBottom="16dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/TideBlue" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Picked up: "
-            android:id="@+id/expand_picked_up" />
-    </TableRow>
-    <LinearLayout android:layout_height="1px"
-        android:layout_width="match_parent"
-        android:background="@android:color/darker_gray">
-    </LinearLayout>
-    <TableRow android:layout_marginTop="2.5sp"
-        android:layout_marginBottom="2.5sp" >
+            android:text="Picked Up?"
+            android:id="@+id/picked_up"
+            android:layout_alignTop="@+id/radioButton"
+            android:layout_alignParentStart="true"
+            android:layout_alignBottom="@+id/radioButton"
+            android:layout_toStartOf="@+id/radioButton"
+            android:layout_alignParentEnd="false"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentTop="false"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/TideBlue" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yes"
+            android:id="@+id/radioButton"
+            android:checked="false"
+            android:layout_below="@+id/textView2"
+            android:layout_toStartOf="@+id/radioButton2"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="16dp"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No"
+            android:id="@+id/radioButton2"
+            android:checked="false"
+            android:layout_below="@+id/radioButton"
+            android:layout_alignEnd="@+id/bldgunit"
+            android:layout_alignTop="@+id/radioButton"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Posted: Yes"
-            android:id="@+id/expand_posted" />
-    </TableRow>
+            android:text="Violation Type"
+            android:id="@+id/textView5"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/TideBlue"
+            android:layout_below="@+id/radioButton"
+            android:layout_alignStart="@+id/picked_up"
+            android:layout_marginBottom="16dp" />
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:layout_height="wrap_content">
-
-
-        <LinearLayout
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_unit"
             android:layout_width="fill_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_alignParentBottom="false"
+            android:layout_below="@+id/textView5">
+
+
+            <EditText
+                android:id="@+id/unit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Contractor Comments"
+                android:inputType="number"
+                android:layout_below="@+id/textView5"
+                android:layout_alignStart="@+id/textView5" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
             android:orientation="horizontal"
-            android:layout_gravity="bottom">
-            <LinearLayout android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:clickable="false">
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/ximg1"
-                    android:layout_gravity="center"
-                    android:src="@drawable/placeholder" />
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/input_layout_unit">
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="bottom">
+                <LinearLayout android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:clickable="false">
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ximg1"
+                        android:layout_gravity="center"
+                        android:src="@drawable/placeholder" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+
+                    android:clickable="false">
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/ximg2"
+                        android:src="@drawable/placeholder"
+
+                        />
+                </LinearLayout>
+                <LinearLayout android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:clickable="false">
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ximg3"
+                        android:layout_gravity="center"
+                        android:src="@drawable/placeholder"
+                        />
+                </LinearLayout>
+                <LinearLayout android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:clickable="false">
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ximg4"
+                        android:layout_gravity="center"
+                        android:src="@drawable/placeholder" />
+                </LinearLayout>
             </LinearLayout>
-            <LinearLayout android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:orientation="vertical"
 
-                android:clickable="false">
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:id="@+id/ximg2"
-                    android:src="@drawable/placeholder"
 
-                    />
-            </LinearLayout>
-            <LinearLayout android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:clickable="false">
+        </FrameLayout>
 
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/ximg3"
-                    android:layout_gravity="center"
-                    android:src="@drawable/placeholder"
-                    />
-            </LinearLayout>
-            <LinearLayout android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:clickable="false">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@android:color/darker_gray"
+            android:layout_above="@+id/updateViolation"
+            android:layout_alignParentStart="true" />
 
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/ximg4"
-                    android:layout_gravity="center"
-                    android:src="@drawable/placeholder" />
-            </LinearLayout>
-        </LinearLayout>
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit Changes"
+            android:id="@+id/updateViolation"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/abc_button_padding_horizontal_material"
+            android:textStyle="normal|bold"
+            android:theme="@style/FlatButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/TideBlue"
+            android:layout_alignParentTop="false"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true" />
 
+    </RelativeLayout>
 
 </FrameLayout>
-
-
-</TableLayout>
