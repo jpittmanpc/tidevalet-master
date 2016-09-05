@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,17 +99,16 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
         dbAdapter.open();
         post = dbAdapter.getPostById(mParam2);
         dbAdapter.close();
-        TextView location = (TextView)view.findViewById(R.id.expand_location);
+        TextView location = (TextView)view.findViewById(R.id.bldgunit);
         location.setText("Location: " + post.getBldg() + "/" + post.getUnit());
-        TextView comments = (TextView)view.findViewById(R.id.expand_comments);
+        TextView comments = (TextView)view.findViewById(R.id.contcomments);
         comments.setText("Comments: " + post.getContractorComments());
-        TextView violationType = (TextView)view.findViewById(R.id.violation_type);
+        TextView violationType = (TextView)view.findViewById(R.id.violation_Type);
         violationType.setText(violationType.getText() + post.getViolationType());
-        TextView pickedup = (TextView)view.findViewById(R.id.expand_picked_up);
-        pickedup.setText(pickedup.getText() + (post.getPU() == 0 ? "No" : "Yes"));
-        TextView postLink = (TextView)view.findViewById(R.id.expand_link);
-        TextView isPosted = (TextView)view.findViewById(R.id.expand_posted);
-        isPosted.setText("Posted: " + (post.getIsPosted() == 0 ? "No" : "Yes"));
+        if (post.getPU() == 0) { RadioButton rB = (RadioButton) view.findViewById(R.id.pickedup_yes); rB.setChecked(true); }
+        if (post.getPU() == 1) { RadioButton rB = (RadioButton) view.findViewById(R.id.pickedup_no);  rB.setChecked(true); }
+       // TextView isPosted = (TextView)view.findViewById(R.id.expand_posted);
+        //isPosted.setText("Posted: " + (post.getIsPosted() == 0 ? "No" : "Yes"));
         String[] imgs = post.getImagePath().split(",");
         Log.d("TAG", imgs.toString());
         ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
@@ -134,19 +134,17 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
             imgLoader.displayImage(Uri.parse(imgs[i]).toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ", ""), iz, size);
             iz.setOnClickListener(this);
         }
-        postLink.setText(post.getReturnedString() + "");
-        postLink.setMovementMethod(LinkMovementMethod.getInstance());
-        LinearLayout click = (LinearLayout)view.findViewById(R.id.expand_close_click);
-        click.setOnClickListener(this);
-        ImageButton close = (ImageButton)view.findViewById(R.id.expand_close_button);
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
-        ImageButton edit = (ImageButton)view.findViewById(R.id.expand_edit);
-        edit.setOnClickListener(this);
+        //LinearLayout click = (LinearLayout)view.findViewById(R.id.expand_close_click);
+        //click.setOnClickListener(this);
+      //  ImageButton close = (ImageButton)view.findViewById(R.id.expand_close_button);
+        //close.setOnClickListener(new View.OnClickListener() {
+            //@Override
+           // public void onClick(View v) {
+            //    getActivity().onBackPressed();
+        // }
+       // });
+    //    ImageButton edit = (ImageButton)view.findViewById(R.id.expand_edit);
+        //edit.setOnClickListener(this);
         return view;
     }
 
@@ -188,9 +186,9 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.expand_close_click: getActivity().onBackPressed(); break;
-            case R.id.expand_edit_click: editViolation(post.getId()); break;
-            case R.id.expand_edit: editViolation(post.getId()); break;
+     //       case R.id.expand_close_click: getActivity().onBackPressed(); break;
+       //     case R.id.expand_edit_click: editViolation(post.getId()); break;
+         //   case R.id.expand_edit: editViolation(post.getId()); break;
             default: Log.d("TAG", v.getId() + " clicked"); break;
         }
     }

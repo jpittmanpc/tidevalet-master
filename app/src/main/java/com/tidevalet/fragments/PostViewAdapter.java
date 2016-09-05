@@ -59,7 +59,7 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
             holder.violtype.setText(holder.post.getViolationType());
             holder.datetext.setText(holder.post.getTimestamp());
 
-            holder.pickedup.setText(holder.post.getPU() == 0 ? "No" : "Yes");
+    //            holder.pickedup.setText(holder.post.getPU() == 0 ? "No" : "Yes");
             if (holder.post.getIsPosted() == 0) {
                 holder.posted.setVisibility(View.VISIBLE);
             } else {

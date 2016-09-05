@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout android:layout_width="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@android:color/white"
     android:layout_height="fill_parent" >
 
 
@@ -34,10 +35,10 @@
             android:layout_height="wrap_content"
             android:text="Picked Up?"
             android:id="@+id/picked_up"
-            android:layout_alignTop="@+id/radioButton"
+            android:layout_alignTop="@+id/pickedup_yes"
             android:layout_alignParentStart="true"
-            android:layout_alignBottom="@+id/radioButton"
-            android:layout_toStartOf="@+id/radioButton"
+            android:layout_alignBottom="@+id/pickedup_yes"
+            android:layout_toStartOf="@+id/pickedup_yes"
             android:layout_alignParentEnd="false"
             android:textStyle="bold"
             android:textSize="16sp"
@@ -50,10 +51,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Yes"
-            android:id="@+id/radioButton"
+            android:id="@+id/pickedup_yes"
             android:checked="false"
             android:layout_below="@+id/textView2"
-            android:layout_toStartOf="@+id/radioButton2"
+            android:layout_toStartOf="@+id/pickedup_no"
             android:layout_marginEnd="50dp"
             android:layout_marginBottom="16dp"
             android:textStyle="bold"
@@ -63,23 +64,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No"
-            android:id="@+id/radioButton2"
+            android:id="@+id/pickedup_no"
             android:checked="false"
-            android:layout_below="@+id/radioButton"
+            android:layout_below="@+id/pickedup_yes"
             android:layout_alignEnd="@+id/bldgunit"
-            android:layout_alignTop="@+id/radioButton"
+            android:layout_alignTop="@+id/pickedup_yes"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Violation Type"
-            android:id="@+id/textView5"
+            android:text="Violation Type: "
+            android:id="@+id/violation_Type"
             android:textStyle="bold"
             android:textSize="16sp"
             android:textColor="@color/TideBlue"
-            android:layout_below="@+id/radioButton"
+            android:layout_below="@+id/pickedup_yes"
             android:layout_alignStart="@+id/picked_up"
             android:layout_marginBottom="16dp" />
 
@@ -89,15 +90,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_alignParentBottom="false"
-            android:layout_below="@+id/textView5">
+            android:layout_below="@+id/violation_Type">
 
 
             <EditText
-                android:id="@+id/unit"
+                android:id="@+id/contcomments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Contractor Comments"
-                android:inputType="number"
                 android:layout_below="@+id/textView5"
                 android:layout_alignStart="@+id/textView5" />
 
