@@ -1,5 +1,6 @@
 package com.tidevalet.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -11,22 +12,24 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
@@ -69,7 +72,11 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     private boolean upload = true;
     private StepperLayout stepperLayout;
     private long iE = -1;
-    private String subtitletext;
+    private static final String FRAG1 = "Violation1";
+    private static final String FRAG2 = "Violation2";
+    private static final String FRAG3 = "Violation3";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,15 +86,8 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         post = new Post();
         SessionManager session = new SessionManager(this);
         adapter adapter = new adapter(this);
-        if (iE != -1) {
-            adapter.open();
-            post = adapter.getPostById(iE);
-            adapter.close();
-            subtitletext = "Edit Violation " + post.getBldg() + "/" + post.getUnit() + " ";
-        }
-        else {
-            subtitletext = "New Violation ";
-        }
+        String subtitletext;
+        subtitletext = "New Violation ";
         setContentView(R.layout.violation_slider);
         stepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
         stepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager()));
@@ -96,6 +96,19 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         property = adapter.getPropertyById(session.propertySelected());
         adapter.close();
         getSupportActionBar().setSubtitle(subtitletext + property.getName());
+        initializeFragments();
+    }
+
+    private void initializeFragments() {
+        FragmentManager fM = getSupportFragmentManager();
+        Violation1 violation1 = (Violation1) fM.findFragmentByTag(FRAG1);
+        if (violation1 == null) {
+            Log.d("init","viol1-null");
+            return;
+        }
+        else {
+            Log.d("init","viol1-NOTnull");
+        }
     }
 
     private void dispatchTakePictureIntent() {
@@ -276,47 +289,9 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     public void sendview(View v, int id) {
         switch (id) {
             case 1: Violation1v = v;
-                if (iE != -1) {
-                    ((TextView) v.findViewById(R.id.dateTxt)).setText(post.getTimestamp());
-                    ((EditText) v.findViewById(R.id.bldg)).setText(post.getBldg());
-                    ((EditText) v.findViewById(R.id.unit)).setText(post.getUnit());
-                    List<ImageView> x = new ArrayList<ImageView>();
-                    x.add((ImageView) v.findViewById(R.id.img1));x.add((ImageView) v.findViewById(R.id.img2));x.add((ImageView) v.findViewById(R.id.img3));x.add((ImageView) v.findViewById(R.id.img4));
-                    String[] imagePath = post.getLocalImagePath().split(",");
-                    ImageLoader imgLoader = ImageLoader.getInstance();
-                    ImageSize size = new ImageSize(60, 60);
-                    int i = imagePath.length;
-                    for (int j = 0; j < i; j++) {
-                        uriList.add(imagePath[j]);
-                        imgLoader.displayImage(imagePath[j].replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ",""), x.get(j), size);
-                    }
-                }
                 break;
             case 2: Violation2v = v;
-                if (iE != -1) {
-                    String[] violType = post.getViolationType().split(",");
-                    for (int i=0; i<violType.length;i++) {
-                        ViewGroup left = (ViewGroup) v.findViewById(R.id.left);
-                        ViewGroup right = (ViewGroup) v.findViewById(R.id.right);
-                        for (int z = 0; z < left.getChildCount(); z++) {
-                            if (left.getChildAt(i) instanceof CheckBox) {
-                                CheckBox cb = (CheckBox) left.getChildAt(z);
-                                Log.d("test", cb.getText() + " " + violType[i]);
-                                if (Objects.equals(cb.getText(),violType[i])) {
-                                    cb.setChecked(true);
-                                }
-                            }
-                        }
-                        for (int z = 0; z < right.getChildCount(); z++) {
-                            if (left.getChildAt(i) instanceof CheckBox) {
-                                CheckBox cb = (CheckBox) right.getChildAt(z);
-                                Log.d("test", cb.getText() + " " + violType[i]);
-                                if (Objects.equals(cb.getText(),violType[i])) {
-                                    cb.setChecked(true);
-                                }
-                            }
-                        }
-                    }
+
                         switch (post.getPU()) {
                         case 0:
                             ((RadioButton) v.findViewById(R.id.notpickedup)).setChecked(true);
@@ -328,10 +303,9 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
                         default:
                             break;
                     }
-                }
+
                 break;
             case 3: Violation3v = v;
-                ((EditText)v.findViewById(R.id.comments)).setText(post.getContractorComments());
                 break;
             default: break;
         }
@@ -371,6 +345,33 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     }
     @Override
     public void onStepSelected(int newStepPosition) {
+        switch (newStepPosition) {
+            case 0:
+                if (uriList.size() > 0) {
+                    Bitmap image = null;
+                    ImageLoader imgLoader = ImageLoader.getInstance();
+                    ImageSize size = new ImageSize(80, 80);
+                   switch (uriList.size()) {
+                       case 0: break;
+                       case 1:
+                               String filePath = "file://" + uriList.get(0).replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ","");
+                               imgLoader.displayImage(filePath, (ImageView) Violation1v.findViewById(R.id.img1), size);
+                                break;
+                       default:
+                           List<ImageView> list = new ArrayList<>();
+                           list.add((ImageView) Violation1v.findViewById(R.id.img1));
+                           list.add((ImageView) Violation1v.findViewById(R.id.img2));
+                           list.add((ImageView) Violation1v.findViewById(R.id.img3));
+                           list.add((ImageView) Violation1v.findViewById(R.id.img4));
+                           for (int i=0; i < uriList.size(); i++) {
+                               filePath = "file://" + uriList.get(i).replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", "");
+                               imgLoader.displayImage(filePath, list.get(i), size);
+                           }
+                           break;
+                    }
+
+                }
+        }
     }
     private void startSubmit() {
         post.setIsPosted(0);
@@ -394,16 +395,36 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         post.setPropertyId(new SessionManager(this).propertySelected());
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MM-dd h:mma");
         post.setTimestamp(dateFormat.format(new Date()));
-        adapter dbAdapter = new adapter(this);
-        if (iE == -1) {
+        if (Objects.equals(post.getBldg(),"") || Objects.equals(post.getUnit(),"") || uriList.size() == 0 && !upload){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isFinishing()){
+                        new AlertDialog.Builder(ViolationActivity.this)
+                                .setTitle("Not enough information.")
+                                .setMessage("You must have BLDG/UNIT and Image.")
+                                .setCancelable(false)
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).create().show();
+                    }
+                }
+            });
+        }
+        else {
+            adapter dbAdapter = new adapter(this);
             dbAdapter.open();
             post = dbAdapter.addPost(post);
             dbAdapter.close();
-        }
-        else {
-            dbAdapter.open();
-            dbAdapter.updatePost(post);
-            dbAdapter.close();
+            if (!upload) {
+                Toast.makeText(App.getAppContext(),"Saving..",Toast.LENGTH_SHORT);
+                Intent i = new Intent(this, MainActivity.class);
+                startActivity(i);
+                finish();
+            }
         }
         if (upload) {
             Intent service = new Intent(this, ulservice.class);
@@ -413,28 +434,20 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             LocalBroadcastManager.getInstance(App.getAppContext()).registerReceiver(MainActivity.broadcastReceiver, new IntentFilter("sendSnackBar"));
             finish();
         }
-        //start submit, then call new intent to go back to the property screen
-        if (iE == -1) {
-            Intent i = new Intent(this, MainActivity.class);
-            startActivity(i);
-            finish();
-        }
-        else { super.onBackPressed(); }
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_violation, menu);
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.logout:
-                SessionManager byebye = new SessionManager(App.getInstance());
-                byebye.resetUser();
+            case R.id.action_save:
+                upload=false;
+                startSubmit();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -451,6 +464,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             switch (position) {
                 case 0:
                     final Violation1 step = new Violation1();
+                    Log.d("step","createviol1");
                     b.putInt(CURRENT_STEP_POSITION_KEY, position);
                     step.setArguments(b);
                     return step;

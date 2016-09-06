@@ -109,4 +109,42 @@ public class LoginActivity extends AppCompatActivity {
 
 }
 
-*/
+                /*if (iE != -1) {
+                    ((TextView) v.findViewById(R.id.dateTxt)).setText(post.getTimestamp());
+                    ((EditText) v.findViewById(R.id.bldg)).setText(post.getBldg());
+                    ((EditText) v.findViewById(R.id.unit)).setText(post.getUnit());
+                    List<ImageView> x = new ArrayList<ImageView>();
+                    x.add((ImageView) v.findViewById(R.id.img1));x.add((ImageView) v.findViewById(R.id.img2));x.add((ImageView) v.findViewById(R.id.img3));x.add((ImageView) v.findViewById(R.id.img4));
+                    String[] imagePath = post.getLocalImagePath().split(",");
+                    ImageLoader imgLoader = ImageLoader.getInstance();
+                    ImageSize size = new ImageSize(60, 60);
+                    int i = imagePath.length;
+                    for (int j = 0; j < i; j++) {
+                        uriList.add(imagePath[j]);
+                        imgLoader.displayImage(imagePath[j].replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ",""), x.get(j), size);
+                    }
+                }*/
+  /* if (iE != -1) {
+                    String[] violType = post.getViolationType().split(",");
+                    for (int i=0; i<violType.length;i++) {
+                        ViewGroup left = (ViewGroup) v.findViewById(R.id.left);
+                        ViewGroup right = (ViewGroup) v.findViewById(R.id.right);
+                        for (int z = 0; z < left.getChildCount(); z++) {
+                            if (left.getChildAt(i) instanceof CheckBox) {
+                                CheckBox cb = (CheckBox) left.getChildAt(z);
+                                if (Objects.equals(cb.getText(),violType[i])) {
+                                    cb.setChecked(true);
+                                }
+                            }
+                        }
+                        for (int z = 0; z < right.getChildCount(); z++) {
+                            if (left.getChildAt(i) instanceof CheckBox) {
+                                CheckBox cb = (CheckBox) right.getChildAt(z);
+                                Log.d("test", cb.getText() + " " + violType[i]);
+                                if (Objects.equals(cb.getText(),violType[i])) {
+                                    cb.setChecked(true);
+                                }
+                            }
+                        }
+                    }*/
+               /* ((EditText)v.findViewById(R.id.comments)).setText(post.getContractorComments());*/

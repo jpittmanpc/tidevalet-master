@@ -18,6 +18,7 @@ import com.tidevalet.interfaces.MainListener;
 import com.tidevalet.thread.adapter;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link } and makes a call to the
@@ -53,8 +54,13 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
             catch(NullPointerException e) { imagePath = holder.post.getLocalImagePath().split(","); }
             ImageLoader imgLoader = ImageLoader.getInstance();
             ImageSize size = new ImageSize(60, 60);
-            try { imgLoader.displayImage(imagePath[0].replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ",""), holder.firstImage, size); }
-            catch(NullPointerException e) { e.printStackTrace(); }
+            try {
+                if (imagePath[0].charAt(0) == '/') {
+                    imagePath[0] = "file://" + imagePath[0];
+                }
+                imgLoader.displayImage(imagePath[0].replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ",""), holder.firstImage, size);
+            }
+            catch(Exception e) { e.printStackTrace(); }
             holder.bldgunit.setText(" Location: " + holder.post.getBldg() + "/" + holder.post.getUnit());
             holder.violtype.setText(holder.post.getViolationType());
             holder.datetext.setText(holder.post.getTimestamp());

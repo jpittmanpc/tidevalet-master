@@ -1,15 +1,20 @@
 package com.tidevalet.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stepstone.stepper.Step;
@@ -42,6 +47,8 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
     private String mParam2;
     public ViolationListener vL;
     private TextView errorText;
+    private ImageView img1,img2,img3,img4;
+    private Bitmap img;
     public Violation1() {
         // Required empty public constructor
     }
@@ -61,6 +68,7 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+        Log.d("viol1", "newinstance");
         return fragment;
     }
 
@@ -71,8 +79,15 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        Log.d("viol1", "oncreate");
+        setRetainInstance(true);
     }
-
+    public void setImg(Bitmap img) {
+        this.img = img;
+    }
+    public Bitmap getImg() {
+        return this.img;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -163,5 +178,10 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
     @Override
     public void onError(VerificationError error) {
 
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outstate) {
+        super.onSaveInstanceState(outstate);
+        Log.d("viol1","outstate");
     }
 }

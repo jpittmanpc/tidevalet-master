@@ -109,7 +109,7 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
         if (post.getPU() == 1) { RadioButton rB = (RadioButton) view.findViewById(R.id.pickedup_no);  rB.setChecked(true); }
        // TextView isPosted = (TextView)view.findViewById(R.id.expand_posted);
         //isPosted.setText("Posted: " + (post.getIsPosted() == 0 ? "No" : "Yes"));
-        String[] imgs = post.getImagePath().split(",");
+        String[] imgs = post.getLocalImagePath().split(",");
         Log.d("TAG", imgs.toString());
         ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
         imageButtons.add((ImageButton)view.findViewById(R.id.ximg1));
@@ -131,7 +131,8 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
         for (int i=0;i<imgs.length;i++) {
             ImageButton iz = imageButtons.get(i);
             Log.d("IMAGES", imgs[i]);
-            imgLoader.displayImage(Uri.parse(imgs[i]).toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ", ""), iz, size);
+            String filepath = "file://" + Uri.parse(imgs[i]).toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ", "");
+            imgLoader.displayImage(filepath, iz, size);
             iz.setOnClickListener(this);
         }
         //LinearLayout click = (LinearLayout)view.findViewById(R.id.expand_close_click);
