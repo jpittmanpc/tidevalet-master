@@ -79,14 +79,7 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        Log.d("viol1", "oncreate");
         setRetainInstance(true);
-    }
-    public void setImg(Bitmap img) {
-        this.img = img;
-    }
-    public Bitmap getImg() {
-        return this.img;
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,7 +96,6 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
         errorText = (TextView) v.findViewById(R.id.errorTextView1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma", Locale.getDefault());
-        //TextView propViol = (TextView)v.findViewById(R.id.violProp);
         TextView dateTxt = (TextView)v.findViewById(R.id.dateTxt);
         TextView timeTxt = (TextView)v.findViewById(R.id.timeTxt);
         ImageButton takePic = (ImageButton)v.findViewById(R.id.imageButton);
@@ -182,6 +174,5 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
     @Override
     public void onSaveInstanceState(Bundle outstate) {
         super.onSaveInstanceState(outstate);
-        Log.d("viol1","outstate");
     }
 }

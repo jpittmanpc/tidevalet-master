@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -34,6 +35,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tidevalet.App;
 import com.tidevalet.R;
 import com.tidevalet.SessionManager;
+import com.tidevalet.fragments.ImagePreview;
 import com.tidevalet.fragments.LoginActivityFragment;
 import com.tidevalet.fragments.PropertyChosen;
 import com.tidevalet.fragments.PropertyList;
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     Button viewViolation;
     Button changeProperty;
     private TextView snackbar;
-
+    private static Bitmap bitmap;
     private static Context mContext;
     private static ArrayAdapter<Object> listAdapter;
     private static adapter propAdapter = new adapter(App.getInstance());
@@ -153,7 +155,6 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         newViolation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("New Violation", "Click (Start Intent)");
                 Intent i = new Intent(App.getAppContext(), ViolationActivity.class);
                 startActivity(i);
                 finish();
@@ -163,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         viewViolation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("View Violations", "Click");
                 startViolationView();
             }
         });
@@ -172,11 +172,12 @@ public class MainActivity extends AppCompatActivity implements MainListener {
             @Override
             public void onClick(View v) {
                 sM.setPropertySelected(0);
-
                 startListView();
             }
         });
     }
+
+
 
     private void startViolationView() {
         Fragment violationViewFragment = new ViewViolations();
@@ -194,7 +195,6 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         propAdapter.open();
         propertyList = propAdapter.getAllProperties();
         propAdapter.close();
-        Log.d(TAG, sM.noProperties() + " ");
         if (propertyList.keySet().isEmpty()) {
             sM.setNoProperties(true);
         }
@@ -251,8 +251,6 @@ public class MainActivity extends AppCompatActivity implements MainListener {
                 sM.setPropertySelected(ids);
                 propAdapter.close();
                 startPropView();
-                Log.d(TAG, propertyList.get(listAdapter.getItem(pos).toString()).toString());
-                Log.d("MainAct", pos + " pos " + " id: " + id + "name: " + listAdapter.getItem(pos).toString() + " ID:" + ids);
             }
         });
     }
@@ -268,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         fm.beginTransaction()
                 .replace(R.id.topLevelViewViolation, violationExpand)
                 .addToBackStack("transaction").commit();
-        Log.d("TAG", "Clicked on post " + item.getViolationId() + " InDBAS: " + item.getId());
     }
 
     @Override
@@ -317,7 +314,6 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     @Override
     public void onBackPressed() {
         int count = getFragmentManager().getBackStackEntryCount();
-        Log.d("onBackPressed", count + "");
         if (count == 0) {
             super.onBackPressed();
             //additional code
@@ -346,5 +342,18 @@ public class MainActivity extends AppCompatActivity implements MainListener {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public void ImageClick(View v) {
+        Log.d("imageclick",v.getId() + "");
+    }
+    @Override
+    public void setUri(String filepath) {
+        Log.d("setUri","Started from the bottom now we hea!");
+        Bundle b = new Bundle();
+        b.putString("img_filepath", filepath);
+        ImagePreview imageFrag = new ImagePreview();
+        imageFrag.setArguments(b);
+        fm.beginTransaction().replace(R.id.main_fragment, imageFrag).commit();
+        fm.popBackStack();
     }
 }

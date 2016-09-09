@@ -25,6 +25,7 @@ import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.tidevalet.App;
 import com.tidevalet.R;
+import com.tidevalet.activities.MainActivity;
 import com.tidevalet.activities.ViolationActivity;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.interfaces.MainListener;
@@ -37,7 +38,7 @@ import java.util.ArrayList;
  * Use the {@link ViolationExpand#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViolationExpand extends Fragment implements MainListener, View.OnClickListener {
+public class ViolationExpand extends Fragment implements MainListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param1";
     private MainListener mListener;
@@ -110,7 +111,6 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
        // TextView isPosted = (TextView)view.findViewById(R.id.expand_posted);
         //isPosted.setText("Posted: " + (post.getIsPosted() == 0 ? "No" : "Yes"));
         String[] imgs = post.getLocalImagePath().split(",");
-        Log.d("TAG", imgs.toString());
         ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
         imageButtons.add((ImageButton)view.findViewById(R.id.ximg1));
         imageButtons.add((ImageButton)view.findViewById(R.id.ximg2));
@@ -128,12 +128,17 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
                 .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.RGB_565).build();
         ImageSize size = new ImageSize(80,80);
+
         for (int i=0;i<imgs.length;i++) {
             ImageButton iz = imageButtons.get(i);
-            Log.d("IMAGES", imgs[i]);
-            String filepath = "file://" + Uri.parse(imgs[i]).toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ", "");
+            final String filepath = "file://" + Uri.parse(imgs[i]).toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ", "");
+            iz.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    settingUri(filepath);
+                }
+            });
             imgLoader.displayImage(filepath, iz, size);
-            iz.setOnClickListener(this);
         }
         //LinearLayout click = (LinearLayout)view.findViewById(R.id.expand_close_click);
         //click.setOnClickListener(this);
@@ -185,14 +190,14 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-     //       case R.id.expand_close_click: getActivity().onBackPressed(); break;
-       //     case R.id.expand_edit_click: editViolation(post.getId()); break;
-         //   case R.id.expand_edit: editViolation(post.getId()); break;
-            default: Log.d("TAG", v.getId() + " clicked"); break;
-        }
+    public void setUri(String filepath) {
+        Log.d("setUri,ViolExp","");
     }
+
+    public void settingUri(String filepath) {
+        mListener.setUri(filepath);
+    }
+
 
     private void editViolation(long id) {
         Intent i = new Intent(getActivity(), ViolationActivity.class);

@@ -17,4 +17,5 @@ public interface MainListener {
     void onFragmentInteraction(Uri uri);
     void onListFragmentInteraction(Post item, View view);
     void propertyView(View v);
+    void setUri(String filepath);
 }

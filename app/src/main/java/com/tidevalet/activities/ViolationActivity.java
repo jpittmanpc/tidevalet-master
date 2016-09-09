@@ -464,7 +464,6 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             switch (position) {
                 case 0:
                     final Violation1 step = new Violation1();
-                    Log.d("step","createviol1");
                     b.putInt(CURRENT_STEP_POSITION_KEY, position);
                     step.setArguments(b);
                     return step;

@@ -161,7 +161,6 @@ public class LoginActivityFragment extends Fragment {
                 InteractWithAct(1, "error");
                 e.printStackTrace();
             }
-            Log.d("RESPONSE FROM SITE", result.toString() + " ");
             return resp;
         }
     }

@@ -127,6 +127,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/ximg1"
+                        android:onClick="ImageClick"
                         android:layout_gravity="center"
                         android:src="@drawable/placeholder" />
                 </LinearLayout>
@@ -140,6 +141,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:onClick="ImageClick"
                         android:id="@+id/ximg2"
                         android:src="@drawable/placeholder"
 
@@ -155,6 +157,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/ximg3"
+                        android:onClick="ImageClick"
                         android:layout_gravity="center"
                         android:src="@drawable/placeholder"
                         />
@@ -169,6 +172,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/ximg4"
+                        android:onClick="ImageClick"
                         android:layout_gravity="center"
                         android:src="@drawable/placeholder" />
                 </LinearLayout>
