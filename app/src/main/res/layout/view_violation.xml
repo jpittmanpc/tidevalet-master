@@ -113,11 +113,10 @@
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_gravity="bottom">
+                android:layout_gravity="bottom"
+                android:baselineAligned="false">
                 <LinearLayout android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
@@ -129,7 +128,8 @@
                         android:id="@+id/ximg1"
                         android:onClick="ImageClick"
                         android:layout_gravity="center"
-                        android:src="@drawable/placeholder" />
+                        android:src="@drawable/placeholder"
+                        android:contentDescription="@string/image1" />
                 </LinearLayout>
                 <LinearLayout android:layout_width="0dp"
                     android:layout_height="fill_parent"
@@ -145,7 +145,7 @@
                         android:id="@+id/ximg2"
                         android:src="@drawable/placeholder"
 
-                        />
+                        android:contentDescription="@string/image2" />
                 </LinearLayout>
                 <LinearLayout android:layout_width="0dp"
                     android:layout_height="fill_parent"
@@ -160,7 +160,7 @@
                         android:onClick="ImageClick"
                         android:layout_gravity="center"
                         android:src="@drawable/placeholder"
-                        />
+                        android:contentDescription="@string/image3" />
                 </LinearLayout>
                 <LinearLayout android:layout_width="0dp"
                     android:layout_height="fill_parent"
@@ -174,7 +174,8 @@
                         android:id="@+id/ximg4"
                         android:onClick="ImageClick"
                         android:layout_gravity="center"
-                        android:src="@drawable/placeholder" />
+                        android:src="@drawable/placeholder"
+                        android:contentDescription="@string/image4" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -183,7 +184,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2px"
+            android:layout_height="2dp"
             android:background="@android:color/darker_gray"
             android:layout_above="@+id/updateViolation"
             android:layout_alignParentStart="true" />
@@ -191,7 +192,7 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Submit Changes"
+            android:text="@string/submit_changes"
             android:id="@+id/updateViolation"
             android:background="@android:color/transparent"
             android:padding="@dimen/abc_button_padding_horizontal_material"
