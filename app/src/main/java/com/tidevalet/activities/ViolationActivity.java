@@ -432,6 +432,8 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             startService(service);
             setResult(RESULT_OK);
             LocalBroadcastManager.getInstance(App.getAppContext()).registerReceiver(MainActivity.broadcastReceiver, new IntentFilter("sendSnackBar"));
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
             finish();
         }
     }
