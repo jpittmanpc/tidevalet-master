@@ -25,7 +25,6 @@ import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.tidevalet.App;
 import com.tidevalet.R;
-import com.tidevalet.activities.MainActivity;
 import com.tidevalet.activities.ViolationActivity;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.interfaces.MainListener;
@@ -38,13 +37,15 @@ import java.util.ArrayList;
  * Use the {@link ViolationExpand#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViolationExpand extends Fragment implements MainListener {
+public class ViolationExpand extends Fragment implements MainListener, View.OnClickListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param1";
     private MainListener mListener;
     private String mParam1;
     private long mParam2;
     private static Post post = null;
+    private RadioButton yes;
+    private RadioButton no;
 
 
     public ViolationExpand() {
@@ -106,8 +107,17 @@ public class ViolationExpand extends Fragment implements MainListener {
         comments.setText("Comments: " + post.getContractorComments());
         TextView violationType = (TextView)view.findViewById(R.id.violation_Type);
         violationType.setText(violationType.getText() + post.getViolationType());
-        if (post.getPU() == 0) { RadioButton rB = (RadioButton) view.findViewById(R.id.pickedup_yes); rB.setChecked(true); }
-        if (post.getPU() == 1) { RadioButton rB = (RadioButton) view.findViewById(R.id.pickedup_no);  rB.setChecked(true); }
+        if (post.getPU() == 0) {
+            yes = (RadioButton) view.findViewById(R.id.pickedup_yes);
+            yes.setChecked(true);
+            //yes.setOnClickListener(this);
+        }
+        if (post.getPU() == 1) {
+            no = (RadioButton) view.findViewById(R.id.pickedup_no);
+            no.setChecked(true);
+            //no.setOnClickListener(this);
+        }
+
        // TextView isPosted = (TextView)view.findViewById(R.id.expand_posted);
         //isPosted.setText("Posted: " + (post.getIsPosted() == 0 ? "No" : "Yes"));
         String[] imgs = post.getLocalImagePath().split(",");
@@ -131,14 +141,23 @@ public class ViolationExpand extends Fragment implements MainListener {
 
         for (int i=0;i<imgs.length;i++) {
             ImageButton iz = imageButtons.get(i);
-            final String filepath = "file://" + Uri.parse(imgs[i]).toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ", "");
+            String filepath2 = "";
+            final String filepath = Uri.parse(imgs[i]).toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ", "");
+            Log.d("TAG",filepath + "");
+            try {
+                if (filepath.charAt(0) == '/') {
+                    filepath2 = "file://" + filepath;
+                    imgLoader.displayImage(filepath2.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", ""), iz, size);
+                }
+                else { imgLoader.displayImage(filepath, iz, size); }
+            }
+            catch(Exception e) { }
             iz.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     settingUri(filepath);
                 }
             });
-            imgLoader.displayImage(filepath, iz, size);
         }
         //LinearLayout click = (LinearLayout)view.findViewById(R.id.expand_close_click);
         //click.setOnClickListener(this);
@@ -207,5 +226,9 @@ public class ViolationExpand extends Fragment implements MainListener {
         getActivity().startActivity(i);
         getActivity().finish();
         Log.d(getTag(), "Edit click");
+    }
+
+    @Override
+    public void onClick(View v) {
     }
 }

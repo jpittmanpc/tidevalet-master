@@ -13,14 +13,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
@@ -29,7 +26,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.tidevalet.App;
@@ -51,7 +47,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements MainListener {
-
     private static final String TAG = "MainActivity";
     private static SessionManager sM = new SessionManager(App.getInstance());
     public static BroadcastReceiver broadcastReceiver;
@@ -314,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     @Override
     public void onBackPressed() {
         int count = getFragmentManager().getBackStackEntryCount();
-        if (count == 0) {
+        if (count <= 0) {
             super.onBackPressed();
             //additional code
         } else {

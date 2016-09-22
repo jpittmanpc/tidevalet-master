@@ -61,9 +61,11 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
                 imgLoader.displayImage(imagePath[0].replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ",""), holder.firstImage, size);
             }
             catch(Exception e) { e.printStackTrace(); }
-            holder.bldgunit.setText(" Location: " + holder.post.getBldg() + "/" + holder.post.getUnit());
+            holder.bldgunit.setText("Location: " + holder.post.getBldg() + "/" + holder.post.getUnit());
             holder.violtype.setText(holder.post.getViolationType());
             holder.datetext.setText(holder.post.getTimestamp());
+            holder.comments.setText(holder.post.getContractorComments());
+            holder.viewButton.setText("VIEW");
 
     //            holder.pickedup.setText(holder.post.getPU() == 0 ? "No" : "Yes");
             if (holder.post.getIsPosted() == 0) {
@@ -108,7 +110,8 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final View mView;
-        private final TextView bldgunit, posted, violtype, datetext, pickedup;
+        private final TextView bldgunit, posted, violtype, datetext, comments, viewButton;
+        private final TextView pickedup;
         private final ImageView firstImage;
         private Post post;
         private ViewHolder(View view) {
@@ -120,6 +123,8 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
             violtype = (TextView) view.findViewById(R.id.violation_type_text);
             datetext = (TextView) view.findViewById(R.id.date_text);
             pickedup = (TextView) view.findViewById(R.id.pickedup);
+            comments = (TextView) view.findViewById(R.id.violation_comments);
+            viewButton = (TextView) view.findViewById(R.id.view_button);
         }
 
         @Override

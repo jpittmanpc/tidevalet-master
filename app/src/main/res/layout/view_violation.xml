@@ -35,52 +35,57 @@
             android:layout_height="wrap_content"
             android:text="Picked Up?"
             android:id="@+id/picked_up"
-            android:layout_alignTop="@+id/pickedup_yes"
             android:layout_alignParentStart="true"
-            android:layout_alignBottom="@+id/pickedup_yes"
-            android:layout_toStartOf="@+id/pickedup_yes"
             android:layout_alignParentEnd="false"
             android:textStyle="bold"
+            android:layout_marginBottom="16dp"
             android:textSize="16sp"
             android:layout_alignParentBottom="false"
-            android:layout_alignParentTop="false"
-            android:layout_marginTop="6dp"
-            android:textColor="@color/TideBlue" />
+            android:textColor="@color/TideBlue"
+            android:layout_below="@+id/textView2" />
 
-        <RadioButton
+        <RadioGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Yes"
-            android:id="@+id/pickedup_yes"
-            android:checked="false"
-            android:layout_below="@+id/textView2"
-            android:layout_toStartOf="@+id/pickedup_no"
-            android:layout_marginEnd="50dp"
-            android:layout_marginBottom="16dp"
-            android:textStyle="bold"
-            android:textSize="16sp" />
+            android:id="@+id/radiogroup_pickedup"
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/picked_up"
+            android:layout_alignBottom="@+id/picked_up"
+            android:layout_below="@+id/textView2">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yes"
+                android:id="@+id/pickedup_yes"
+                android:checked="false"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="16dp"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No"
+                android:id="@+id/pickedup_no"
+                android:checked="false"
+                android:layout_alignEnd="@+id/bldgunit"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No"
-            android:id="@+id/pickedup_no"
-            android:checked="false"
-            android:layout_below="@+id/pickedup_yes"
-            android:layout_alignEnd="@+id/bldgunit"
-            android:layout_alignTop="@+id/pickedup_yes"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+        </RadioGroup>
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Violation Type: "
             android:id="@+id/violation_Type"
+            android:layout_marginTop="16dp"
             android:textStyle="bold"
             android:textSize="16sp"
             android:textColor="@color/TideBlue"
-            android:layout_below="@+id/pickedup_yes"
+            android:layout_below="@+id/radiogroup_pickedup"
             android:layout_alignStart="@+id/picked_up"
             android:layout_marginBottom="16dp" />
 
@@ -113,10 +118,11 @@
 
             <LinearLayout
                 android:layout_width="fill_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_gravity="bottom"
-                android:baselineAligned="false">
+                android:layout_gravity="bottom">
                 <LinearLayout android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
@@ -128,8 +134,7 @@
                         android:id="@+id/ximg1"
                         android:onClick="ImageClick"
                         android:layout_gravity="center"
-                        android:src="@drawable/placeholder"
-                        android:contentDescription="@string/image1" />
+                        android:src="@drawable/placeholder" />
                 </LinearLayout>
                 <LinearLayout android:layout_width="0dp"
                     android:layout_height="fill_parent"
@@ -145,7 +150,7 @@
                         android:id="@+id/ximg2"
                         android:src="@drawable/placeholder"
 
-                        android:contentDescription="@string/image2" />
+                        />
                 </LinearLayout>
                 <LinearLayout android:layout_width="0dp"
                     android:layout_height="fill_parent"
@@ -160,7 +165,7 @@
                         android:onClick="ImageClick"
                         android:layout_gravity="center"
                         android:src="@drawable/placeholder"
-                        android:contentDescription="@string/image3" />
+                        />
                 </LinearLayout>
                 <LinearLayout android:layout_width="0dp"
                     android:layout_height="fill_parent"
@@ -174,8 +179,7 @@
                         android:id="@+id/ximg4"
                         android:onClick="ImageClick"
                         android:layout_gravity="center"
-                        android:src="@drawable/placeholder"
-                        android:contentDescription="@string/image4" />
+                        android:src="@drawable/placeholder" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -184,7 +188,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="2px"
             android:background="@android:color/darker_gray"
             android:layout_above="@+id/updateViolation"
             android:layout_alignParentStart="true" />
@@ -192,7 +196,7 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/submit_changes"
+            android:text="Submit Changes"
             android:id="@+id/updateViolation"
             android:background="@android:color/transparent"
             android:padding="@dimen/abc_button_padding_horizontal_material"
@@ -204,6 +208,7 @@
             android:layout_alignParentTop="false"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true" />
+
 
     </RelativeLayout>
 

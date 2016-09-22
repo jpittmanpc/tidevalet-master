@@ -152,7 +152,13 @@ public class WebUtils {
                     }
 
                     Log.d("STRING", entry.getKey() + " val:" + entry.getValue().toString());
-                } else if (entry.getValue() instanceof Object) {
+                }
+                if (entry.getValue() instanceof HashMap) {
+                    Map<String, String> imageMap = (HashMap<String, String>) entry.getValue();
+                    image = (String) imageMap.get("image");
+                    Log.d("HASHMAP", entry.getValue().toString() + " for " + entry.getKey());
+                }
+                else if (entry.getValue() instanceof Object) {
                     String t = entry.getValue().getClass().getName();
                     Log.d("TAG", "Class for " + entry.getKey() + " is: " + t);
                     if (t == "java.lang.Boolean") {
@@ -164,21 +170,27 @@ public class WebUtils {
                         image = (String) imageMap.get("image");
                         Log.d("HASHMAP", entry.getValue().toString() + " for " + entry.getKey());
                     } else {
-                        Object[] breakdown = (Object[]) entry.getValue();
-                        for (int j = 0; j < breakdown.length; j++) {
-                            switch (entry.getKey()) {
-                                case "contractor":
-                                    contractors.add(breakdown[j].toString());
-                                    break;
-                                case "complex_mgr":
-                                    complex_mgrs.add(breakdown[j].toString());
-                                    break;
-                                default:
-                                    Log.d("IDK", entry.getKey() + "< THE KEY ... THE VALUE >>" + breakdown[j].toString());
-                                    break;
+                        try {
+                            Object[] breakdown = (Object[]) entry.getValue();
+                            for (int j = 0; j < breakdown.length; j++) {
+                                switch (entry.getKey()) {
+                                    case "contractor":
+                                        contractors.add(breakdown[j].toString());
+                                        break;
+                                    case "complex_mgr":
+                                        complex_mgrs.add(breakdown[j].toString());
+                                        break;
+                                    default:
+                                        Log.d("IDK", entry.getKey() + "< THE KEY ... THE VALUE >>" + breakdown[j].toString());
+                                        break;
+                                }
+                                Log.d("BREAKDOWN", entry.getKey() + " " + breakdown[j].toString());
                             }
-                            Log.d("BREAKDOWN", entry.getKey() + " " + breakdown[j].toString());
                         }
+                        catch (Exception e) {
+                            Log.d("callWP", e.toString());
+                        }
+
                     }
                     if (entry.getValue() instanceof Map || entry.getValue() instanceof HashMap) {
                         Log.d("MAP", "Fuck if i know" + entry.getValue().toString());
