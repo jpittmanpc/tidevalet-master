@@ -1,11 +1,14 @@
 package com.tidevalet.activities;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -14,10 +17,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
@@ -28,6 +34,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.tidevalet.App;
 import com.tidevalet.R;
 import com.tidevalet.SessionManager;
@@ -340,15 +347,48 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     }
     public void ImageClick(View v) {
         Log.d("imageclick",v.getId() + "");
+        LayoutInflater inflater = this.getLayoutInflater();
+        View imageDialog = inflater.inflate(R.layout.fragment_imagepreview, null);
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(imageDialog);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable((android.graphics.Color.TRANSPARENT)));
+        ImageView img = (ImageView) imageDialog.findViewById(R.id.imagepreview);
+        img.setImageBitmap(v.getDrawingCache());
+        dialog.show();
+
     }
     @Override
-    public void setUri(String filepath) {
+    public void setUri(View v, String file) {
         Log.d("setUri","Started from the bottom now we hea!");
         Bundle b = new Bundle();
-        b.putString("img_filepath", filepath);
-        ImagePreview imageFrag = new ImagePreview();
-        imageFrag.setArguments(b);
-        fm.beginTransaction().replace(R.id.main_fragment, imageFrag).commit();
-        fm.popBackStack();
+        LayoutInflater inflater = this.getLayoutInflater();
+        View imageDialog = inflater.inflate(R.layout.fragment_imagepreview, null);
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(imageDialog);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable((android.graphics.Color.TRANSPARENT)));
+        ImageView img = (ImageView) imageDialog.findViewById(R.id.imagepreview);
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        ImageSize imgSize = new ImageSize(width,height);
+        String filepath2 = "";
+        final String filepath = Uri.parse(file).toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ", "");
+        Log.d("TAG",filepath + "");
+        ImageLoader imgLoader = ImageLoader.getInstance();
+        try {
+            if (filepath.charAt(0) == '/') {
+                filepath2 = "file://" + filepath;
+                imgLoader.displayImage(filepath2.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", ""), img, imgSize);
+            }
+            else { imgLoader.displayImage(filepath, img, imgSize); }
+        }
+        catch(Exception e) { }
+        dialog.show();
     }
 }

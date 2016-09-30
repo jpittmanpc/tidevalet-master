@@ -44,7 +44,7 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
     private RadioButton got, not;
 
     private String[] checkBoxListLeft = { "Not Tied", "Over Weight", "Sharp Objects", "Pet Waste", "Hazardous", "CardBoard" };
-    private String[] checkBoxListRight = {"Not Bagged", "Oversized Trash", "Leaking Trash", "Outside Hours", "Recycling", "Empty Bin" };
+    private String[] checkBoxListRight = {"Not Bagged", "Oversized Trash", "Leaking Trash", "Outside Hours", "Recycling", "Trash without Bin" };
     private List<CheckBox> cbList = new ArrayList<CheckBox>();
     private StringBuilder violationTypes = new StringBuilder();
     private TextView errorTextView;

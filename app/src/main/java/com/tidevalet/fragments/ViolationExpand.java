@@ -155,7 +155,7 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
             iz.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    settingUri(filepath);
+                    setUri(v, filepath);
                 }
             });
         }
@@ -208,13 +208,8 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
 
     }
 
-    @Override
-    public void setUri(String filepath) {
-        Log.d("setUri,ViolExp","");
-    }
-
-    public void settingUri(String filepath) {
-        mListener.setUri(filepath);
+    public void setUri(View v, String filepath) {
+    mListener.setUri(v, filepath);
     }
 
 
@@ -227,7 +222,6 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
         getActivity().finish();
         Log.d(getTag(), "Edit click");
     }
-
     @Override
     public void onClick(View v) {
     }
