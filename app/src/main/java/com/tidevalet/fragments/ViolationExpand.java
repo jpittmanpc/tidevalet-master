@@ -6,18 +6,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -37,7 +33,7 @@ import java.util.ArrayList;
  * Use the {@link ViolationExpand#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViolationExpand extends Fragment implements MainListener, View.OnClickListener {
+public class ViolationExpand extends Fragment implements View.OnClickListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param1";
     private MainListener mListener;
@@ -75,8 +71,6 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
         if (getArguments() != null) {
             mParam2 = getArguments().getLong(ARG_PARAM2);
         }
-        mListener = this;
-
     }
     @Override
     public void onDetach() {
@@ -155,7 +149,7 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
             iz.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setUri(v, filepath);
+                    setTheUri(v, filepath);
                 }
             });
         }
@@ -172,47 +166,10 @@ public class ViolationExpand extends Fragment implements MainListener, View.OnCl
         //edit.setOnClickListener(this);
         return view;
     }
-
-    @Override
-    public void clicked(View v) {
-
+     public void setTheUri(View v, String filepath) {
+        Log.d("ViolationExpand","set");
+      mListener.setUri(v, filepath);
     }
-
-    @Override
-    public void authenticated() {
-
-    }
-
-    @Override
-    public void showDialog(int i, String value) {
-
-    }
-
-    @Override
-    public void propertyList(View v) {
-
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
-    @Override
-    public void onListFragmentInteraction(Post item, View view) {
-
-    }
-
-    @Override
-    public void propertyView(View v) {
-
-    }
-
-    public void setUri(View v, String filepath) {
-    mListener.setUri(v, filepath);
-    }
-
-
     private void editViolation(long id) {
         Intent i = new Intent(getActivity(), ViolationActivity.class);
         i.putExtra("id", id);

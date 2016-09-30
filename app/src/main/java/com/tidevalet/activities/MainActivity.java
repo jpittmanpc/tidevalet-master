@@ -38,7 +38,6 @@ import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.tidevalet.App;
 import com.tidevalet.R;
 import com.tidevalet.SessionManager;
-import com.tidevalet.fragments.ImagePreview;
 import com.tidevalet.fragments.LoginActivityFragment;
 import com.tidevalet.fragments.PropertyChosen;
 import com.tidevalet.fragments.PropertyList;
@@ -362,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     @Override
     public void setUri(View v, String file) {
         Log.d("setUri","Started from the bottom now we hea!");
-        Bundle b = new Bundle();
+        //Bundle b = new Bundle();
         LayoutInflater inflater = this.getLayoutInflater();
         View imageDialog = inflater.inflate(R.layout.fragment_imagepreview, null);
         Dialog dialog = new Dialog(this);

@@ -11,9 +11,8 @@ import com.tidevalet.helpers.Post;
 public interface MainListener {
     void clicked(View v);
     void authenticated();
-    void showDialog(int i, String value);
     void propertyList(View v);
-
+    void showDialog(int i, String value);
     void onFragmentInteraction(Uri uri);
     void onListFragmentInteraction(Post item, View view);
     void propertyView(View v);
