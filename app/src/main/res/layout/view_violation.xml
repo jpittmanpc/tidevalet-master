@@ -6,8 +6,8 @@
 
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:padding="16dp">
 
         <TextView android:id="@+id/bldgunit"
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Date"
-            android:id="@+id/textView2"
+            android:id="@+id/datetext"
             android:layout_below="@+id/bldgunit"
             android:layout_marginBottom="16dp"
             android:textStyle="bold"
@@ -42,7 +42,7 @@
             android:textSize="16sp"
             android:layout_alignParentBottom="false"
             android:textColor="@color/TideBlue"
-            android:layout_below="@+id/textView2" />
+            android:layout_below="@+id/datetext" />
 
         <RadioGroup
             android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
             android:layout_alignParentEnd="true"
             android:layout_toEndOf="@+id/picked_up"
             android:layout_alignBottom="@+id/picked_up"
-            android:layout_below="@+id/textView2">
+            android:layout_below="@+id/datetext">
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -198,8 +198,10 @@
             android:layout_height="wrap_content"
             android:text="Submit Changes"
             android:id="@+id/updateViolation"
-            android:background="@android:color/transparent"
-            android:padding="@dimen/abc_button_padding_horizontal_material"
+            android:background="@color/TideLightGrey"
+            android:paddingTop="0px"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:paddingRight="@dimen/activity_vertical_margin"
             android:textStyle="normal|bold"
             android:theme="@style/FlatButton"
             style="@style/Widget.AppCompat.Button.Borderless"

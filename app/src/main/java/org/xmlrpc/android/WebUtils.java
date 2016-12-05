@@ -27,19 +27,46 @@ import java.util.Map;
 public class WebUtils {
     static SessionManager sessionManager;
     static String URL = App.getSiteUrl();
+    static long id = 0;
+    public static String editPost(String comments, long ID, Context context) throws XMLRPCException {
+        id = ID;
+        XMLRPCClient client = new XMLRPCClient(URL + "xmlrpc.php");
+        HashMap<String, Object> content = new HashMap<String, Object>();
+        content.put("comments", comments);
+        Object result = null;
+        sessionManager = new SessionManager(context);
+        String username = sessionManager.getUsername();
+        String password = sessionManager.getPassword();
+        int t = 733;
+        Object[] params = new Object[]{1, username, password, t, true};
+        try {
+            result = client.call("wp.getPost", params);
+        } catch (XMLRPCException e) {
+            e.printStackTrace();
+        }
+        Log.d("getPost",result.toString());
+        return result.toString();
+    }
     public static HashMap<String, String> uploadPostToWordpress(String image,
                                                                 String violation_type,
                                                                 String bldg,
                                                                 String unit,
                                                                 String comments,
                                                                 Integer picked_up,
-                                                                Context context)
+                                                                String type,
+                                                                Context context, long ID)
             throws XMLRPCException {
+        id = ID;
         List<String> imageURL = new ArrayList<>();
         sessionManager = new SessionManager(context);
+        Object[] params;
         for (String img : image.split(",")) {
-            String result = uploadImage(img, context);
-            imageURL.add(result);
+            if (!img.contains("http")) {
+                String result = uploadImage(img, context);
+                imageURL.add(result);
+            } else if (img.contains("http")) {
+                 imageURL.add(img);
+            }
         }
         XMLRPCClient client = new XMLRPCClient(URL + "xmlrpc.php");
         // Setup Post
@@ -80,16 +107,20 @@ public class WebUtils {
         customField.put("key", constants.PICKEDUP);
         customField.put("value", picked_up);
         customFieldsList.add(customField);
-
         content.put("custom_fields", customFieldsList);
         String username = sessionManager.getUsername();
         String password = sessionManager.getPassword();
-        Object[] params = {
-                1, username, password, content, true
-        };
+        if (type.equals("editPost")) {
+            params = new Object[]{1, username, password, id, content, true};
+        }
+        else {
+            params = new Object[]{
+                    1, username, password, content, true
+            };
+        }
         Object result = null;
         try {
-            result = client.call("wp.newPost", params);
+            result = client.call("wp." + type, params);
         } catch (XMLRPCException e) {
             e.printStackTrace();
         }
@@ -124,6 +155,7 @@ public class WebUtils {
         throws XMLRPCException, IOException {
         adapter dbAdapter = new adapter(App.getInstance());
         sessionManager = new SessionManager(context);
+
         String sXmlRpcMethod = method;
         String result = null;
         XMLRPCClient client = new XMLRPCClient(URL + "xmlrpc.php");
@@ -133,8 +165,8 @@ public class WebUtils {
         theCall.put("filter", filter);
         String taxonomy = "properties";
         Object[] params = { 1, sessionManager.getUsername(), sessionManager.getPassword(), taxonomy, theCall
-
         };
+        Log.d("User", "User " + sessionManager.getUserId());
         Object[] obj = (Object[]) client.call(method, params);
         Integer propId = 0;
         String name = "", address = "", image = "";
@@ -161,7 +193,10 @@ public class WebUtils {
                 else if (entry.getValue() instanceof Object) {
                     String t = entry.getValue().getClass().getName();
                     Log.d("TAG", "Class for " + entry.getKey() + " is: " + t);
-                    if (t == "java.lang.Boolean") {
+                    if (t == "java.lang.String") {
+                        Log.d("TAG", "String " + entry.getValue() + " for " + entry.getKey());
+                    }
+                    else if (t == "java.lang.Boolean") {
                         Log.d("TAG", "Boolean: " + entry.getValue() + " for " + entry.getKey());
                     } else if (t == "java.lang.Integer") {
                         Log.d("TAG", "Int: " + entry.getValue() + " for " + entry.getKey());

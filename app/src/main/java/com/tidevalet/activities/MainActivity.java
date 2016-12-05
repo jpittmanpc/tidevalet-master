@@ -1,9 +1,11 @@
 package com.tidevalet.activities;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
@@ -11,6 +13,7 @@ import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,12 +21,14 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
@@ -45,6 +50,7 @@ import com.tidevalet.fragments.ViewViolations;
 import com.tidevalet.fragments.ViolationExpand;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.helpers.Properties;
+import com.tidevalet.helpers.TouchImageView;
 import com.tidevalet.interfaces.MainListener;
 import com.tidevalet.service.wp_service;
 import com.tidevalet.thread.adapter;
@@ -54,7 +60,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements MainListener {
     private static final String TAG = "MainActivity";
-    private static SessionManager sM = new SessionManager(App.getInstance());
+    private SessionManager sM = new SessionManager(App.getInstance());
     public static BroadcastReceiver broadcastReceiver;
     final FragmentManager fm = getSupportFragmentManager();
     ImageView propertyImage;
@@ -64,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     Button changeProperty;
     private TextView snackbar;
     private static Bitmap bitmap;
-    private static Context mContext;
+    private Context mContext;
     private static ArrayAdapter<Object> listAdapter;
     private static adapter propAdapter = new adapter(App.getInstance());
     private static Map<String, Object> propertyList;
@@ -125,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         });
         snackbar.setAnimation(alphaAnim);
         snackbar.setVisibility(View.VISIBLE);
+        snackbar.setSystemUiVisibility(View.FOCUS_FORWARD);
     }
 
     @Override
@@ -346,30 +353,38 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     }
     public void ImageClick(View v) {
         Log.d("imageclick",v.getId() + "");
-        LayoutInflater inflater = this.getLayoutInflater();
-        View imageDialog = inflater.inflate(R.layout.fragment_imagepreview, null);
-        Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(imageDialog);
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable((android.graphics.Color.TRANSPARENT)));
-        ImageView img = (ImageView) imageDialog.findViewById(R.id.imagepreview);
-        img.setImageBitmap(v.getDrawingCache());
-        dialog.show();
-
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog
+                .setTitle("Images")
+                .setMessage("Add picture?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
     @Override
     public void setUri(View v, String file) {
-        Log.d("setUri","Started from the bottom now we hea!");
-        //Bundle b = new Bundle();
         LayoutInflater inflater = this.getLayoutInflater();
         View imageDialog = inflater.inflate(R.layout.fragment_imagepreview, null);
-        Dialog dialog = new Dialog(this);
+        Dialog dialog = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        wlp.gravity = Gravity.CENTER;
+        wlp.flags &= ~WindowManager.LayoutParams.FLAG_BLUR_BEHIND;
+        window.setAttributes(wlp);
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         dialog.setContentView(imageDialog);
-        dialog.setCanceledOnTouchOutside(true);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable((android.graphics.Color.TRANSPARENT)));
-        ImageView img = (ImageView) imageDialog.findViewById(R.id.imagepreview);
+        TouchImageView img = (TouchImageView) imageDialog.findViewById(R.id.imagepreview);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);

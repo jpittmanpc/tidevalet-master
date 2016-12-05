@@ -393,9 +393,9 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         post.setBldg(bldg);
         post.setUnit(unit);
         post.setPropertyId(new SessionManager(this).propertySelected());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MM-dd h:mma");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MM-dd h:mma", Locale.US);
         post.setTimestamp(dateFormat.format(new Date()));
-        if (Objects.equals(post.getBldg(),"") || Objects.equals(post.getUnit(),"") || uriList.size() == 0 && !upload){
+        if (post.getBldg().equals("") || post.getUnit().equals("") || uriList.size() == 0 && !upload){
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -420,7 +420,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             post = dbAdapter.addPost(post);
             dbAdapter.close();
             if (!upload) {
-                Toast.makeText(App.getAppContext(),"Saving..",Toast.LENGTH_SHORT);
+                Toast.makeText(App.getAppContext(),"Saving..",Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(this, MainActivity.class);
                 startActivity(i);
                 finish();
@@ -429,6 +429,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         if (upload) {
             Intent service = new Intent(this, ulservice.class);
             service.putExtra("id", post.getId());
+            service.putExtra("type", "newPost");
             startService(service);
             setResult(RESULT_OK);
             LocalBroadcastManager.getInstance(App.getAppContext()).registerReceiver(MainActivity.broadcastReceiver, new IntentFilter("sendSnackBar"));

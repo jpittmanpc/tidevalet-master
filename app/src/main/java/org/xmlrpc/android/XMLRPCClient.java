@@ -345,7 +345,6 @@ public class XMLRPCClient {
 			else{
 				StringWriter bodyWriter = new StringWriter();
 				serializer.setOutput(bodyWriter);
-
 				serializer.startDocument(null, null);
 				serializer.startTag(null, TAG_METHOD_CALL);
 				// set method name
@@ -394,7 +393,6 @@ public class XMLRPCClient {
 			HttpEntity entity = response.getEntity();
 			//change to pushbackinput stream 1/18/2010 to handle self installed wp sites that insert the BOM
 			PushbackInputStream is = new PushbackInputStream(entity.getContent());
-
 			//get rid of junk characters before xml response.  60 = '<'.  Added stopper to prevent infinite loop
 			int bomCheck = is.read();
 			int stopper = 0;

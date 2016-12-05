@@ -52,8 +52,9 @@ public class Properties {
         Boolean isContractor = false;
         String test = contractors.replaceAll("\"", "");
         test = test.substring(1,test.length()-1);
+        Log.d("Contractor", sM.getUserId() + " id");
         for (String isCont : test.split(",")) {
-            if (Objects.equals(isCont, sM.getUserId())) { isContractor = true; }
+            if (isCont.equals(sM.getUserId())) { isContractor = true; }
         }
         return isContractor;
     }

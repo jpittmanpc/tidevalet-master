@@ -3,17 +3,21 @@ package com.tidevalet.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -21,12 +25,18 @@ import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.tidevalet.App;
 import com.tidevalet.R;
+import com.tidevalet.activities.MainActivity;
 import com.tidevalet.activities.ViolationActivity;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.interfaces.MainListener;
+import com.tidevalet.service.ulservice;
 import com.tidevalet.thread.adapter;
+import com.tidevalet.thread.upload;
 
 import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_OK;
+import static com.tidevalet.R.id.posted;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,10 +44,8 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class ViolationExpand extends Fragment implements View.OnClickListener {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param1";
+    private static final String ARG_PARAM2 = "id";
     private MainListener mListener;
-    private String mParam1;
     private long mParam2;
     private static Post post = null;
     private RadioButton yes;
@@ -91,14 +99,16 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_violation, container, false);
-        adapter dbAdapter = new adapter(App.getAppContext());
+        final adapter dbAdapter = new adapter(App.getAppContext());
         dbAdapter.open();
         post = dbAdapter.getPostById(mParam2);
         dbAdapter.close();
         TextView location = (TextView)view.findViewById(R.id.bldgunit);
         location.setText("Location: " + post.getBldg() + "/" + post.getUnit());
-        TextView comments = (TextView)view.findViewById(R.id.contcomments);
-        comments.setText("Comments: " + post.getContractorComments());
+        TextView date = (TextView)view.findViewById(R.id.datetext);
+        date.setText(post.getTimestamp());
+        final TextView comments = (TextView)view.findViewById(R.id.contcomments);
+        comments.setText(post.getContractorComments());
         TextView violationType = (TextView)view.findViewById(R.id.violation_Type);
         violationType.setText(violationType.getText() + post.getViolationType());
         if (post.getPU() == 0) {
@@ -131,53 +141,70 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
                 .cacheInMemory(true).cacheOnDisk(true)
                 .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.RGB_565).build();
-        ImageSize size = new ImageSize(80,80);
+        ImageSize size = new ImageSize(140,140);
 
-        for (int i=0;i<imgs.length;i++) {
+        for (int i=0;i<imageButtons.size();i++) {
             ImageButton iz = imageButtons.get(i);
             String filepath2 = "";
-            final String filepath = Uri.parse(imgs[i]).toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ", "");
-            Log.d("TAG",filepath + "");
-            try {
-                if (filepath.charAt(0) == '/') {
-                    filepath2 = "file://" + filepath;
-                    imgLoader.displayImage(filepath2.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", ""), iz, size);
-                }
-                else { imgLoader.displayImage(filepath, iz, size); }
+            if (imgs.length <= i) {
+                iz.setVisibility(View.INVISIBLE);
             }
-            catch(Exception e) { }
-            iz.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setTheUri(v, filepath);
+            else {
+                final String filepath = Uri.parse(imgs[i]).toString().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", "");
+                Log.d("TAG", filepath + "");
+                try {
+                    if (filepath.charAt(0) == '/') {
+                        filepath2 = "file://" + filepath;
+                        imgLoader.displayImage(filepath2.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", ""), iz, size);
+                    } else {
+                        imgLoader.displayImage(filepath, iz, size);
+                    }
+                } catch (Exception e) {
+                    iz.setVisibility(View.INVISIBLE);
                 }
-            });
+                iz.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setTheUri(v, filepath);
+                    }
+                });
+            }
         }
-        //LinearLayout click = (LinearLayout)view.findViewById(R.id.expand_close_click);
-        //click.setOnClickListener(this);
-      //  ImageButton close = (ImageButton)view.findViewById(R.id.expand_close_button);
-        //close.setOnClickListener(new View.OnClickListener() {
-            //@Override
-           // public void onClick(View v) {
-            //    getActivity().onBackPressed();
-        // }
-       // });
-    //    ImageButton edit = (ImageButton)view.findViewById(R.id.expand_edit);
-        //edit.setOnClickListener(this);
+        Button edit = (Button) view.findViewById(R.id.updateViolation);
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String current = "";
+                try {
+                    current = post.getContractorComments();
+                } catch(NullPointerException e) { e.printStackTrace(); }
+                String newComments = comments.getText().toString();
+                Log.d("comments", "curr:" + current + " new: " + newComments);
+                post.setContractorComments(newComments);
+                editViolation(post);
+
+
+            }
+        });
         return view;
     }
      public void setTheUri(View v, String filepath) {
         Log.d("ViolationExpand","set");
       mListener.setUri(v, filepath);
     }
-    private void editViolation(long id) {
-        Intent i = new Intent(getActivity(), ViolationActivity.class);
-        i.putExtra("id", id);
-        Log.d("Viol", id + "");
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        getActivity().startActivity(i);
-        getActivity().finish();
+    private void editViolation(Post post) {
+        adapter dbAdapter = new adapter(this.getContext());
+        dbAdapter.open();
+        dbAdapter.updatePost(post);
+        dbAdapter.close();
+        Intent service = new Intent(this.getContext(), ulservice.class);
+        service.putExtra(ARG_PARAM2, mParam2);
+        service.putExtra("type","editPost");
+        this.getContext().startService(service);
+        getActivity().setResult(RESULT_OK);
+        LocalBroadcastManager.getInstance(App.getAppContext()).registerReceiver(MainActivity.broadcastReceiver, new IntentFilter("sendSnackBar"));
         Log.d(getTag(), "Edit click");
+        Toast.makeText(getActivity(), "Submitting..", Toast.LENGTH_LONG).show();
     }
     @Override
     public void onClick(View v) {

@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.tidevalet.App;
+import com.tidevalet.SessionManager;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.helpers.Properties;
 
@@ -21,8 +23,10 @@ import java.util.Map;
 public class adapter {
 	private SQLiteDatabase sqlDB;
 	private DatabaseHelper dbHelper;
+    private SessionManager sm = new SessionManager(App.getAppContext());
 
-	public adapter(Context context) {
+
+    public adapter(Context context) {
 		dbHelper = new DatabaseHelper(context);
 	}
 
@@ -73,7 +77,6 @@ public class adapter {
 	public List<Post> getPostsByPropertyId(long propId) throws Exception {
 		List<Post> postList = new ArrayList<Post>();
 		Cursor cursor = sqlDB.query(constants.TABLE_POSTS, null, constants.PROPERTY_ID+"="+propId, null, null, null, null);
-		Log.d("Adapter", cursor.getCount() + " count" + "property: " + propId);
 		while (cursor.moveToNext()) {
 			Post post = new Post();
 			post.setId(cursor.getLong(cursor.getColumnIndex(constants.COL_KEY_ROW)));
@@ -89,7 +92,6 @@ public class adapter {
 			post.setBldg(cursor.getString(cursor.getColumnIndex(constants.POST_BLDG)));
 			post.setUnit(cursor.getString(cursor.getColumnIndex(constants.POST_UNIT)));
 			postList.add(post);
-
 		}
 		cursor.close();
 		return postList;
@@ -115,17 +117,27 @@ public class adapter {
 				property.setComplexMgrs(cursor.getString(cursor
 						.getColumnIndex(constants.PROPERTY_COMPLEXMGRS)));
 				if (!property.getName().equals("")) {
-					String name = cursor.getString(cursor
-							.getColumnIndex(constants.PROPERTY_NAME));
-					Object prop_id = property.getId();
-					Object image = property.getImage();
-					Object address = property.getAddress();
-					HashMap<String, Object> objectHashMap = new HashMap<String, Object>();
-					objectHashMap.put(constants.PROPERTY_ID, prop_id);
-					objectHashMap.put(constants.PROPERTY_IMG, image);
-					objectHashMap.put(constants.PROPERTY_ADDRESS, address);
-					map.put(name, objectHashMap);
-				} else {
+						String name = cursor.getString(cursor
+								.getColumnIndex(constants.PROPERTY_NAME));
+						Object prop_id = property.getId();
+						Object image = property.getImage();
+						Object address = property.getAddress();
+						HashMap<String, Object> objectHashMap = new HashMap<String, Object>();
+						objectHashMap.put(constants.PROPERTY_ID, prop_id);
+						objectHashMap.put(constants.PROPERTY_IMG, image);
+						objectHashMap.put(constants.PROPERTY_ADDRESS, address);
+					if (!sm.getRole().equals("contractor")) {
+                        map.put(name,objectHashMap);
+                    }
+					else if (property.isContractor()) {
+                        map.put(name, objectHashMap);
+                    }
+					else {
+                        trashProperty(property.getId());
+                        Log.d("Trashed", name);
+                    }
+				}
+                else {
 					trashProperty(property.getId());
 				}
 			}

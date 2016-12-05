@@ -110,7 +110,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/right"
+            android:id="@+id/rightOptions"
             android:orientation="vertical"
             android:layout_weight="1.25">
 
@@ -183,7 +183,6 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/right"
                     android:layout_weight="1.25"
                     android:orientation="vertical">
                     <RadioButton

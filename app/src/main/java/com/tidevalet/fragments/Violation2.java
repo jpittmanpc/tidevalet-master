@@ -2,33 +2,24 @@ package com.tidevalet.fragments;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
-import com.tidevalet.App;
 import com.tidevalet.R;
 import com.tidevalet.interfaces.ViolationListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 public class Violation2 extends Fragment implements View.OnClickListener, Step {
@@ -98,7 +89,7 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
         got.setOnClickListener(this);
         not.setOnClickListener(this);
         ViewGroup left = (ViewGroup) v.findViewById(R.id.left);
-        ViewGroup right = (ViewGroup) v.findViewById(R.id.right);
+        ViewGroup right = (ViewGroup) v.findViewById(R.id.rightOptions);
         int x=0;
         for (int i = 0; i<left.getChildCount(); i++) {
             if (left.getChildAt(i) instanceof CheckBox) {

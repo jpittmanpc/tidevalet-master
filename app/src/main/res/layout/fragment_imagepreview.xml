@@ -1,31 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:gravity="center"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@android:color/black"
-    >
-    <!--<LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/close_button" />
 
-    </LinearLayout>-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:gravity="center"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:background="@android:color/black"
-    android:orientation="horizontal">
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/imagepreview"
-        android:src="@drawable/tidevalet" />
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@android:color/black" >
+    <com.tidevalet.helpers.TouchImageView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+       android:id="@+id/imagepreview" />
 
-    </LinearLayout>
-    </LinearLayout>
+    </FrameLayout>

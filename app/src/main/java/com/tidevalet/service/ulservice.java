@@ -21,7 +21,8 @@ public class ulservice extends Service {
             super.onStart(intent, startId);
 try {
     long postId = intent.getLongExtra("id", 0);
-    upload thread = new upload(postId, this);
+    String type = intent.getStringExtra("type");
+    upload thread = new upload(postId, this, type);
     thread.start();
     Toast.makeText(this, "Posting Violation", Toast.LENGTH_LONG).show();
 }

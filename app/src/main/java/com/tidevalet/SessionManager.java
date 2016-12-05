@@ -20,6 +20,7 @@ public class SessionManager {
 	static final String DATE = "date";
 	static final String TIME = "time";
 	static final String DEF_LOGGED_IN = "logged_in";
+	private static final String ROLE = "role";
 	private static final String DEF_URL = "url";
 	private static final String DEF_USR = "username";
 	private static final String DEF_PWD = "password";
@@ -62,11 +63,11 @@ public class SessionManager {
 	}
 	public void setDefUrl(String url) {
 		url = App.getSiteUrl();
-		if (!url.contains("http://")) {
+		if (!url.contains("http://") && !url.startsWith("http")) {
 			url = "http://" + url;
 		}
 		if (url.lastIndexOf("/") < url.length() - 1) {
-			url = url + "/";
+			url = url + "///";
 		}
 		editor.putString(DEF_URL, url);
 		editor.commit();
@@ -99,4 +100,10 @@ public class SessionManager {
 	public boolean noProperties() {
 		return pref.getBoolean(UPDATE_VIEW, false);
 	}
+
+	public void setRole(String role) {
+		editor.putString(ROLE, role);
+		editor.commit();
+	}
+	public String getRole() { return pref.getString(ROLE,""); }
 }
