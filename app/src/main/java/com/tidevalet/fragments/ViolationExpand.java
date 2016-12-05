@@ -100,6 +100,7 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_violation, container, false);
         final adapter dbAdapter = new adapter(App.getAppContext());
+        Log.d("mParam2", mParam2 + "");
         dbAdapter.open();
         post = dbAdapter.getPostById(mParam2);
         dbAdapter.close();
@@ -124,7 +125,13 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
 
        // TextView isPosted = (TextView)view.findViewById(R.id.expand_posted);
         //isPosted.setText("Posted: " + (post.getIsPosted() == 0 ? "No" : "Yes"));
-        String[] imgs = post.getLocalImagePath().split(",");
+        String[] imgs;
+        try {
+            imgs = post.getLocalImagePath().split(",");
+        }
+        catch (NullPointerException e) {
+            imgs = post.getImagePath().split(",");
+        }
         ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
         imageButtons.add((ImageButton)view.findViewById(R.id.ximg1));
         imageButtons.add((ImageButton)view.findViewById(R.id.ximg2));
@@ -180,10 +187,11 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
                 } catch(NullPointerException e) { e.printStackTrace(); }
                 String newComments = comments.getText().toString();
                 Log.d("comments", "curr:" + current + " new: " + newComments);
+                dbAdapter.open();
                 post.setContractorComments(newComments);
+                dbAdapter.updatePost(post);
+                dbAdapter.close();
                 editViolation(post);
-
-
             }
         });
         return view;
@@ -194,11 +202,8 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
     }
     private void editViolation(Post post) {
         adapter dbAdapter = new adapter(this.getContext());
-        dbAdapter.open();
-        dbAdapter.updatePost(post);
-        dbAdapter.close();
         Intent service = new Intent(this.getContext(), ulservice.class);
-        service.putExtra(ARG_PARAM2, mParam2);
+        service.putExtra(ARG_PARAM2, post.getId());
         service.putExtra("type","editPost");
         this.getContext().startService(service);
         getActivity().setResult(RESULT_OK);

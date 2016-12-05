@@ -11,13 +11,11 @@ import com.tidevalet.SessionManager;
 import com.tidevalet.thread.adapter;
 import com.tidevalet.thread.constants;
 
-import org.apache.http.client.ClientProtocolException;
 import org.json.JSONArray;
 import org.wordpress.android.MediaFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -31,20 +29,24 @@ public class WebUtils {
     public static String editPost(String comments, long ID, Context context) throws XMLRPCException {
         id = ID;
         XMLRPCClient client = new XMLRPCClient(URL + "xmlrpc.php");
-        HashMap<String, Object> content = new HashMap<String, Object>();
-        content.put("comments", comments);
+        HashMap<String, Object> struct = new HashMap<String, Object>();
+        Hashtable keyvalpair = new Hashtable();
+        List<Hashtable> array = new ArrayList<Hashtable>();
+        keyvalpair.put("key", constants.POST_COMMENTS);
+        keyvalpair.put("value", comments);
+        array.add(keyvalpair);
+        struct.put("custom_fields", array);
         Object result = null;
         sessionManager = new SessionManager(context);
         String username = sessionManager.getUsername();
         String password = sessionManager.getPassword();
-        int t = 733;
-        Object[] params = new Object[]{1, username, password, t, true};
+        int violationid = (int) ID;
+        Object[] params = new Object[]{1, username, password, violationid, struct, true};
         try {
-            result = client.call("wp.getPost", params);
+            result = client.call("wp.editPost", params);
         } catch (XMLRPCException e) {
             e.printStackTrace();
         }
-        Log.d("getPost",result.toString());
         return result.toString();
     }
     public static HashMap<String, String> uploadPostToWordpress(String image,

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.tidevalet.R;
 import com.tidevalet.helpers.Post;
@@ -16,6 +17,7 @@ import com.tidevalet.helpers.Post;
 import org.xmlrpc.android.WebUtils;
 
 import java.util.HashMap;
+import java.util.logging.ErrorManager;
 
 public class upload extends Thread {
     private long postId;
@@ -38,8 +40,11 @@ public class upload extends Thread {
             nManager.cancel((int) (R.string.app_name + postId));
             post = dbAdapter.getPostById(postId);
             if (type.equals("editPost")) { String rez =
-                    WebUtils.editPost(post.getContractorComments(), postId, context);
-            Log.d("TAG", rez.toString()); }
+                    WebUtils.editPost(post.getContractorComments(), post.getViolationId(), context);
+                if (rez.equals(true)) { }
+                else { //TODO: throw error
+                }
+            }
             else {
                 HashMap<String, String> pair = WebUtils.uploadPostToWordpress(
                         post.getLocalImagePath(),
