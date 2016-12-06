@@ -81,13 +81,18 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
-        iE = intent.getLongExtra("id", -1);
-        post = new Post();
+        long postId = getIntent().getLongExtra("id",-1);
+        if (postId != -1) {
+            adapter dbAdapter = new adapter(this);
+            dbAdapter.open();
+            post = dbAdapter.getPostById(postId);
+            dbAdapter.close();
+        }
+        else { post = new Post(); }
         SessionManager session = new SessionManager(this);
         adapter adapter = new adapter(this);
         String subtitletext;
-        subtitletext = "New Violation ";
+        subtitletext = "New Violation - ";
         setContentView(R.layout.violation_slider);
         stepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
         stepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager()));

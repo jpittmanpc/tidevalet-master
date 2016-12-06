@@ -278,6 +278,10 @@ public class MainActivity extends AppCompatActivity implements MainListener {
                     .addToBackStack("transaction").commit();
         }
         else {
+            Intent i = new Intent(this, ViolationActivity.class);
+            i.putExtra("id", item.getId());
+            startActivity(i);
+            finish();
             Log.d("WHAT2DO", "Go back to original violation screen");
         }
     }
