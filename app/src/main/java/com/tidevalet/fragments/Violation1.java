@@ -19,8 +19,11 @@ import android.widget.TextView;
 
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
+import com.tidevalet.App;
 import com.tidevalet.R;
+import com.tidevalet.helpers.Post;
 import com.tidevalet.interfaces.ViolationListener;
+import com.tidevalet.thread.adapter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,13 +41,11 @@ import java.util.Locale;
 public class Violation1 extends Fragment implements View.OnClickListener, Step {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String POST_ID = "id";
     private static final String LAYOUT_RESOURCE_ID_ARG_KEY = "messageResourceId";
+    static long postId = -1;
     private int i = 0;
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Post post;
     public ViolationListener vL;
     private TextView errorText;
     private ImageView img1,img2,img3,img4;
@@ -57,16 +58,14 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+
      * @return A new instance of fragment Violation1.
      */
     // TODO: Rename and change types and number of parameters
-    public static Violation1 newInstance(String param1, String param2) {
+    public static Violation1 newInstance(long postId) {
         Violation1 fragment = new Violation1();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putLong(POST_ID, postId);
         fragment.setArguments(args);
         Log.d("viol1", "newinstance");
         return fragment;
@@ -76,8 +75,8 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            postId = getArguments().getLong(POST_ID);
+            Log.d("Viol1",postId + "");
         }
         setRetainInstance(true);
     }
@@ -102,6 +101,15 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
         takePic.setOnClickListener(this);
         dateTxt.setText(dateFormat.format(new Date()));
         timeTxt.setText(timeFormat.format(new Date()));
+        if (postId != -1) {
+            adapter dbAdapter = new adapter(App.getAppContext());
+            dbAdapter.open();
+            post = dbAdapter.getPostById(postId);
+            dbAdapter.close();
+            dateTxt.setText(post.getTimestamp());
+            timeTxt.setText("");
+            bldg.setText(post.getBldg());
+        }
         sendview(v);
         return v;
 

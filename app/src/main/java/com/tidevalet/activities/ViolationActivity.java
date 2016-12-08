@@ -82,11 +82,9 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         long postId = getIntent().getLongExtra("id",-1);
+        Log.d("ViolActi",postId + "");
         if (postId != -1) {
-            adapter dbAdapter = new adapter(this);
-            dbAdapter.open();
-            post = dbAdapter.getPostById(postId);
-            dbAdapter.close();
+            Violation1.newInstance(postId);
         }
         else { post = new Post(); }
         SessionManager session = new SessionManager(this);
@@ -106,6 +104,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
 
     private void initializeFragments() {
         FragmentManager fM = getSupportFragmentManager();
+
         Violation1 violation1 = (Violation1) fM.findFragmentByTag(FRAG1);
         if (violation1 == null) {
             Log.d("init","viol1-null");

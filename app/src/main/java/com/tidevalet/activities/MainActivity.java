@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     public void onListFragmentInteraction(Post item, View view) {
         Log.d("ITEM:ID", item.getViolationId() + " ");
         if( item.getIsPosted() != 0 ) {
-            Fragment violationExpand = ViolationExpand.newInstance("", item);
+            Fragment violationExpand = ViolationExpand.newInstance("", item.getViolationId());
             fm.beginTransaction()
                     .replace(R.id.topLevelViewViolation, violationExpand)
                     .addToBackStack("transaction").commit();

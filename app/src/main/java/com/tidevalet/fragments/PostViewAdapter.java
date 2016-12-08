@@ -49,6 +49,8 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         if (!posts.isEmpty()) {
             holder.post = posts.get(position);
+            holder.post.setId(posts.get(position).getId());
+            Log.d("onBind",posts.get(position).getId() + "");
             String[] imagePath;
             try { imagePath = holder.post.getImagePath().split(","); }
             catch(NullPointerException e) { imagePath = holder.post.getLocalImagePath().split(","); }
@@ -66,7 +68,6 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
             holder.datetext.setText(holder.post.getTimestamp());
             holder.comments.setText(holder.post.getContractorComments());
             holder.viewButton.setText("VIEW");
-
     //            holder.pickedup.setText(holder.post.getPU() == 0 ? "No" : "Yes");
             if (holder.post.getIsPosted() == 0) {
                 holder.posted.setVisibility(View.VISIBLE);
@@ -111,6 +112,7 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final View mView;
         private final TextView bldgunit, posted, violtype, datetext, comments, viewButton;
+        private final long postNum = -1;
         private final TextView pickedup;
         private final ImageView firstImage;
         private Post post;

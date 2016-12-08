@@ -26,17 +26,14 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.tidevalet.App;
 import com.tidevalet.R;
 import com.tidevalet.activities.MainActivity;
-import com.tidevalet.activities.ViolationActivity;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.interfaces.MainListener;
 import com.tidevalet.service.ulservice;
 import com.tidevalet.thread.adapter;
-import com.tidevalet.thread.upload;
 
 import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
-import static com.tidevalet.R.id.posted;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,8 +61,12 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
      * @return A new instance of fragment ViolationExpand.
      */
     // TODO: Rename and change types and number of parameters
-    public static ViolationExpand newInstance(String param1, Post posted) {
-        post = posted;
+    public static ViolationExpand newInstance(String param1, long posted) {
+        adapter dbAdapter = new adapter(App.getAppContext());
+        dbAdapter.open();
+        post = dbAdapter.getPostById(posted);
+        dbAdapter.close();
+        Log.d("TAG", post.getId() + "");
         ViolationExpand fragment = new ViolationExpand();
         Bundle args = new Bundle();
         args.putLong(ARG_PARAM2, post.getId());
