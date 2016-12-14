@@ -13,10 +13,10 @@ public class SessionManager {
 	Editor editor;
 	String PREF_NAME = "pref_name";
 	int PREF_MODE = 0;
+	static final String POST_ID = "post_id";
 	static final String LATITUDE = "latitude";
 	static final String LONGITUDE = "longitude";
 	static final String ADDRESS = "address";
-	static final String FILE_LINK = "fileAttach";
 	static final String DATE = "date";
 	static final String TIME = "time";
 	static final String DEF_LOGGED_IN = "logged_in";
@@ -34,13 +34,10 @@ public class SessionManager {
 		pref = context.getSharedPreferences(PREF_NAME, PREF_MODE);
 		editor = pref.edit();
 	}
+
 	public void ShareValues
-			(String latitude, String longitude, String address, String date, String time) {
-		editor.putString(LATITUDE, latitude);
-		editor.putString(LONGITUDE, longitude);
-		editor.putString(ADDRESS, address);
-		editor.putString(DATE, date);
-		editor.putString(TIME, time);
+			(long postId) {
+		editor.putLong(POST_ID, postId);
 		editor.commit();
 	}
 
@@ -85,6 +82,17 @@ public class SessionManager {
 	}
 	public void setPropertySelected(long value) {
 		editor.putLong(PROPERTY_SELECTED, value);
+		editor.commit();
+	}
+	public long getpostId() {
+		return pref.getLong(POST_ID, -1);
+	}
+	public void setpostId(long postId) {
+		editor.putLong(POST_ID, postId);
+		editor.commit();
+	}
+	public void resetpostId() {
+		editor.remove(POST_ID);
 		editor.commit();
 	}
 	public void setLoggedIn(Boolean value) { editor.putBoolean(DEF_LOGGED_IN, value); editor.commit(); }

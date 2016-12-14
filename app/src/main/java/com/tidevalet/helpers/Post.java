@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Post {
     private long id, violationId, propertyId;
-    private int isPosted, pickedup;
+    private int isPosted = 0, pickedup = 0;
     private String type, contractorComments, timestamp, returnedString, bldg, unit;
     private String localImagePath, imagePath;
     public char[] content;

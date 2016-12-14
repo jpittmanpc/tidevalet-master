@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -82,11 +83,15 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         long postId = getIntent().getLongExtra("id",-1);
-        Log.d("ViolActi",postId + "");
+        Log.d("ViolActi", postId + "");
         if (postId != -1) {
-            Violation1.newInstance(postId);
+            SessionManager sm = new SessionManager(this);
+            postId = sm.getpostId();
+            try {
+                Log.d("img",post.getImagePath() + "");
+            }
+            catch (NullPointerException e) { e.printStackTrace(); }
         }
-        else { post = new Post(); }
         SessionManager session = new SessionManager(this);
         adapter adapter = new adapter(this);
         String subtitletext;
@@ -97,21 +102,20 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         stepperLayout.setListener(this);
         adapter.open();
         property = adapter.getPropertyById(session.propertySelected());
+        post = adapter.getPostById(postId);
         adapter.close();
         getSupportActionBar().setSubtitle(subtitletext + property.getName());
-        initializeFragments();
+        initializeFragments(postId);
     }
 
-    private void initializeFragments() {
+    private void initializeFragments(long postId) {
         FragmentManager fM = getSupportFragmentManager();
-
-        Violation1 violation1 = (Violation1) fM.findFragmentByTag(FRAG1);
-        if (violation1 == null) {
+        if (Violation1v == null) {
+            Violation1 violation1 = Violation1.newInstance(postId);
             Log.d("init","viol1-null");
-            return;
         }
         else {
-            Log.d("init","viol1-NOTnull");
+            Violation1 violation1 = (Violation1) fM.findFragmentByTag(FRAG1);
         }
     }
 
@@ -131,8 +135,10 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) { return true; }
-            else {  ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false; }
+            else {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
         } else { return true;  }
     }
     static String TAG = "TAG";
@@ -291,12 +297,19 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
 
     @Override
     public void sendview(View v, int id) {
-        switch (id) {
+        int pu = 0;
+        try {
+            pu = post.getPU();
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        switch (pu) {
             case 1: Violation1v = v;
                 break;
             case 2: Violation2v = v;
 
-                        switch (post.getPU()) {
+                        switch (pu) {
                         case 0:
                             ((RadioButton) v.findViewById(R.id.notpickedup)).setChecked(true);
                             ((RadioButton) v.findViewById(R.id.pickedup)).setChecked(false);
