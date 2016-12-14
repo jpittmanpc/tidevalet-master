@@ -84,15 +84,10 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         super.onCreate(savedInstanceState);
         long postId = getIntent().getLongExtra("id",-1);
         Log.d("ViolActi", postId + "");
-        if (postId != -1) {
-            SessionManager sm = new SessionManager(this);
-            postId = sm.getpostId();
-            try {
-                Log.d("img",post.getImagePath() + "");
-            }
-            catch (NullPointerException e) { e.printStackTrace(); }
-        }
         SessionManager session = new SessionManager(this);
+        if (postId != -1) {
+            postId = session.getpostId();
+        }
         adapter adapter = new adapter(this);
         String subtitletext;
         subtitletext = "New Violation - ";
@@ -410,8 +405,9 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         post.setBldg(bldg);
         post.setUnit(unit);
         post.setPropertyId(new SessionManager(this).propertySelected());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MM-dd h:mma", Locale.US);
-        post.setTimestamp(dateFormat.format(new Date()));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yy", Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma", Locale.getDefault());
+        post.setTimestamp(dateFormat.format(dateFormat) + " " + timeFormat.format(timeFormat));
         if (post.getBldg().equals("") || post.getUnit().equals("") || uriList.size() == 0 && !upload){
             runOnUiThread(new Runnable() {
                 @Override

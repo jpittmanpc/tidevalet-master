@@ -3,6 +3,7 @@ package com.tidevalet.fragments;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.ThumbnailUtils;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -112,7 +113,7 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
             try { imagePath = post.getImagePath().split(","); }
             catch(NullPointerException e) { imagePath = post.getLocalImagePath().split(","); }
             ImageLoader imgLoader = ImageLoader.getInstance();
-            ImageSize size = new ImageSize(60, 60);
+            ImageSize size = new ImageSize(80,80);
             try {
                 if (imagePath[0].charAt(0) == '/') {
                     imagePath[0] = "file://" + imagePath[0];
