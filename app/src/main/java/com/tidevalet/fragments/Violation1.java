@@ -142,7 +142,7 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
             dateTxt.setText(dateFormat.format(new Date()));
             timeTxt.setText(timeFormat.format(new Date()));
         }
-     sendview(v);
+        sendview(v);
      return v;
     }
     public void showSoftKeyboard(View view) {

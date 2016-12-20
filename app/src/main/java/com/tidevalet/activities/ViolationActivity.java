@@ -106,7 +106,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     private void initializeFragments(long postId) {
         FragmentManager fM = getSupportFragmentManager();
         if (Violation1v == null) {
-            Violation1 violation1 = Violation1.newInstance(postId);
+            Violation1.newInstance(postId);
             Log.d("init","viol1-null");
         }
         else {
@@ -297,13 +297,11 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             pu = post.getPU();
         }
         catch (NullPointerException e) {
-            e.printStackTrace();
         }
-        switch (pu) {
+        switch (id) {
             case 1: Violation1v = v;
                 break;
             case 2: Violation2v = v;
-
                         switch (pu) {
                         case 0:
                             ((RadioButton) v.findViewById(R.id.notpickedup)).setChecked(true);
@@ -339,6 +337,16 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     public void onCompleted(View completeButton) {
         EditText comments = (EditText) Violation3v.findViewById(R.id.comments);
         post.setContractorComments(comments.getText().toString());
+        SessionManager session = new SessionManager(this);
+        long ID = session.getpostId();
+        Log.d("ID",ID + "....");
+        if (uriList.size() == 0 && ID != -1) {
+            String[] imgpath = post.getLocalImagePath().split(",");
+            for (int i=0;i<imgpath.length;i++) {
+                uriList.add(imgpath[i]);
+                Log.d("uriList", "added" + imgpath[i]);
+            }
+        }
         if (post.getViolationType() == null) {
             stepperLayout.setCurrentStepPosition(1);
             TextView tv1 = (TextView) Violation2v.findViewById(R.id.errorTextView2);
@@ -407,8 +415,9 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         post.setPropertyId(new SessionManager(this).propertySelected());
         SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma", Locale.getDefault());
-        post.setTimestamp(dateFormat.format(dateFormat) + " " + timeFormat.format(timeFormat));
-        if (post.getBldg().equals("") || post.getUnit().equals("") || uriList.size() == 0 && !upload){
+        post.setTimestamp(dateFormat.format(new Date()) + " " + timeFormat.format(new Date()));
+        if (post.getLocalImagePath() == null) { Log.d("imagepath", "null"); return; }
+        if (post.getBldg().equals("") || post.getUnit().equals("") || post.getLocalImagePath() == null && !upload){
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

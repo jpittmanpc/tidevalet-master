@@ -10,7 +10,7 @@ public class Post {
     private long id, violationId, propertyId;
     private int isPosted = 0, pickedup = 0;
     private String type, contractorComments, timestamp, returnedString, bldg, unit;
-    private String localImagePath, imagePath;
+    private String localImagePath = null, imagePath;
     public char[] content;
     public long getId() {
         return id;
@@ -31,7 +31,7 @@ public class Post {
         this.violationId = violationId;
     }
     public String getLocalImagePath() {
-        if (isPosted == 1) return imagePath;
+        if (isPosted == 1 && localImagePath == null) return imagePath;
        else return localImagePath;
     }
     public void setLocalImagePath(String localImagePath) {
