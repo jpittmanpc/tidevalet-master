@@ -25,6 +25,7 @@ import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.tidevalet.App;
 import com.tidevalet.R;
+import com.tidevalet.SessionManager;
 import com.tidevalet.activities.MainActivity;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.interfaces.MainListener;
@@ -61,16 +62,18 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
      * @return A new instance of fragment ViolationExpand.
      */
     // TODO: Rename and change types and number of parameters
-    public static ViolationExpand newInstance(String param1, long posted) {
+    public static ViolationExpand newInstance(long posted) {
         adapter dbAdapter = new adapter(App.getAppContext());
+        SessionManager session = new SessionManager(App.getAppContext());
         dbAdapter.open();
         post = dbAdapter.getPostById(posted);
         dbAdapter.close();
-        Log.d("TAG", post.getId() + "");
+        Log.d("TAG", post.getId() + "posted" + posted + "");
         ViolationExpand fragment = new ViolationExpand();
         Bundle args = new Bundle();
-        args.putLong(ARG_PARAM2, post.getId());
+        args.putLong(ARG_PARAM2, posted);
         fragment.setArguments(args);
+        session.resetpostId();
         return fragment;
     }
 
@@ -80,6 +83,12 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
         if (getArguments() != null) {
             mParam2 = getArguments().getLong(ARG_PARAM2);
         }
+        adapter dbAdapter = new adapter(App.getAppContext());
+        SessionManager session = new SessionManager(App.getAppContext());
+        dbAdapter.open();
+        post = dbAdapter.getPostById(mParam2);
+        Log.d("onCreate,ViolExp",mParam2 + " " + post.getBldg());
+        dbAdapter.close();
     }
     @Override
     public void onDetach() {
@@ -101,10 +110,10 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_violation, container, false);
         final adapter dbAdapter = new adapter(App.getAppContext());
-        Log.d("mParam2", mParam2 + "");
-        dbAdapter.open();
+        Log.d("mParam2", post.getLocalImagePath() + "" + post.getBldg() + "");
+        /*dbAdapter.open();
         post = dbAdapter.getPostById(mParam2);
-        dbAdapter.close();
+        dbAdapter.close();*/
         TextView location = (TextView)view.findViewById(R.id.bldgunit);
         location.setText("Location: " + post.getBldg() + "/" + post.getUnit());
         TextView date = (TextView)view.findViewById(R.id.datetext);
@@ -126,12 +135,13 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
 
        // TextView isPosted = (TextView)view.findViewById(R.id.expand_posted);
         //isPosted.setText("Posted: " + (post.getIsPosted() == 0 ? "No" : "Yes"));
-        String[] imgs;
+        String[] imgs = null;
         try {
             imgs = post.getLocalImagePath().split(",");
         }
         catch (NullPointerException e) {
-            imgs = post.getImagePath().split(",");
+            try{ imgs = post.getImagePath().split(","); }
+            catch (NullPointerException f) { f.printStackTrace(); }
         }
         ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
         imageButtons.add((ImageButton)view.findViewById(R.id.ximg1));
@@ -187,7 +197,7 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
                     current = post.getContractorComments();
                 } catch(NullPointerException e) { e.printStackTrace(); }
                 String newComments = comments.getText().toString();
-                Log.d("comments", "curr:" + current + " new: " + newComments);
+                Log.d("contractorComments", "curr:" + current + " new: " + newComments);
                 dbAdapter.open();
                 post.setContractorComments(newComments);
                 dbAdapter.updatePost(post);
@@ -203,6 +213,9 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
     }
     private void editViolation(Post post) {
         adapter dbAdapter = new adapter(this.getContext());
+        dbAdapter.open();
+        dbAdapter.updatePost(post);
+        dbAdapter.close();
         Intent service = new Intent(this.getContext(), ulservice.class);
         service.putExtra(ARG_PARAM2, post.getId());
         service.putExtra("type","editPost");

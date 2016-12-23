@@ -38,7 +38,7 @@
         android:id="@+id/textView" />
 
     <EditText
-        android:id="@+id/comments"
+        android:id="@+id/contractorComments"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:lines="5"

@@ -147,4 +147,4 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                     }*/
-               /* ((EditText)v.findViewById(R.id.comments)).setText(post.getContractorComments());*/
+               /* ((EditText)v.findViewById(R.id.contractorComments)).setText(post.getContractorComments());*/

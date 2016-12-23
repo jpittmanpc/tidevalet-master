@@ -27,7 +27,7 @@ public interface constants {
 	public static final String POST_VIOLATION_TYPE = "violation_type";
 	public static final String POST_BLDG = "bldg";
 	public static final String POST_UNIT = "unit";
-	public static final String POST_COMMENTS = "comments";
+	public static final String POST_COMMENTS = "contractorComments";
 	public static final String POST_IMAGES = "images";
 	public static final String PROPERTY_ID = "property_id";
 	public static final String PICKEDUP = "picked_up";

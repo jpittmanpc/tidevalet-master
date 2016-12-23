@@ -7,7 +7,7 @@ import java.util.List;
  * Created by Justin on 4/22/16.
  */
 public class Post {
-    private long id, violationId, propertyId;
+    private long id = -1, violationId, propertyId;
     private int isPosted = 0, pickedup = 0;
     private String type, contractorComments, timestamp, returnedString, bldg, unit;
     private String localImagePath = null, imagePath;

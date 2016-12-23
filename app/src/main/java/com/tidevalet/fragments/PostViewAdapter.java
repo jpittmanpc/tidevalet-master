@@ -50,7 +50,7 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
         if (!posts.isEmpty()) {
             holder.post = posts.get(position);
             holder.post.setId(posts.get(position).getId());
-            Log.d("onBind",posts.get(position).getId() + "");
+            Log.d("onBind",posts.get(position).getId() + " violId:" + posts.get(position).getViolationId() + "");
             String[] imagePath;
             try { imagePath = holder.post.getImagePath().split(","); }
             catch(NullPointerException e) { imagePath = holder.post.getLocalImagePath().split(","); }

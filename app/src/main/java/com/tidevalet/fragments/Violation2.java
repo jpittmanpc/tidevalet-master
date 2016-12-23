@@ -16,7 +16,9 @@ import android.widget.TextView;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 import com.tidevalet.R;
+import com.tidevalet.helpers.Post;
 import com.tidevalet.interfaces.ViolationListener;
+import com.tidevalet.thread.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,6 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
     private String mParam1;
     private String mParam2;
     private RadioButton got, not;
-
     private String[] checkBoxListLeft = { "Not Tied", "Over Weight", "Sharp Objects", "Pet Waste", "Hazardous", "CardBoard" };
     private String[] checkBoxListRight = {"Not Bagged", "Oversized Trash", "Leaking Trash", "Outside Hours", "Recycling", "Trash without Bin" };
     private List<CheckBox> cbList = new ArrayList<CheckBox>();
@@ -82,7 +83,10 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.viol2, container, false);
-
+        adapter dbAdapter = new adapter(this.getContext());
+        dbAdapter.open();
+        Post post = dbAdapter.getPostById(getArguments().getLong(ARG_PARAM1));
+        dbAdapter.close();
         errorTextView = (TextView) v.findViewById(R.id.errorTextView2);
         got = (RadioButton) v.findViewById(R.id.pickedup);
         not = (RadioButton) v.findViewById(R.id.notpickedup);

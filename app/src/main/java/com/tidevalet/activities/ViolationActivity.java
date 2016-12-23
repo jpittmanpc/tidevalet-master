@@ -12,10 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -26,6 +23,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -59,7 +58,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 public class ViolationActivity extends AppCompatActivity implements ViolationListener, StepperLayout.StepperListener {
     private Uri filePath;
@@ -298,17 +296,46 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         }
         catch (NullPointerException e) {
         }
+        if (post.getId() != -1) { }
         switch (id) {
             case 1: Violation1v = v;
                 break;
             case 2: Violation2v = v;
-                        switch (pu) {
+                if (post.getId() != -1) {
+                    ViewGroup left2v = (ViewGroup) Violation2v.findViewById(R.id.left).getRootView();
+                    ViewGroup right2v = (ViewGroup) Violation2v.findViewById(R.id.right).getRootView();
+                    for (int i = 0; i > left2v.getChildCount(); i++) {
+                        if (left2v.getChildAt(i) instanceof CheckBox) {
+                            CheckBox temp = (CheckBox) left2v.getChildAt(i);
+                            if (temp.getText() == post.getViolationType()) {
+                                temp.setChecked(true);
+                            }
+                        }
+                    }
+                    for (int i = 0; i > right2v.getChildCount(); i++) {
+                        if (right2v.getChildAt(i) instanceof CheckBox) {
+                            CheckBox temp = (CheckBox) right2v.getChildAt(i);
+                            if (temp.getText().equals(post.getViolationType())) {
+                                temp.setChecked(true);
+                            }
+                        }
+                    }
+                    if (post.getPU() == 0) {
+                        ((RadioButton) v.findViewById(R.id.notpickedup)).setChecked(false);
+                    }
+                    if (post.getPU() == 1) {
+                        ((RadioButton) v.findViewById(R.id.pickedup)).setChecked(true);
+                    }
+                }
+                switch (pu) {
                         case 0:
                             ((RadioButton) v.findViewById(R.id.notpickedup)).setChecked(true);
                             ((RadioButton) v.findViewById(R.id.pickedup)).setChecked(false);
+                            post.setPU(0);
                             break;
                         case 1:
                             ((RadioButton) v.findViewById(R.id.notpickedup)).setChecked(false);
+                            post.setPU(1);
                             break;
                         default:
                             break;
@@ -316,8 +343,14 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
 
                 break;
             case 3: Violation3v = v;
+                if (post.getId() != -1) {
+                    EditText comments = (EditText) v.findViewById(R.id.contractorComments);
+                    try { comments.setText(post.getContractorComments()); }
+                    catch(NullPointerException e) { Log.d("violation3", "No contractor comments yet."); }
+                }
                 break;
-            default: break;
+            default:
+                break;
         }
     }
 
@@ -335,7 +368,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     }
     @Override
     public void onCompleted(View completeButton) {
-        EditText comments = (EditText) Violation3v.findViewById(R.id.comments);
+        EditText comments = (EditText) Violation3v.findViewById(R.id.contractorComments);
         post.setContractorComments(comments.getText().toString());
         SessionManager session = new SessionManager(this);
         long ID = session.getpostId();
@@ -439,7 +472,14 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         else {
             adapter dbAdapter = new adapter(this);
             dbAdapter.open();
-            post = dbAdapter.addPost(post);
+            try {
+                long id = post.getId();
+                if (id != -1) { dbAdapter.updatePost(post); }
+                else { post = dbAdapter.addPost(post); }
+            }
+            catch (NullPointerException e) {
+                post = dbAdapter.addPost(post);
+            }
             dbAdapter.close();
             if (!upload) {
                 Toast.makeText(App.getAppContext(),"Saving..",Toast.LENGTH_SHORT).show();
