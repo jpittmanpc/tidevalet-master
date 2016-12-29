@@ -56,7 +56,8 @@ public class Post {
         this.timestamp = timestamp;
     }
     public String getViolationType() {
-        return type;
+        if (type == null) { return ""; }
+        else { return type; }
     }
     public void setViolationType(String type) {
         this.type = type;

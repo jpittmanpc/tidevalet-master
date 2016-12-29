@@ -2,6 +2,7 @@ package com.tidevalet.interfaces;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.CheckBox;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface ViolationListener {
     void sendview(View v, int id);
 
     void sendComments(String s);
+
+    void checkType(List<CheckBox> cbList);
 }

@@ -69,10 +69,10 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
     // TODO: Rename and change types and number of parameters
     public static Violation1 newInstance(long postId) {
         sm = new SessionManager(App.getAppContext());
-        Violation1 fragment = new Violation1();
         Bundle args = new Bundle();
         args.putLong(POST_ID, postId);
         sm.setpostId(postId);
+        Violation1 fragment = new Violation1();
         fragment.setArguments(args);
         Log.d("viol1", postId + " newinstance");
         return fragment;

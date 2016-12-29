@@ -107,8 +107,14 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             Violation1.newInstance(postId);
             Log.d("init","viol1-null");
         }
+        if (Violation2v == null) {
+            Violation2.newInstance(postId);
+        }
+        if (Violation3v == null) {
+            Violation3.newInstance(postId);
+        }
         else {
-            Violation1 violation1 = (Violation1) fM.findFragmentByTag(FRAG1);
+            Violation1 Violation1v = (Violation1) fM.findFragmentByTag(FRAG1);
         }
     }
 
@@ -293,60 +299,48 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         int pu = 0;
         try {
             pu = post.getPU();
+        } catch (NullPointerException e) {
         }
-        catch (NullPointerException e) {
+        if (post.getId() != -1) {
         }
-        if (post.getId() != -1) { }
         switch (id) {
-            case 1: Violation1v = v;
+            case 1:
+                Violation1v = v;
                 break;
-            case 2: Violation2v = v;
-                if (post.getId() != -1) {
-                    ViewGroup left2v = (ViewGroup) Violation2v.findViewById(R.id.left).getRootView();
-                    ViewGroup right2v = (ViewGroup) Violation2v.findViewById(R.id.right).getRootView();
-                    for (int i = 0; i > left2v.getChildCount(); i++) {
-                        if (left2v.getChildAt(i) instanceof CheckBox) {
-                            CheckBox temp = (CheckBox) left2v.getChildAt(i);
-                            if (temp.getText() == post.getViolationType()) {
-                                temp.setChecked(true);
-                            }
-                        }
-                    }
-                    for (int i = 0; i > right2v.getChildCount(); i++) {
-                        if (right2v.getChildAt(i) instanceof CheckBox) {
-                            CheckBox temp = (CheckBox) right2v.getChildAt(i);
-                            if (temp.getText().equals(post.getViolationType())) {
-                                temp.setChecked(true);
-                            }
-                        }
-                    }
-                    if (post.getPU() == 0) {
-                        ((RadioButton) v.findViewById(R.id.notpickedup)).setChecked(false);
-                    }
-                    if (post.getPU() == 1) {
-                        ((RadioButton) v.findViewById(R.id.pickedup)).setChecked(true);
-                    }
+            case 2:
+                Violation2v = v;
+                if (post.getPU() == 0) {
+                    ((RadioButton) v.findViewById(R.id.notpickedup)).setChecked(false);
                 }
+                if (post.getPU() == 1) {
+                    ((RadioButton) v.findViewById(R.id.pickedup)).setChecked(true);
+                }
+
                 switch (pu) {
-                        case 0:
-                            ((RadioButton) v.findViewById(R.id.notpickedup)).setChecked(true);
-                            ((RadioButton) v.findViewById(R.id.pickedup)).setChecked(false);
-                            post.setPU(0);
-                            break;
-                        case 1:
-                            ((RadioButton) v.findViewById(R.id.notpickedup)).setChecked(false);
-                            post.setPU(1);
-                            break;
-                        default:
-                            break;
-                    }
+                    case 0:
+                        ((RadioButton) v.findViewById(R.id.notpickedup)).setChecked(true);
+                        ((RadioButton) v.findViewById(R.id.pickedup)).setChecked(false);
+                        post.setPU(0);
+                        break;
+                    case 1:
+                        ((RadioButton) v.findViewById(R.id.notpickedup)).setChecked(false);
+                        post.setPU(1);
+                        break;
+                    default:
+                        break;
+                }
 
                 break;
-            case 3: Violation3v = v;
+
+            case 3:
+                Violation3v = v;
                 if (post.getId() != -1) {
-                    EditText comments = (EditText) v.findViewById(R.id.contractorComments);
-                    try { comments.setText(post.getContractorComments()); }
-                    catch(NullPointerException e) { Log.d("violation3", "No contractor comments yet."); }
+                    EditText comments = (EditText) v.getRootView().findViewById(R.id.contractorComments);
+                    try {
+                        comments.setText(post.getContractorComments());
+                    } catch (NullPointerException e) {
+                        Log.d("violation3", "No contractor comments yet.");
+                    }
                 }
                 break;
             default:
@@ -357,6 +351,12 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     @Override
     public void sendComments(String s) {
         post.setContractorComments(s);
+    }
+
+    @Override
+    public void checkType(List<CheckBox> cbList) {
+       // View left = Violation2v.findViewById(R.id.left);
+        // View right = Violation2v.findViewById(R.id.right);
     }
     @Override
     public void clicked(View v) {
@@ -428,6 +428,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     }
     private void startSubmit() {
         post.setIsPosted(0);
+
         StringBuilder stringBuilder = new StringBuilder();
         String prefix = "";
         for (int i = 0; i<uriList.size();i++) {
@@ -435,7 +436,10 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             prefix = ",";
             stringBuilder.append(uriList.get(i));
         }
-        post.setLocalImagePath(stringBuilder.toString());
+        String firstCharacter = stringBuilder.length() != 0 ? String.valueOf(stringBuilder.charAt(0)) : "";
+        if (firstCharacter.equals("/")) {
+            post.setLocalImagePath(stringBuilder.toString());
+        }
         EditText bldgV = (EditText) Violation1v.findViewById(R.id.bldg);
         EditText unitV = (EditText) Violation1v.findViewById(R.id.unit);
         String unit = "";
@@ -450,7 +454,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma", Locale.getDefault());
         post.setTimestamp(dateFormat.format(new Date()) + " " + timeFormat.format(new Date()));
         if (post.getLocalImagePath() == null) { Log.d("imagepath", "null"); return; }
-        if (post.getBldg().equals("") || post.getUnit().equals("") || post.getLocalImagePath() == null && !upload){
+        if (post.getBldg().equals("") || post.getUnit().equals("") || post.getLocalImagePath() == null){
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -519,6 +523,8 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     }
     public static class StepperAdapter extends AbstractStepAdapter {
         private static final String CURRENT_STEP_POSITION_KEY = "position";
+
+
         public StepperAdapter(FragmentManager fm) {
             super(fm);
         }

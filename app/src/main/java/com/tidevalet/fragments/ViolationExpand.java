@@ -73,7 +73,7 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
         Bundle args = new Bundle();
         args.putLong(ARG_PARAM2, posted);
         fragment.setArguments(args);
-        session.resetpostId();
+        if (post.getIsPosted() == 1) { session.resetpostId(); }
         return fragment;
     }
 

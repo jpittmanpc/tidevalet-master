@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,9 @@ import android.widget.TextView;
 
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
+import com.tidevalet.App;
 import com.tidevalet.R;
+import com.tidevalet.SessionManager;
 import com.tidevalet.helpers.Post;
 import com.tidevalet.interfaces.ViolationListener;
 import com.tidevalet.thread.adapter;
@@ -30,17 +33,17 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     public ViolationListener vL;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String POST_ID = "id";
     private RadioButton got, not;
     private String[] checkBoxListLeft = { "Not Tied", "Over Weight", "Sharp Objects", "Pet Waste", "Hazardous", "CardBoard" };
     private String[] checkBoxListRight = {"Not Bagged", "Oversized Trash", "Leaking Trash", "Outside Hours", "Recycling", "Trash without Bin" };
     private List<CheckBox> cbList = new ArrayList<CheckBox>();
     private StringBuilder violationTypes = new StringBuilder();
     private TextView errorTextView;
+    private Post post = null;
     private RelativeLayout.LayoutParams params;
+    static long postId = -1;
+    static SessionManager sm;
     private int PICKEDUP = 1;
     public Violation2() {
         // Required empty public constructor
@@ -50,16 +53,16 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+
      * @return A new instance of fragment Violation2.
      */
     // TODO: Rename and change types and number of parameters
-    public static Violation2 newInstance(String param1, String param2) {
-        Violation2 fragment = new Violation2();
+    public static Violation2 newInstance(long postId) {
+        sm = new SessionManager(App.getAppContext());
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putLong(POST_ID, postId);
+        sm.setpostId(postId);
+        Violation2 fragment = new Violation2();
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,10 +70,17 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sm = new SessionManager(App.getAppContext());
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-
+            postId = sm.getpostId();
+            Log.d("Viol2",postId + "");
+            if (postId != -1) {
+                adapter dBadapter = new adapter(this.getActivity());
+                dBadapter.open();
+                this.post = dBadapter.getPostById(postId);
+                Log.d("onCreate2", post.getBldg() + post.getUnit() + post.getViolationType() + "  .." + post.getTimestamp());
+                dBadapter.close();
+            }
         }
         params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -81,12 +91,7 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.viol2, container, false);
-        adapter dbAdapter = new adapter(this.getContext());
-        dbAdapter.open();
-        Post post = dbAdapter.getPostById(getArguments().getLong(ARG_PARAM1));
-        dbAdapter.close();
         errorTextView = (TextView) v.findViewById(R.id.errorTextView2);
         got = (RadioButton) v.findViewById(R.id.pickedup);
         not = (RadioButton) v.findViewById(R.id.notpickedup);
@@ -101,6 +106,8 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
                  checkBox.setOnClickListener(this);
                  checkBox.setText(checkBoxListLeft[x]);
                  cbList.add(checkBox);
+                Log.d("checking", checkBoxListLeft[x] + " " + post.getViolationType());
+                if (post.getViolationType().equals(checkBoxListLeft[x])) { checkBox.setChecked(true); }
                  x++;
               }
             }
@@ -110,12 +117,13 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
                 CheckBox checkBox = (CheckBox) right.getChildAt(i);
                 checkBox.setOnClickListener(this);
                 checkBox.setText(checkBoxListRight[x]);
+                if (post.getViolationType().equals(checkBoxListRight[x])) { checkBox.setChecked(true); }
                 cbList.add(checkBox);
                 x++;
             }
         }
-       sendview(v);
-       return v;
+        sendview(v);
+        return v;
     }
     @Override
     public void onClick(View v) {
@@ -147,12 +155,12 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
                 break;
         }
     }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof ViolationListener) {
             vL = (ViolationListener) context;
+            vL.checkType(cbList);
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement MainListener");
@@ -172,6 +180,11 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
     public void giveViolationTypes(String list, int PICKEDUP) {
         if (vL != null) {
             vL.violationTypes(list, PICKEDUP);
+        }
+    }
+    void setViolationTypes(List<CheckBox> cbList) {
+        if (vL != null) {
+            vL.checkType(cbList);
         }
     }
     public void sendview(View v) {
