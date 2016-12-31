@@ -1,5 +1,6 @@
 package com.tidevalet.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -156,8 +157,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
 
     private static File getOutputMediaFile(int type) {
         // External sdcard location
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "TIDE");
+        File mediaStorageDir = new File(App.getAppContext().getFilesDir(), "TIDE");
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {

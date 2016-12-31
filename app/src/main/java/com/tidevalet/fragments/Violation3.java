@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,8 +37,8 @@ public class Violation3 extends Fragment implements Step {
     private static final String POST_ID = "id";
     private static final String ARG_PARAM2 = "param2";
     private Post post = null;
-    static SessionManager sm;
     private long postId = -1;
+    private String contractorComment;
     public ViolationListener vL;
 public Violation3() {
         // Required empty public constructor
@@ -50,7 +52,7 @@ public Violation3() {
      */
     // TODO: Rename and change types and number of parameters
     public static Violation3 newInstance(long postId) {
-        sm = new SessionManager(App.getAppContext());
+        SessionManager sm = new SessionManager(App.getAppContext());
         Bundle args = new Bundle();
         args.putLong(POST_ID, postId);
         sm.setpostId(postId);
@@ -62,8 +64,9 @@ public Violation3() {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SessionManager sm = new SessionManager(App.getAppContext());
         if (getArguments() != null) {
-            postId = getArguments().getLong(POST_ID);
+            postId = sm.getpostId();
             Log.d("Viol3",postId + "");
             if (postId != -1) {
                 adapter dBadapter = new adapter(this.getActivity());
@@ -80,10 +83,30 @@ public Violation3() {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.viol3, container, false);
-        if (post.getContractorComments() != null) {
             EditText contractorComments = (EditText) v.findViewById(R.id.contractorComments);
-            contractorComments.setText(post.getContractorComments());
+        contractorComments.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                vL.sendComments(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                vL.sendComments(editable.toString());
+
+            }
+        });
+        try {
+            if (postId != -1) {
+                contractorComments.setText(post.getContractorComments());
+            }
         }
+        catch(NullPointerException e) { }
         sendview(v);
         return v;
     }

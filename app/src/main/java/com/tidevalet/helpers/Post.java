@@ -9,7 +9,7 @@ import java.util.List;
 public class Post {
     private long id = -1, violationId, propertyId;
     private int isPosted = 0, pickedup = 0;
-    private String type, contractorComments, timestamp, returnedString, bldg, unit;
+    private String type, contractorComments = "", timestamp, returnedString, bldg, unit;
     private String localImagePath = null, imagePath;
     public char[] content;
     public long getId() {

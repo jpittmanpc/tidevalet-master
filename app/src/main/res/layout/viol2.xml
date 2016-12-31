@@ -57,7 +57,7 @@
 
         <LinearLayout android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/left"
+            android:id="@+id/leftOptions"
             android:orientation="vertical"
             android:clickable="false"
             android:layout_weight="1.5"

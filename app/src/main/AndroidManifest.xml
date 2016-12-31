@@ -21,6 +21,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="FLAG_GRANT_READ_URI_PERMISSION" />
+    <uses-permission android:name="FLAG_GRANT_WRITE_URI_PERMISSION" />
 
      <application
         android:name=".App"
@@ -34,6 +36,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"
            />
+
         <service android:name=".service.ulservice" >
         </service>
         <service android:name=".service.wp_service" >
@@ -51,6 +54,16 @@
          <meta-data
              android:name="com.google.android.gms.version"
              android:value="@integer/google_play_services_version" />
+         <provider
+             android:name="android.support.v4.content.FileProvider"
+             android:authorities="com.tidevalet.fileprovider"
+             android:exported="false"
+             android:grantUriPermissions="true">
+             <meta-data
+                 android:name="android.support.FILE_PROVIDER_PATHS"
+                 android:resource="@xml/file_paths" />
+         </provider>
+
      </application>
 
 </manifest>

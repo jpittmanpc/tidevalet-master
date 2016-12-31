@@ -97,28 +97,41 @@ public class Violation2 extends Fragment implements View.OnClickListener, Step {
         not = (RadioButton) v.findViewById(R.id.notpickedup);
         got.setOnClickListener(this);
         not.setOnClickListener(this);
-        ViewGroup left = (ViewGroup) v.findViewById(R.id.left);
+        ViewGroup left = (ViewGroup) v.findViewById(R.id.leftOptions);
         ViewGroup right = (ViewGroup) v.findViewById(R.id.rightOptions);
         int x=0;
-        for (int i = 0; i<left.getChildCount(); i++) {
+        for (int i = 0; i<checkBoxListLeft.length; i++) {
             if (left.getChildAt(i) instanceof CheckBox) {
                  CheckBox checkBox = (CheckBox) left.getChildAt(i);
                  checkBox.setOnClickListener(this);
                  checkBox.setText(checkBoxListLeft[x]);
                  cbList.add(checkBox);
-                Log.d("checking", checkBoxListLeft[x] + " " + post.getViolationType());
-                if (post.getViolationType().equals(checkBoxListLeft[x])) { checkBox.setChecked(true); }
+                 try {
+                     if (!post.getViolationType().isEmpty()) {
+                         if (post.getViolationType().equals(checkBoxListLeft[x])) {
+                             checkBox.setChecked(true);
+                         }
+                     }
+                 }
+                 catch (NullPointerException e) { }
+                 }
                  x++;
-              }
             }
         x=0;
-        for (int i = 0; i<right.getChildCount(); i++) {
+        for (int i = 0; i<checkBoxListRight.length; i++) {
             if (right.getChildAt(i) instanceof CheckBox) {
                 CheckBox checkBox = (CheckBox) right.getChildAt(i);
                 checkBox.setOnClickListener(this);
                 checkBox.setText(checkBoxListRight[x]);
-                if (post.getViolationType().equals(checkBoxListRight[x])) { checkBox.setChecked(true); }
                 cbList.add(checkBox);
+                try {
+                    if (!post.getViolationType().isEmpty()) {
+                        if (post.getViolationType().equals(checkBoxListRight[x])) {
+                            checkBox.setChecked(true);
+                        }
+                    }
+                }
+                catch (NullPointerException e) { }
                 x++;
             }
         }
