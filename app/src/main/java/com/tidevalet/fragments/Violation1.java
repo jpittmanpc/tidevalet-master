@@ -112,11 +112,12 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
             String[] imagePath;
             try { imagePath = post.getImagePath().split(","); }
             catch(NullPointerException e) { imagePath = post.getLocalImagePath().split(","); }
+            Log.d("images",imagePath[0]);
             ImageLoader imgLoader = ImageLoader.getInstance();
             ImageSize size = new ImageSize(80,80);
             try {
                 if (imagePath[0].charAt(0) == '/') {
-                    imagePath[0] = "file://" + imagePath[0];
+                    imagePath[0] = "content:" + imagePath[0];
                 }
                 imgLoader.displayImage(imagePath[0].replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ",""), (ImageView) v.findViewById(R.id.img1), size);
             }

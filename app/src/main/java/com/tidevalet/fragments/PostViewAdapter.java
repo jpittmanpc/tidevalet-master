@@ -1,5 +1,9 @@
 package com.tidevalet.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +21,9 @@ import com.tidevalet.helpers.Post;
 import com.tidevalet.interfaces.MainListener;
 import com.tidevalet.thread.adapter;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,15 +59,16 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
             holder.post.setId(posts.get(position).getId());
             Log.d("onBind",posts.get(position).getId() + " violId:" + posts.get(position).getViolationId() + "");
             String[] imagePath;
+            Log.d("images",holder.post.getLocalImagePath() + holder.post.getImagePath() + "....");
             try { imagePath = holder.post.getImagePath().split(","); }
             catch(NullPointerException e) { imagePath = holder.post.getLocalImagePath().split(","); }
-            ImageLoader imgLoader = ImageLoader.getInstance();
-            ImageSize size = new ImageSize(60, 60);
+            Log.d("images2",imagePath[0]);
             try {
-                if (imagePath[0].charAt(0) == '/') {
-                    imagePath[0] = "file://" + imagePath[0];
-                }
-                imgLoader.displayImage(imagePath[0].replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ",""), holder.firstImage, size);
+                Uri imageUri = Uri.parse(imagePath[0]);
+                File file = new File(imageUri.getPath());
+                InputStream ims = new FileInputStream(file);
+                Bitmap tempImage = BitmapFactory.decodeStream(ims);
+                holder.firstImage.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, 80, 80));
             }
             catch(Exception e) { e.printStackTrace(); }
             holder.bldgunit.setText("Location: " + holder.post.getBldg() + "/" + holder.post.getUnit());

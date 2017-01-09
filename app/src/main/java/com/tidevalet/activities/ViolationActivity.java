@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -52,8 +54,11 @@ import com.tidevalet.thread.adapter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,7 +80,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     private static final String FRAG1 = "Violation1";
     private static final String FRAG2 = "Violation2";
     private static final String FRAG3 = "Violation3";
-
+    String mCurrentPhotoPath;
 
 
     @Override
@@ -119,17 +124,46 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         }
     }
 
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "content:" + image.getAbsolutePath();
+        return image;
+    }
+
+    static final int REQUEST_TAKE_PHOTO = 1;
     private void dispatchTakePictureIntent() {
-        if (isStoragePermissionGranted()) {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            filePath = getOutputMediaFileUri(1);
-            Log.d("filePath", filePath.toString());
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, filePath);
-                startActivityForResult(takePictureIntent, 1);
+        isStoragePermissionGranted();
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.tidevalet",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
     }
+
 
     public boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
@@ -150,11 +184,6 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
             dispatchTakePictureIntent();
         }
     }
-
-    public Uri getOutputMediaFileUri(int type) {
-        return Uri.fromFile(getOutputMediaFile(type));
-    }
-
     private static File getOutputMediaFile(int type) {
         // External sdcard location
         File mediaStorageDir = new File(App.getAppContext().getFilesDir(), "TIDE");
@@ -178,25 +207,32 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         if (requestCode == 1 && resultCode == RESULT_OK) {
             try {
                 Log.d("ONACTIVITYRESULT", "Got pic");
-                Bitmap image = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                saveScaledPhotoToFile(image, filePath.getPath());
-                switch (uriList.size()) {
-                    case 1:
-                        img1.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img1.getWidth(), img1.getHeight()));
-                        break;
-                    case 2:
-                        img2.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img2.getWidth(), img2.getHeight()));
-                        break;
-                    case 3:
-                        img3.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img3.getWidth(), img3.getHeight()));
-                        break;
-                    case 4:
-                        img4.setImageBitmap(ThumbnailUtils.extractThumbnail(image, img4.getWidth(), img4.getHeight()));
-                        break;
-                    default:
-                        break;
+                try {
+                Uri imageUri = Uri.parse(mCurrentPhotoPath);
+                File file = new File(imageUri.getPath());
+                InputStream ims = new FileInputStream(file);
+                Bitmap tempImage = BitmapFactory.decodeStream(ims);
+                    switch (uriList.size()) {
+                        case 0:
+                            img1.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, img1.getWidth(), img1.getHeight()));
+                            break;
+                        case 1:
+                            img2.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, img2.getWidth(), img2.getHeight()));
+                            break;
+                        case 2:
+                            img3.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, img3.getWidth(), img3.getHeight()));
+                            break;
+                        case 3:
+                            img4.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, img4.getWidth(), img4.getHeight()));
+                            break;
+                        default:
+                            img1.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, img1.getWidth(), img1.getHeight()));
+                            break;
+                    }
+                    saveScaledPhotoToFile(tempImage, file.getPath());
+                } catch (FileNotFoundException e) {
+                    return;
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -204,7 +240,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         }
     }
 
-    public void saveScaledPhotoToFile(Bitmap photoBm, String oldFile) {
+    public void saveScaledPhotoToFile(Bitmap photoBm, String oldFile) throws IOException {
         int bmOriginalWidth = photoBm.getWidth();
         int bmOriginalHeight = photoBm.getHeight();
         double originalWidthToHeightRatio =  1.0 * bmOriginalWidth / bmOriginalHeight;
@@ -228,7 +264,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
         photoBm.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
         photoBm.recycle();
         //construct a File object to save the scaled file to
-        File f = getOutputMediaFile(1);
+        File f = createImageFile();
         //create an FileOutputStream on the created file
         try {
             FileOutputStream fo = new FileOutputStream(f);
@@ -407,7 +443,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
                    switch (uriList.size()) {
                        case 0: break;
                        case 1:
-                               String filePath = "file://" + uriList.get(0).replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ","");
+                               String filePath = uriList.get(0).replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ","");
                                imgLoader.displayImage(filePath, (ImageView) Violation1v.findViewById(R.id.img1), size);
                                 break;
                        default:
@@ -417,7 +453,7 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
                            list.add((ImageView) Violation1v.findViewById(R.id.img3));
                            list.add((ImageView) Violation1v.findViewById(R.id.img4));
                            for (int i=0; i < uriList.size(); i++) {
-                               filePath = "file://" + uriList.get(i).replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", "");
+                               filePath = uriList.get(i).replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", "");
                                imgLoader.displayImage(filePath, list.get(i), size);
                            }
                            break;
@@ -428,7 +464,6 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
     }
     private void startSubmit() {
         post.setIsPosted(0);
-
         StringBuilder stringBuilder = new StringBuilder();
         String prefix = "";
         for (int i = 0; i<uriList.size();i++) {

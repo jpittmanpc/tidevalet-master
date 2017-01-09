@@ -408,7 +408,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         ImageLoader imgLoader = ImageLoader.getInstance();
         try {
             if (filepath.charAt(0) == '/') {
-                filepath2 = "file://" + filepath;
+                filepath2 = "content://" + filepath;
                 imgLoader.displayImage(filepath2.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", ""), img, imgSize);
             }
             else { imgLoader.displayImage(filepath, img, imgSize); }

@@ -172,7 +172,7 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
                 Log.d("TAG", filepath + "");
                 try {
                     if (filepath.charAt(0) == '/') {
-                        filepath2 = "file://" + filepath;
+                        filepath2 = "content://" + filepath;
                         imgLoader.displayImage(filepath2.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", ""), iz, size);
                     } else {
                         imgLoader.displayImage(filepath, iz, size);
