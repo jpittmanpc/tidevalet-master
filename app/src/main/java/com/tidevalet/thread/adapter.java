@@ -221,7 +221,9 @@ public class adapter {
 		sqlDB.delete(constants.TABLE_PROPERTIES, constants.COL_KEY_ROW + "="
 				+ propertyId, null);
 	}
-
+	public void deletePost(long postId) {
+		sqlDB.delete(constants.TABLE_POSTS, constants.COL_KEY_ROW + "=" + postId, null);
+	}
 	public void updatePost(Post post) {
 		ContentValues values = new ContentValues();
 		values.put(constants.POST_VIOLATION_ID, post.getViolationId());

@@ -4,11 +4,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -55,6 +57,8 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         if (!posts.isEmpty()) {
+            ImageLoader imgLoader = ImageLoader.getInstance();
+            ImageSize size = new ImageSize(80, 80);
             holder.post = posts.get(position);
             holder.post.setId(posts.get(position).getId());
             Log.d("onBind",posts.get(position).getId() + " violId:" + posts.get(position).getViolationId() + "");
@@ -63,14 +67,19 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
             try { imagePath = holder.post.getImagePath().split(","); }
             catch(NullPointerException e) { imagePath = holder.post.getLocalImagePath().split(","); }
             Log.d("images2",imagePath[0]);
-            try {
-                Uri imageUri = Uri.parse(imagePath[0]);
-                File file = new File(imageUri.getPath());
-                InputStream ims = new FileInputStream(file);
-                Bitmap tempImage = BitmapFactory.decodeStream(ims);
-                holder.firstImage.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, 80, 80));
+                if (imagePath[0].startsWith("/")) {
+                    Uri imageUri = Uri.parse(imagePath[0]);
+                    File file = new File(imageUri.getPath());
+                    InputStream ims = null;
+                    try { ims = new FileInputStream(file); }
+                    catch (Exception e) { e.printStackTrace(); }
+                    Bitmap tempImage = BitmapFactory.decodeStream(ims);
+                    holder.firstImage.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, 80, 80));
+                }
+            else {
+                Log.d("online", imagePath[0].replaceAll("[\\p{Ps}\\p{Pe}]", ""));
+                imgLoader.displayImage(imagePath[0].replaceAll("[\\p{Ps}\\p{Pe}]", ""), holder.firstImage, size);
             }
-            catch(Exception e) { e.printStackTrace(); }
             holder.bldgunit.setText("Location: " + holder.post.getBldg() + "/" + holder.post.getUnit());
             holder.violtype.setText(holder.post.getViolationType());
             holder.datetext.setText(holder.post.getTimestamp());
@@ -79,9 +88,20 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
     //            holder.pickedup.setText(holder.post.getPU() == 0 ? "No" : "Yes");
             if (holder.post.getIsPosted() == 0) {
                 holder.posted.setVisibility(View.VISIBLE);
+                holder.delButton.setVisibility(View.VISIBLE);
             } else {
+                holder.delButton.setVisibility(View.INVISIBLE);
                 holder.posted.setVisibility(View.INVISIBLE);
             }
+            holder.delButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    adapter dBadapter = new adapter(App.getAppContext());
+                    dBadapter.open();
+                    dBadapter.deletePost(holder.postNum);
+                    dBadapter.close();
+                }
+        });
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -122,6 +142,7 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
         private final TextView bldgunit, posted, violtype, datetext, comments, viewButton;
         private final long postNum = -1;
         private final TextView pickedup;
+        Button delButton;
         private final ImageView firstImage;
         private Post post;
         private ViewHolder(View view) {
@@ -135,6 +156,7 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
             pickedup = (TextView) view.findViewById(R.id.pickedup);
             comments = (TextView) view.findViewById(R.id.violation_comments);
             viewButton = (TextView) view.findViewById(R.id.view_button);
+            delButton = (Button) view.findViewById(R.id.delPost);
         }
 
         @Override

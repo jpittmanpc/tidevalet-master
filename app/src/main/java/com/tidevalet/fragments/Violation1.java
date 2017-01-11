@@ -2,8 +2,10 @@ package com.tidevalet.fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,6 +31,9 @@ import com.tidevalet.helpers.Post;
 import com.tidevalet.interfaces.ViolationListener;
 import com.tidevalet.thread.adapter;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -116,12 +121,23 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
             ImageLoader imgLoader = ImageLoader.getInstance();
             ImageSize size = new ImageSize(80,80);
             try {
-                if (imagePath[0].charAt(0) == '/') {
-                    imagePath[0] = "content:" + imagePath[0];
+                    if (imagePath[0].startsWith("/")) {
+                        Uri imageUri = Uri.parse(imagePath[0]);
+                        File file = new File(imageUri.getPath());
+                        InputStream ims = null;
+                        try { ims = new FileInputStream(file); }
+                        catch (Exception e) { e.printStackTrace(); }
+                        Bitmap tempImage = BitmapFactory.decodeStream(ims);
+                        ImageView firstImage = (ImageView) v.findViewById(R.id.img1);
+                        firstImage.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, 80, 80));
                 }
-                imgLoader.displayImage(imagePath[0].replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ",""), (ImageView) v.findViewById(R.id.img1), size);
+                    else {
+                        imgLoader.displayImage(imagePath[0].replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", ""), (ImageView) v.findViewById(R.id.img1), size);
+                    }
             }
-            catch (NullPointerException e) { e.printStackTrace(); }
+            catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
         else {
             EditText bldg = (EditText) v.findViewById(R.id.bldg);

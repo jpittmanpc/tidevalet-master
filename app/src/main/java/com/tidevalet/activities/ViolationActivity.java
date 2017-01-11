@@ -443,9 +443,24 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
                    switch (uriList.size()) {
                        case 0: break;
                        case 1:
-                               String filePath = uriList.get(0).replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ","");
-                               imgLoader.displayImage(filePath, (ImageView) Violation1v.findViewById(R.id.img1), size);
-                                break;
+                           ImageView img = (ImageView) Violation1v.findViewById(R.id.img1);
+                           String filePath = uriList.get(0).replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ","");
+                           if (filePath.startsWith("http://")) {
+                               imgLoader.displayImage(filePath, img, size);
+                           }
+                           else {
+                               Uri imageUri = Uri.parse(filePath);
+                               File file = new File(imageUri.getPath());
+                               InputStream ims = null;
+                               try {
+                                   ims = new FileInputStream(file);
+                               } catch (FileNotFoundException e) {
+                                   e.printStackTrace();
+                               }
+                               Bitmap tempImage = BitmapFactory.decodeStream(ims);
+                               img.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, 80, 80));
+                           }
+                           break;
                        default:
                            List<ImageView> list = new ArrayList<>();
                            list.add((ImageView) Violation1v.findViewById(R.id.img1));
@@ -454,7 +469,21 @@ public class ViolationActivity extends AppCompatActivity implements ViolationLis
                            list.add((ImageView) Violation1v.findViewById(R.id.img4));
                            for (int i=0; i < uriList.size(); i++) {
                                filePath = uriList.get(i).replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", "");
-                               imgLoader.displayImage(filePath, list.get(i), size);
+                               if (filePath.startsWith("http://")) {
+                                   imgLoader.displayImage(filePath, list.get(i), size);
+                               }
+                               else {
+                                   Uri imageUri = Uri.parse(filePath);
+                                   File file = new File(imageUri.getPath());
+                                   InputStream ims = null;
+                                   try {
+                                       ims = new FileInputStream(file);
+                                   } catch (FileNotFoundException e) {
+                                       e.printStackTrace();
+                                   }
+                                   Bitmap tempImage = BitmapFactory.decodeStream(ims);
+                                   list.get(i).setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, 80, 80));
+                               }
                            }
                            break;
                     }

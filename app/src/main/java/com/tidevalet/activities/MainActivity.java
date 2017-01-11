@@ -9,8 +9,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
@@ -54,6 +56,10 @@ import com.tidevalet.helpers.TouchImageView;
 import com.tidevalet.interfaces.MainListener;
 import com.tidevalet.service.wp_service;
 import com.tidevalet.thread.adapter;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -402,16 +408,20 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         int width = size.x;
         int height = size.y;
         ImageSize imgSize = new ImageSize(width,height);
-        String filepath2 = "";
         final String filepath = Uri.parse(file).toString().replaceAll("\\[", "").replaceAll("\\]","").replaceAll(" ", "");
         Log.d("TAG",filepath + "");
         ImageLoader imgLoader = ImageLoader.getInstance();
         try {
-            if (filepath.charAt(0) == '/') {
-                filepath2 = "content://" + filepath;
-                imgLoader.displayImage(filepath2.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", ""), img, imgSize);
+            if (filepath.startsWith("/")) {
+                Uri imageUri = Uri.parse(filepath);
+                File file2 = new File(imageUri.getPath());
+                InputStream ims = null;
+                try { ims = new FileInputStream(file2); }
+                catch (Exception e) { e.printStackTrace(); }
+                Bitmap tempImage = BitmapFactory.decodeStream(ims);
+                img.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, 80, 80));
             }
-            else { imgLoader.displayImage(filepath, img, imgSize); }
+            else { imgLoader.displayImage(filepath.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", ""), img, imgSize); }
         }
         catch(Exception e) { }
         dialog.show();

@@ -44,23 +44,25 @@
             android:paddingRight="16dp">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_weight="2"
                 android:paddingTop="24dp">
-                >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:weightSum="2"
         android:baselineAligned="false">
 
-        <LinearLayout android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/leftOptions"
             android:orientation="vertical"
             android:clickable="false"
-            android:layout_weight="1.5"
+            android:layout_weight="1"
             android:paddingLeft="16dp"
             android:paddingRight="16dp">
 
@@ -112,7 +114,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/rightOptions"
             android:orientation="vertical"
-            android:layout_weight="1.25">
+            android:layout_weight="1">
 
             <CheckBox
                 android:layout_width="wrap_content"

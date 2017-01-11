@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,6 +34,9 @@ import com.tidevalet.interfaces.MainListener;
 import com.tidevalet.service.ulservice;
 import com.tidevalet.thread.adapter;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
@@ -137,10 +142,10 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
         //isPosted.setText("Posted: " + (post.getIsPosted() == 0 ? "No" : "Yes"));
         String[] imgs = null;
         try {
-            imgs = post.getLocalImagePath().split(",");
+            imgs = post.getImagePath().split(",");
         }
         catch (NullPointerException e) {
-            try{ imgs = post.getImagePath().split(","); }
+            try{ imgs = post.getLocalImagePath().split(","); }
             catch (NullPointerException f) { f.printStackTrace(); }
         }
         ArrayList<ImageButton> imageButtons = new ArrayList<ImageButton>();
@@ -163,7 +168,6 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
 
         for (int i=0;i<imageButtons.size();i++) {
             ImageButton iz = imageButtons.get(i);
-            String filepath2 = "";
             if (imgs.length <= i) {
                 iz.setVisibility(View.INVISIBLE);
             }
@@ -171,9 +175,14 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
                 final String filepath = Uri.parse(imgs[i]).toString().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", "");
                 Log.d("TAG", filepath + "");
                 try {
-                    if (filepath.charAt(0) == '/') {
-                        filepath2 = "content://" + filepath;
-                        imgLoader.displayImage(filepath2.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", ""), iz, size);
+                    if (filepath.startsWith("/")) {
+                        Uri imageUri = Uri.parse(filepath);
+                        File file = new File(imageUri.getPath());
+                        InputStream ims = null;
+                        try { ims = new FileInputStream(file); }
+                        catch (Exception e) { e.printStackTrace(); }
+                        Bitmap tempImage = BitmapFactory.decodeStream(ims);
+                        iz.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, 80, 80));
                     } else {
                         imgLoader.displayImage(filepath, iz, size);
                     }
