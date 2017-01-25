@@ -221,8 +221,10 @@ public class adapter {
 		sqlDB.delete(constants.TABLE_PROPERTIES, constants.COL_KEY_ROW + "="
 				+ propertyId, null);
 	}
-	public void deletePost(long postId) {
-		sqlDB.delete(constants.TABLE_POSTS, constants.COL_KEY_ROW + "=" + postId, null);
+	public boolean deletePost(long postId) {
+		try { sqlDB.delete(constants.TABLE_POSTS, constants.COL_KEY_ROW + "=" + postId, null); }
+		catch (SQLException E) { return false; }
+		return true;
 	}
 	public void updatePost(Post post) {
 		ContentValues values = new ContentValues();

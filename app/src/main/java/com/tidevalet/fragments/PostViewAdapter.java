@@ -10,9 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
@@ -57,7 +59,6 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         if (!posts.isEmpty()) {
-            ImageLoader imgLoader = ImageLoader.getInstance();
             ImageSize size = new ImageSize(80, 80);
             holder.post = posts.get(position);
             holder.post.setId(posts.get(position).getId());
@@ -67,7 +68,30 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
             try { imagePath = holder.post.getImagePath().split(","); }
             catch(NullPointerException e) { imagePath = holder.post.getLocalImagePath().split(","); }
             Log.d("images2",imagePath[0]);
-                if (imagePath[0].startsWith("/")) {
+            if (imagePath[0].startsWith("/")) {
+                Uri imageUri = Uri.parse(imagePath[0]);
+                File file = new File(imageUri.getPath());
+                InputStream ims = null;
+                try {
+                    ims = new FileInputStream(file);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                final Bitmap tempImage = BitmapFactory.decodeStream(ims);
+                final ImageView image = holder.firstImage;
+                final ViewTreeObserver vto = holder.mView.getViewTreeObserver();
+                vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    public boolean onPreDraw() {
+                        int finalHeight, finalWidth;
+                        finalHeight = (image.getMeasuredHeight() / 2);
+                        finalWidth = (image.getMeasuredWidth() / 2);
+                        holder.firstImage.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, finalHeight, finalWidth));
+                        holder.firstImage.getViewTreeObserver().removeOnPreDrawListener(this);
+                        return true;
+                    }
+                });
+            }
+               /* if (imagePath[0].startsWith("/")) {
                     Uri imageUri = Uri.parse(imagePath[0]);
                     File file = new File(imageUri.getPath());
                     InputStream ims = null;
@@ -75,10 +99,25 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
                     catch (Exception e) { e.printStackTrace(); }
                     Bitmap tempImage = BitmapFactory.decodeStream(ims);
                     holder.firstImage.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, 80, 80));
-                }
+                }*/
             else {
-                Log.d("online", imagePath[0].replaceAll("[\\p{Ps}\\p{Pe}]", ""));
-                imgLoader.displayImage(imagePath[0].replaceAll("[\\p{Ps}\\p{Pe}]", ""), holder.firstImage, size);
+                final ImageView image = holder.firstImage;
+                ViewTreeObserver vto = holder.mView.getViewTreeObserver();
+                final String[] finalImagePath = imagePath;
+                vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                                             public boolean onPreDraw() {
+                                                 int finalHeight, finalWidth;
+                                                 ImageLoader imgLoader;
+                                                 imgLoader = ImageLoader.getInstance();
+                                                 finalHeight = (image.getMeasuredHeight() / 2);
+                                                 finalWidth = (image.getMeasuredWidth() / 2);
+                                                 ImageSize size = new ImageSize(finalHeight,finalWidth);
+                                                 imgLoader.displayImage(finalImagePath[0].replaceAll("[\\p{Ps}\\p{Pe}]", ""), holder.firstImage, size);
+                                                 holder.firstImage.getViewTreeObserver().removeOnPreDrawListener(this);
+                                                 return true;
+                                             }
+                                         });
+                //imgLoader.displayImage(imagePath[0].replaceAll("[\\p{Ps}\\p{Pe}]", ""), holder.firstImage, size);
             }
             holder.bldgunit.setText("Location: " + holder.post.getBldg() + "/" + holder.post.getUnit());
             holder.violtype.setText(holder.post.getViolationType());
@@ -98,8 +137,15 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
                 public void onClick(View view) {
                     adapter dBadapter = new adapter(App.getAppContext());
                     dBadapter.open();
-                    dBadapter.deletePost(holder.postNum);
+                    boolean deleted = dBadapter.deletePost(holder.post.getId());
                     dBadapter.close();
+                    if (deleted) {
+                        posts.remove(holder.post);
+                        Toast.makeText(App.getAppContext(), "Deleted the post.", Toast.LENGTH_SHORT).show();
+                        notifyDataSetChanged();
+                    }
+                    else { Toast.makeText(App.getAppContext(), "Error deleting post..", Toast.LENGTH_SHORT).show(); }
+
                 }
         });
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +188,7 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewAdapter.ViewHo
         private final TextView bldgunit, posted, violtype, datetext, comments, viewButton;
         private final long postNum = -1;
         private final TextView pickedup;
-        Button delButton;
+        private Button delButton;
         private final ImageView firstImage;
         private Post post;
         private ViewHolder(View view) {

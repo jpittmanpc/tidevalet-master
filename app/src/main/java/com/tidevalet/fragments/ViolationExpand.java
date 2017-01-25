@@ -115,7 +115,7 @@ public class ViolationExpand extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_violation, container, false);
         final adapter dbAdapter = new adapter(App.getAppContext());
-        Log.d("mParam2", post.getLocalImagePath() + "" + post.getBldg() + "");
+        Log.d("ViolationExpand", post.getLocalImagePath() + "" + post.getBldg() + "");
         /*dbAdapter.open();
         post = dbAdapter.getPostById(mParam2);
         dbAdapter.close();*/

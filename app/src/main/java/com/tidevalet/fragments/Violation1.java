@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -127,9 +128,19 @@ public class Violation1 extends Fragment implements View.OnClickListener, Step {
                         InputStream ims = null;
                         try { ims = new FileInputStream(file); }
                         catch (Exception e) { e.printStackTrace(); }
-                        Bitmap tempImage = BitmapFactory.decodeStream(ims);
-                        ImageView firstImage = (ImageView) v.findViewById(R.id.img1);
-                        firstImage.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, 80, 80));
+                        final Bitmap tempImage = BitmapFactory.decodeStream(ims);
+                        final ImageView firstImage = (ImageView) v.findViewById(R.id.img1);
+                        ViewTreeObserver vto = v.getViewTreeObserver();
+                        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                            public boolean onPreDraw() {
+                                int finalHeight, finalWidth;
+                                finalHeight = firstImage.getMeasuredHeight();
+                                finalWidth = firstImage.getMeasuredWidth();
+                                firstImage.setImageBitmap(ThumbnailUtils.extractThumbnail(tempImage, finalHeight, finalWidth));
+                                return true;
+                            }
+                        });
+
                 }
                     else {
                         imgLoader.displayImage(imagePath[0].replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", ""), (ImageView) v.findViewById(R.id.img1), size);

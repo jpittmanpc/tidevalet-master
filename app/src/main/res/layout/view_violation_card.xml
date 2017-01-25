@@ -20,7 +20,7 @@ android:layout_margin="5dp"
              android:layout_height="match_parent"
              android:minWidth="150dp"
              android:contentDescription="@null"
-             android:scaleType="centerCrop"
+             android:scaleType="fitCenter"
              android:src="@drawable/placeholder"
              android:id="@+id/firstImage"
              />
