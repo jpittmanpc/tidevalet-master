@@ -65,7 +65,6 @@ public class ViewViolations extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

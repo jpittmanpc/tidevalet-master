@@ -128,6 +128,7 @@ public class WebUtils {
         }
         Intent sendSnackBar = new Intent("sendSnackBar");
         LocalBroadcastManager.getInstance(App.getAppContext()).sendBroadcast(sendSnackBar);
+        Log.d("snackbar", "Sent snackbar");
         StringBuilder images = new StringBuilder();
         String prefix = "";
         for(int i=0;i<imageURL.size();i++) {
@@ -157,19 +158,15 @@ public class WebUtils {
         throws XMLRPCException, IOException {
         adapter dbAdapter = new adapter(App.getInstance());
         sessionManager = new SessionManager(context);
-
-        String sXmlRpcMethod = method;
         String result = null;
         XMLRPCClient client = new XMLRPCClient(URL + "xmlrpc.php");
         HashMap<String, Object> theCall = new HashMap<String, Object>();
         Hashtable filter = new Hashtable();
         filter.put("hide_empty", false);
-        theCall.put("filter", filter);
+        theCall.put("filter", filter); //struct
         String taxonomy = "properties";
-        Object[] params = { 1, sessionManager.getUsername(), sessionManager.getPassword(), taxonomy, theCall
-        };
-        Log.d("User", "User " + sessionManager.getUserId());
-        Object[] obj = (Object[]) client.call(method, params);
+        Object[] params = { 1, sessionManager.getUsername(), sessionManager.getPassword(), taxonomy, theCall };
+        Object[] obj = (Object[]) client.call(method, params); //return as array
         Integer propId = 0;
         String name = "", address = "", image = "";
         for (int i = 0; i < obj.length; i++) {
@@ -244,6 +241,35 @@ public class WebUtils {
             sessionManager.setNoProperties(false);
          }
        return result;
+    }
+    private static String getPosts(Context context)
+        throws XMLRPCException, IOException {
+            adapter dbAdapter = new adapter(App.getInstance());
+            sessionManager = new SessionManager(context);
+            String sXmlRpcMethod = "wp.getPosts";
+            long prop_id = sessionManager.propertySelected();
+            String result = null;
+            XMLRPCClient client = new XMLRPCClient(URL + "xmlrpc.php");
+        HashMap<String, Object> theCall = new HashMap<>();
+        Hashtable filter = new Hashtable();
+        filter.put("post_type", "violations");
+        theCall.put("filter", filter); //struct
+        //Custom Fields
+        List<Hashtable> customFieldsList = new ArrayList<Hashtable>();
+        Hashtable customField = new Hashtable();
+        customField.put("key", constants.POST_LOCAL_IMAGE_PATH);
+        customField.put("value", imageURL.toString());
+        customFieldsList.add(customField);
+        customField = new Hashtable();
+            HashMap<String, String> struct = new HashMap<String, String>(); //struct
+            struct.put("filter", "post_type");
+            struct.put("filter", "violations"); //array
+            List<String> array = new ArrayList<String>();
+            String taxonomy = "properties";
+            Object[] params = { 1, sessionManager.getUsername(), sessionManager.getPassword(), taxonomy, content };
+            Object[] obj = (Object[]) client.call(sXmlRpcMethod, params);
+        return null;
+
     }
     private static String uploadImage(String image, Context context)
             throws XMLRPCException {

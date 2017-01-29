@@ -46,6 +46,7 @@ import com.tidevalet.App;
 import com.tidevalet.R;
 import com.tidevalet.SessionManager;
 import com.tidevalet.fragments.LoginActivityFragment;
+import com.tidevalet.fragments.MissedUnit;
 import com.tidevalet.fragments.PropertyChosen;
 import com.tidevalet.fragments.PropertyList;
 import com.tidevalet.fragments.ViewViolations;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements MainListener {
     Button newViolation;
     Button viewViolation;
     Button changeProperty;
+    Button missedUnit;
     private TextView snackbar;
     private static Bitmap bitmap;
     private Context mContext;
@@ -189,10 +191,19 @@ public class MainActivity extends AppCompatActivity implements MainListener {
                 startListView();
             }
         });
+        missedUnit = (Button) v.findViewById(R.id.missedUnit);
+        missedUnit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startMissedUnit();
+            }
+        });
+
     }
-
-
-
+    private void startMissedUnit() {
+        Fragment missedUnitFragment = new MissedUnit();
+        fm.beginTransaction().replace(R.id.main_fragment, missedUnitFragment).addToBackStack("PropView").commit();
+    }
     private void startViolationView() {
         Fragment violationViewFragment = new ViewViolations();
         fm.beginTransaction().replace(R.id.main_fragment, violationViewFragment).addToBackStack("PropView").commit();

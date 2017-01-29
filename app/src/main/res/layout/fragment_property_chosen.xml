@@ -14,25 +14,24 @@
         android:id="@+id/topLayout"
         android:maxHeight="80dp"
         android:background="@drawable/ratio16x9">
-        <android.support.design.widget.CoordinatorLayout
-            android:layout_width="fill_parent"
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:translationZ="@dimen/design_snackbar_elevation">
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:translationZ="@dimen/design_snackbar_elevation">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/snackbarlocation"
-                android:text="The Violation has been submitted."
-                android:background="@android:color/black"
-                android:textColor="@android:color/white"
-                android:gravity="center"
-                android:layout_margin="5dp"
-                android:padding="10dp"
-                />
-
-        </android.support.design.widget.CoordinatorLayout>
+            android:id="@+id/snackbarlocation"
+            android:layout_gravity="top|center"
+            android:text="The Violation has been submitted."
+            android:background="@android:color/black"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:layout_margin="5dp"
+            android:padding="10dp"
+            />
         <ImageView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -40,9 +39,13 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/property_image"
             android:src="@drawable/ratio16x9"
+            android:scaleType="centerCrop" />
 
-            android:scaleType="centerCrop"
-            />
+    </android.support.design.widget.CoordinatorLayout>
+
+
+
+
 
     </RelativeLayout>
 
@@ -95,7 +98,20 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp" />
-
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FEEDBACK FROM UNITS"
+            android:textColor="@android:color/holo_red_dark"
+            android:id="@+id/missedUnit"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/abc_button_padding_horizontal_material"
+            android:textStyle="bold"
+            android:theme="@style/FlatButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
