@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+import com.tidevalet.App;
 import com.tidevalet.SessionManager;
 import com.tidevalet.thread.wp_thread;
 
@@ -22,7 +23,9 @@ public class wp_service extends Service {
         SessionManager session = new SessionManager(this);
         String user = session.getUsername();
         String pass = session.getPassword();
-        wp_thread thread = new wp_thread(user, pass, this);
+        SessionManager sm = new SessionManager(App.getAppContext());
+        long ID = sm.propertySelected();
+        wp_thread thread = new wp_thread(user, pass, this, ID);
         thread.start();
     }
 

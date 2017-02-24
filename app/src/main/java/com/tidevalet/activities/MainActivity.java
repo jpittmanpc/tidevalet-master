@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements MainListener {
         snackbar.setVisibility(View.VISIBLE);
         snackbar.setSystemUiVisibility(View.FOCUS_FORWARD);
     }
-
     @Override
     public void propertyView(View v) {
         snackbar = (TextView) v.findViewById(R.id.snackbarlocation);
@@ -198,6 +197,10 @@ public class MainActivity extends AppCompatActivity implements MainListener {
                 startMissedUnit();
             }
         });
+        Intent i = new Intent(this, wp_service.class);
+        i.addFlags(1);
+        startService(i);
+
 
     }
     private void startMissedUnit() {

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class WebUtils {
     static SessionManager sessionManager;
@@ -166,7 +167,7 @@ public class WebUtils {
         theCall.put("filter", filter); //struct
         String taxonomy = "properties";
         Object[] params = { 1, sessionManager.getUsername(), sessionManager.getPassword(), taxonomy, theCall };
-        Object[] obj = (Object[]) client.call(method, params); //return as array
+        Object[] obj = (Object[]) client.call(method, params);
         Integer propId = 0;
         String name = "", address = "", image = "";
         for (int i = 0; i < obj.length; i++) {
@@ -176,7 +177,7 @@ public class WebUtils {
             name = (String) each.get("name");
             address = (String) each.get("address");
             propId = Integer.valueOf(String.valueOf(each.get("term_id")));
-            for (Map.Entry<String, Object> entry : each.entrySet()) {
+            for (Entry<String, Object> entry : each.entrySet()) {
                 if (entry.getValue() instanceof String) {
                     if (entry.getKey() == constants.PROPERTY_NAME) {
                         name = (String) entry.getValue();
@@ -242,35 +243,50 @@ public class WebUtils {
          }
        return result;
     }
-    private static String getPosts(Context context)
+    public static String getPosts(long IDz)
         throws XMLRPCException, IOException {
             adapter dbAdapter = new adapter(App.getInstance());
-            sessionManager = new SessionManager(context);
-            String sXmlRpcMethod = "wp.getPosts";
-            long prop_id = sessionManager.propertySelected();
+            sessionManager = new SessionManager(App.getAppContext());
+            String sXmlRpcMethod = "tv.getComplex";
+            String prop_id = (String) String.valueOf(sessionManager.propertySelected());
             String result = null;
             XMLRPCClient client = new XMLRPCClient(URL + "xmlrpc.php");
-        HashMap<String, Object> theCall = new HashMap<>();
-        Hashtable filter = new Hashtable();
-        filter.put("post_type", "violations");
-        theCall.put("filter", filter); //struct
-        //Custom Fields
-        List<Hashtable> customFieldsList = new ArrayList<Hashtable>();
-        Hashtable customField = new Hashtable();
-        customField.put("key", constants.POST_LOCAL_IMAGE_PATH);
-        customField.put("value", imageURL.toString());
-        customFieldsList.add(customField);
-        customField = new Hashtable();
-            HashMap<String, String> struct = new HashMap<String, String>(); //struct
-            struct.put("filter", "post_type");
-            struct.put("filter", "violations"); //array
-            List<String> array = new ArrayList<String>();
-            String taxonomy = "properties";
-            Object[] params = { 1, sessionManager.getUsername(), sessionManager.getPassword(), taxonomy, content };
-            Object[] obj = (Object[]) client.call(sXmlRpcMethod, params);
+            HashMap<String, String> filter = new HashMap<String, String>();
+            filter.put("term_id", prop_id);
+            //filter.put("post_status", "publish");
+             //end struct
+            List<String> fields = new ArrayList<String>();
+            List<String> secondParameters = new ArrayList<>();
+            fields.add("post_id");
+            fields.add("post_title");
+            fields.add("");
+            fields.add(String.valueOf(prop_id));
+            // Term Fields
+            /*mainStructure.put("fieldsList);*/
+            List<Hashtable> customFieldsList = new ArrayList<Hashtable>();
+            Hashtable customFields = new Hashtable();
+            customFields.put("term_id", prop_id);
+            customFieldsList.add(customFields);
+            HashMap<String, Object> other = new HashMap<String, Object>();
+                //Custom Fields
+            Object[] params = { 1, sessionManager.getUsername(), sessionManager.getPassword(), filter };
+            Object[] results = (Object[]) client.call(sXmlRpcMethod, params);
+        for (int i = 0; i < results.length; i++) {
+            Log.d("test",results[i].getClass() + " ");
+            
+            Map<String, Object> each = (Map<String, Object>) results[i];
+            for (Entry<String, Object> entry : each.entrySet()) {
+                Log.d("entry", entry.getKey() + "   " + entry.getValue() + " ... " + entry.getValue().getClass() + " ....");
+            }
+        }
+           // Log.d("TAG...",results.() + " length");
+
         return null;
 
     }
+
+
+
     private static String uploadImage(String image, Context context)
             throws XMLRPCException {
         String resultUrl = "";

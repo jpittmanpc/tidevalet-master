@@ -5,7 +5,7 @@
     <string name="longitude_label">Longitude</string>
     <string name="last_update_time_label">Last location update time</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="tide_default_url">http://www.tidevalet.com/</string>
+    <string name="tide_default_url">http://162.243.52.229/</string>
     <string name="title_activity_main">Tide Valet</string>
     <string name="found_complex">The following locations were found: </string>
     <string name="step1">violation1</string>
@@ -28,7 +28,4 @@
     <string name="image4">image4</string>
     <string name="submit_changes">Submit Changes</string>
     <string name="blank"> </string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
