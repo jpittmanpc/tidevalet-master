@@ -167,13 +167,19 @@ public class WebUtils {
         theCall.put("filter", filter); //struct
         String taxonomy = "properties";
         Object[] params = { 1, sessionManager.getUsername(), sessionManager.getPassword(), taxonomy, theCall };
-        Object[] obj = (Object[]) client.call(method, params);
+        Object[] obj = (Object[]) client.call(method, params); //return as array
         Integer propId = 0;
         String name = "", address = "", image = "";
         for (int i = 0; i < obj.length; i++) {
             List<String> contractors = new ArrayList<>();
             List<String> complex_mgrs = new ArrayList<>();
-            Map<String, Object> each = (Map<String, Object>) obj[i];
+            Map<String, Object> each =  null;
+            try {
+                each = (Map<String, Object>) obj[i];
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
             name = (String) each.get("name");
             address = (String) each.get("address");
             propId = Integer.valueOf(String.valueOf(each.get("term_id")));
@@ -182,7 +188,6 @@ public class WebUtils {
                     if (entry.getKey() == constants.PROPERTY_NAME) {
                         name = (String) entry.getValue();
                     }
-
                     Log.d("STRING", entry.getKey() + " val:" + entry.getValue().toString());
                 }
                 if (entry.getValue() instanceof HashMap) {
@@ -247,40 +252,54 @@ public class WebUtils {
         throws XMLRPCException, IOException {
             adapter dbAdapter = new adapter(App.getInstance());
             sessionManager = new SessionManager(App.getAppContext());
-            String sXmlRpcMethod = "tv.getComplex";
-            String prop_id = (String) String.valueOf(sessionManager.propertySelected());
+            String sXmlRpcMethod = "wp.getPosts";
+            long prop_id = sessionManager.propertySelected();
             String result = null;
             XMLRPCClient client = new XMLRPCClient(URL + "xmlrpc.php");
-            HashMap<String, String> filter = new HashMap<String, String>();
-            filter.put("term_id", prop_id);
-            //filter.put("post_status", "publish");
-             //end struct
-            List<String> fields = new ArrayList<String>();
-            List<String> secondParameters = new ArrayList<>();
-            fields.add("post_id");
-            fields.add("post_title");
-            fields.add("");
-            fields.add(String.valueOf(prop_id));
+            HashMap<String, Object> filter = new HashMap<String, Object>();
+            filter.put("post_type", "violations");
+            filter.put("post_status", "publish");
+            filter.put("number", 9999);
             // Term Fields
-            /*mainStructure.put("fieldsList);*/
-            List<Hashtable> customFieldsList = new ArrayList<Hashtable>();
-            Hashtable customFields = new Hashtable();
-            customFields.put("term_id", prop_id);
-            customFieldsList.add(customFields);
+            HashMap<String, List<String>> tax = new HashMap<String, List<String>>();
+            List<String> property = new ArrayList<String>();
+            property.add(String.valueOf(sessionManager.propertySelected()));
+            tax.put("properties", property);
+            //Custom Fields
+            List<String> fields = new ArrayList<>();
+            String field;
+            field = "post_id";
+            fields.add(field);
+            field = "post_title";
+            fields.add(field);
+            field ="link";
+            fields.add(field);
+            field = "term_id";
+            fields.add(field);
+            //customField= constants.POST_COMMENTS;
+            //customFieldsList.add(customField);
+            //customField = constants.PICKEDUP;
+            //customFieldsList.add(customField);
             HashMap<String, Object> other = new HashMap<String, Object>();
+            other.put("fields", fields);
                 //Custom Fields
-            Object[] params = { 1, sessionManager.getUsername(), sessionManager.getPassword(), filter };
+            Object[] params = { 1, sessionManager.getUsername(), sessionManager.getPassword(), filter, fields };
             Object[] results = (Object[]) client.call(sXmlRpcMethod, params);
-        for (int i = 0; i < results.length; i++) {
-            Log.d("test",results[i].getClass() + " ");
-            
-            Map<String, Object> each = (Map<String, Object>) results[i];
-            for (Entry<String, Object> entry : each.entrySet()) {
-                Log.d("entry", entry.getKey() + "   " + entry.getValue() + " ... " + entry.getValue().getClass() + " ....");
+            Log.d("WebUtils",results.length + " lengths");
+        for (int x = 0; x < results.length; x++) {
+            Log.d("TAG", results[x].getClass() + " ..");
+            HashMap<String, Object> each = (HashMap<String, Object>) results[x];
+            String ID = (String) each.get("post_id");
+            String Title = (String) each.get("post_title");
+            Log.d("TAG", ID + " ...." + Title);
+            for (Map.Entry<String, Object> entry : each.entrySet()) {
+                Log.d("entry", entry.getKey() + " " + entry.getValue());
             }
         }
-           // Log.d("TAG...",results.() + " length");
-
+           /* HashMap<String, Object[]> contentHash = new HashMap<String, Object[]>();
+            contentHash = (HashMap<String, Object>) results;
+            String Post_ID = contentHash.get("post_id").toString();
+            Log.d("TAG",Post_ID + " " + " ...successfulcall?");*/
         return null;
 
     }
