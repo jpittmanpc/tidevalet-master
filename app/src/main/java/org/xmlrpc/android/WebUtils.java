@@ -248,7 +248,7 @@ public class WebUtils {
          }
        return result;
     }
-    public static String getPosts(long IDz)
+    public static void getPosts(long IDz)
         throws XMLRPCException, IOException {
             adapter dbAdapter = new adapter(App.getInstance());
             sessionManager = new SessionManager(App.getAppContext());
@@ -259,7 +259,7 @@ public class WebUtils {
             HashMap<String, Object> filter = new HashMap<String, Object>();
             filter.put("post_type", "violations");
             filter.put("post_status", "publish");
-            filter.put("number", 9999);
+            filter.put("number", 99999);
             // Term Fields
             HashMap<String, List<String>> tax = new HashMap<String, List<String>>();
             List<String> property = new ArrayList<String>();
@@ -267,15 +267,13 @@ public class WebUtils {
             tax.put("properties", property);
             //Custom Fields
             List<String> fields = new ArrayList<>();
-            String field;
-            field = "post_id";
-            fields.add(field);
-            field = "post_title";
-            fields.add(field);
-            field ="link";
-            fields.add(field);
-            field = "term_id";
-            fields.add(field);
+            fields.add("post_id");
+            fields.add("post_title");
+            fields.add("link");
+            fields.add("post_date");
+            fields.add("custom_fields");
+            fields.add("post_content");
+            fields.add("terms");
             //customField= constants.POST_COMMENTS;
             //customFieldsList.add(customField);
             //customField = constants.PICKEDUP;
@@ -287,24 +285,51 @@ public class WebUtils {
             Object[] results = (Object[]) client.call(sXmlRpcMethod, params);
             Log.d("WebUtils",results.length + " lengths");
         for (int x = 0; x < results.length; x++) {
-            Log.d("TAG", results[x].getClass() + " ..");
-            HashMap<String, Object> each = (HashMap<String, Object>) results[x];
-            String ID = (String) each.get("post_id");
-            String Title = (String) each.get("post_title");
-            Log.d("TAG", ID + " ...." + Title);
-            for (Map.Entry<String, Object> entry : each.entrySet()) {
-                Log.d("entry", entry.getKey() + " " + entry.getValue());
-            }
+            getShit(results[x]);
         }
            /* HashMap<String, Object[]> contentHash = new HashMap<String, Object[]>();
             contentHash = (HashMap<String, Object>) results;
             String Post_ID = contentHash.get("post_id").toString();
             Log.d("TAG",Post_ID + " " + " ...successfulcall?");*/
-        return null;
-
     }
 
-
+    private static void getShit(Object result) {
+        String bldg = "";
+        String unit = "", comments = "", image_path="", viol_type = "";
+        long picked_up = 0;
+        HashMap<String, Object> each = (HashMap<String, Object>) result;
+        String ID = (String) each.get("post_id");
+        Object[] terms = (Object[]) each.get("terms");
+        Object[] custom_fields = (Object[]) each.get("custom_fields");
+        for (int y = 0; y < terms.length; y++) {
+            HashMap<String,String> term = (HashMap<String, String>) terms[y];
+            for (Map.Entry<String,String> termz : term.entrySet()) {
+                if (termz.getValue() instanceof String) {
+                    Log.d("Term", termz.getKey() + termz.getValue() + "");
+                }
+                else { Log.d("Terms", termz.getKey() + " Unknown "); }
+            }
+        }
+        for (Object custom_field : custom_fields) {
+            HashMap<String, String> keyvals = (HashMap<String, String>) custom_field;
+            for (Entry<String, String> keyval : keyvals.entrySet()) {
+                Log.d("custom_fields", keyval.getKey() + " val:" + keyval.getValue());
+                // bldg = keyval.getKey()
+                unit = keyvals.get("unit");
+                comments = keyvals.get(constants.POST_COMMENTS);
+                image_path = keyvals.get(constants.POST_IMAGES);
+                picked_up = Long.getLong(keyvals.get(constants.PICKEDUP), 0);
+                viol_type = keyvals.get(constants.POST_VIOLATION_TYPE);
+            }
+        }
+        Log.d("POST", "Bldg:" + bldg + "Unit: " + unit + " comments: " + comments + " image: " + image_path + " picked: " + picked_up + " viol: " + viol_type);
+        /*for (Map.Entry<String, Object> entry : each.entrySet()) {
+            if (entry.getValue() instanceof String) {
+                Log.d("entry", entry.getKey() + " " + entry.getValue());
+            }
+            else { Log.d("ENTRY", entry.getKey() + " " + entry.getValue().getClass().getName()); }
+        }*/
+    }
 
     private static String uploadImage(String image, Context context)
             throws XMLRPCException {

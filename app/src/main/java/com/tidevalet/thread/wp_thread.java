@@ -33,7 +33,7 @@ public class wp_thread extends Thread {
         try {
             if (ID == 0) {
             String url = WebUtils.callWp("wp.getTerms", context); }
-            else { String ha = WebUtils.getPosts(ID); }
+            else { WebUtils.getPosts(ID); }
         }
         catch (Exception e) {
             e.printStackTrace();
