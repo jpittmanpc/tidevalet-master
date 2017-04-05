@@ -51,6 +51,7 @@ public class adapter {
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(constants.SQL_PROPERTIES);
 			db.execSQL(constants.SQL_POSTS);
+			db.execSQL(constants.SQL_ADDED);
 		}
 
 		@Override
@@ -162,10 +163,24 @@ public class adapter {
 		values.put(constants.PICKEDUP, post.getPU());
 		values.put(constants.POST_COMMENTS, post.getContractorComments());
 		post.setId(sqlDB.insert(constants.TABLE_POSTS, null, values));
+		ContentValues values2 = new ContentValues();
+		values2.put(constants.POST_VIOLATION_ID, post.getViolationId());
+		sqlDB.insert(constants.TABLE_ADDED, null, values2);
 		Log.d("addPost", post.getPropertyId() + " " + post.getViolationId() + " " + post.getId());
 		return post;
 	}
-	
+	public int getPostByViolationId(long violationId) throws Exception {
+		int got = 1;
+		Cursor cursor = sqlDB.query(constants.TABLE_ADDED, null, constants.COL_KEY_ROW+"="+violationId,null,null,null,null);
+		if (!cursor.moveToNext()) { Log.d("null","null"); got = 0; }
+		else {
+			while (cursor.moveToNext()) {
+				got = cursor.getInt(cursor.getColumnIndex(constants.COL_KEY_ROW));
+			}
+		}
+		cursor.close();
+		return got;
+	}
 	public Post getPostById(long postId){
 		Post post = new Post();
 		Cursor cursor = sqlDB.query(constants.TABLE_POSTS, null, constants.COL_KEY_ROW+"="+postId, null, null, null, null);

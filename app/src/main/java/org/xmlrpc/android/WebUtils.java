@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.tidevalet.App;
 import com.tidevalet.SessionManager;
+import com.tidevalet.helpers.Post;
 import com.tidevalet.thread.adapter;
 import com.tidevalet.thread.constants;
 
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -259,12 +261,14 @@ public class WebUtils {
             HashMap<String, Object> filter = new HashMap<String, Object>();
             filter.put("post_type", "violations");
             filter.put("post_status", "publish");
+            filter.put("taxonomy", "properties");
+            filter.put("term_id", sessionManager.propertySelected());
             filter.put("number", 99999);
             // Term Fields
-            HashMap<String, List<String>> tax = new HashMap<String, List<String>>();
+            HashMap<String, List<String>> term = new HashMap<String, List<String>>();
             List<String> property = new ArrayList<String>();
             property.add(String.valueOf(sessionManager.propertySelected()));
-            tax.put("properties", property);
+            term.put("term_id", property);
             //Custom Fields
             List<String> fields = new ArrayList<>();
             fields.add("post_id");
@@ -280,55 +284,101 @@ public class WebUtils {
             //customFieldsList.add(customField);
             HashMap<String, Object> other = new HashMap<String, Object>();
             other.put("fields", fields);
-                //Custom Fields
+            //Custom Fields
             Object[] params = { 1, sessionManager.getUsername(), sessionManager.getPassword(), filter, fields };
             Object[] results = (Object[]) client.call(sXmlRpcMethod, params);
             Log.d("WebUtils",results.length + " lengths");
         for (int x = 0; x < results.length; x++) {
-            getShit(results[x]);
+            Post posts = parsePost(results[x]);
         }
-           /* HashMap<String, Object[]> contentHash = new HashMap<String, Object[]>();
-            contentHash = (HashMap<String, Object>) results;
-            String Post_ID = contentHash.get("post_id").toString();
-            Log.d("TAG",Post_ID + " " + " ...successfulcall?");*/
     }
 
-    private static void getShit(Object result) {
+    private static Post parsePost (Object result) {
         String bldg = "";
         String unit = "", comments = "", image_path="", viol_type = "";
-        long picked_up = 0;
+        Post post = new Post();
+        String picked_up = "0";
         HashMap<String, Object> each = (HashMap<String, Object>) result;
-        String ID = (String) each.get("post_id");
+        Long ID = Long.parseLong(each.get("post_id").toString());
         Object[] terms = (Object[]) each.get("terms");
-        Object[] custom_fields = (Object[]) each.get("custom_fields");
-        for (int y = 0; y < terms.length; y++) {
-            HashMap<String,String> term = (HashMap<String, String>) terms[y];
-            for (Map.Entry<String,String> termz : term.entrySet()) {
-                if (termz.getValue() instanceof String) {
-                    Log.d("Term", termz.getKey() + termz.getValue() + "");
+            for (Object term1 : terms) {
+                HashMap<String, String> term = (HashMap<String, String>) term1;
+                for (Entry<String, String> termz : term.entrySet()) {
+                    //if (termz.getKey().equals("term_id") && termz.getValue().equals(sessionManager.propertySelected())) {
+                    if (termz.getValue() instanceof String) {
+                        if (termz.getKey().equals("term_id") && termz.getValue().equals(String.valueOf(sessionManager.propertySelected()))) {
+                            Object[] custom_fields = (Object[]) each.get("custom_fields");
+                            Log.d("Term", termz.getKey() + termz.getValue() + "");
+                            Map<String, String> postFields = new HashMap<String, String>();
+                            HashMap<String, String> keyvalpair = new HashMap<>();
+                            for (Object custom_field : custom_fields) {
+                                HashMap<String, String> keyvals = (HashMap<String, String>) custom_field;
+                                Iterator KeyValueSet = keyvals.keySet().iterator();
+                                String theKey = "";
+                                String theValue = "";
+                                String waiting = "";
+                                while (KeyValueSet.hasNext()) {
+                                    theKey = (String) KeyValueSet.next();
+                                    if (theKey.equals("key")) {
+                                        waiting = keyvals.get(theKey);
+                                        theValue = keyvals.get(theKey);
+                                      //  Log.d("TAG",theValue);
+                                    }
+                                    else if (theKey.equals("value")) {
+                                        postFields.put(theValue, keyvals.get(theKey));
+                                        keyvalpair.put(theValue, keyvals.get(theKey));
+                                    }
+                                    //Log.d("keyval", "key: " + theKey + " val:" + keyvals.get(theKey));
+                                    //theValue = keyvals.get(theKey);
+                                }
+                                postFields.put(theKey, theValue);
+                            }
+                            //         Log.d("TAG",keyvalpair.toString());
+                            //         Log.d("custom_fields", constants.POST_BLDG + " " + keyval.getKey() + " val:" + keyval.getValue());
+                            bldg = postFields.get(constants.POST_BLDG);
+                            unit = postFields.get(constants.POST_UNIT);
+                            comments = postFields.get(constants.POST_COMMENTS);
+                            image_path = postFields.get(constants.POST_IMAGES);
+                            picked_up = postFields.get(constants.PICKEDUP);
+                            viol_type = postFields.get(constants.POST_VIOLATION_TYPE);
+                            post.setBldg(bldg);
+                            post.setUnit(unit);
+                            post.setContractorComments(comments);
+                            post.setImagePath(image_path);
+                            post.setViolationType(viol_type);
+                            post.setId(ID);
+                            post.setIsPosted(1);
+                            post.setPU(Integer.valueOf(picked_up));
+                            post.setViolationId(ID);
+                            post.setPropertyId(sessionManager.propertySelected());
+                            post.setViolationId(ID);
+                            Log.d("POST", "ID" + ID + " Bldg:" + bldg + "Unit: " + unit + " comments: " + comments + " image: " + image_path + " picked: " + picked_up + " viol: " + viol_type);
+                            adapter dbAdapter = new adapter(App.getAppContext());
+                            dbAdapter.open();
+                            int testPost = 0;
+                            try {
+                                testPost = dbAdapter.getPostByViolationId(ID);
+                            }
+                            catch (Exception e) { e.printStackTrace(); }
+                            if (testPost != 0) {
+                                dbAdapter.addPost(post);
+                                try {
+                                    Log.d("Added", ID.toString() + dbAdapter.getPostByViolationId(ID) + "");
+                                }
+                                catch (Exception e) { e.printStackTrace(); }
+                            }
+                            dbAdapter.close();
+                        }
+                    }
                 }
-                else { Log.d("Terms", termz.getKey() + " Unknown "); }
             }
-        }
-        for (Object custom_field : custom_fields) {
-            HashMap<String, String> keyvals = (HashMap<String, String>) custom_field;
-            for (Entry<String, String> keyval : keyvals.entrySet()) {
-                Log.d("custom_fields", keyval.getKey() + " val:" + keyval.getValue());
-                // bldg = keyval.getKey()
-                unit = keyvals.get("unit");
-                comments = keyvals.get(constants.POST_COMMENTS);
-                image_path = keyvals.get(constants.POST_IMAGES);
-                picked_up = Long.getLong(keyvals.get(constants.PICKEDUP), 0);
-                viol_type = keyvals.get(constants.POST_VIOLATION_TYPE);
-            }
-        }
-        Log.d("POST", "Bldg:" + bldg + "Unit: " + unit + " comments: " + comments + " image: " + image_path + " picked: " + picked_up + " viol: " + viol_type);
         /*for (Map.Entry<String, Object> entry : each.entrySet()) {
             if (entry.getValue() instanceof String) {
                 Log.d("entry", entry.getKey() + " " + entry.getValue());
             }
             else { Log.d("ENTRY", entry.getKey() + " " + entry.getValue().getClass().getName()); }
         }*/
+        return post;
     }
 
     private static String uploadImage(String image, Context context)

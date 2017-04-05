@@ -7,6 +7,7 @@ public interface constants {
 	// Tables
 	public static final String TABLE_PROPERTIES = "properties";
 	public static final String TABLE_POSTS = "posts";
+	public static final String TABLE_ADDED = "added";
 
 	// Key Row Column
 	public static final String COL_KEY_ROW = "_id";
@@ -20,7 +21,7 @@ public interface constants {
 	
 	// Columns for Table POSTS
 	public static final String POST_VIOLATION_ID = "violation_id";
-	public static final String POST_LOCAL_IMAGE_PATH = "image_path";
+	public static final String POST_LOCAL_IMAGE_PATH = "local_image_path";
 	public static final String POST_IS_POSTED = "is_posted";
 	public static final String POST_RETURNED_STRING = "returned_string";
 	public static final String POST_TIMESTAMP = "timestamp";
@@ -28,7 +29,7 @@ public interface constants {
 	public static final String POST_BLDG = "bldg";
 	public static final String POST_UNIT = "unit";
 	public static final String POST_COMMENTS = "contractorComments";
-	public static final String POST_IMAGES = "images";
+	public static final String POST_IMAGES = "image_path";
 	public static final String PROPERTY_ID = "property_id";
 	public static final String PICKEDUP = "picked_up";
 
@@ -46,5 +47,5 @@ public interface constants {
 		+ constants.POST_TIMESTAMP + " text,"+constants.POST_VIOLATION_TYPE +" text,"
 		+ constants.POST_UNIT +" text,"+ constants.POST_BLDG + " text,"
 		+ constants.POST_COMMENTS + " text," + constants.POST_IMAGES + " text);";
-
+	public static final String SQL_ADDED = "create table " + constants.TABLE_ADDED + "(" + constants.COL_KEY_ROW + " integer primary key," + constants.POST_VIOLATION_ID + " integer)";
 }
